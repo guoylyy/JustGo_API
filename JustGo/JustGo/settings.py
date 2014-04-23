@@ -62,8 +62,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'justgo',
-        'USER': 'wp',
-        'PASSWORD': 'wp',
+        'USER': 'wptest',
+        'PASSWORD': 'wptest',
         'HOST': '',
         'PORT': '',
     }
