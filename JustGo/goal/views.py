@@ -85,9 +85,9 @@ def join_goal(request):
     return success if join successfully
     '''
     try :
-        token = request.POST.get('token')
-        goal_id = request.POST.get('goal_id')
-        privacy = request.POST.get('privacy')
+        token = request.GET.get('token')
+        goal_id = request.GET.get('goal_id')
+        privacy = request.GET.get('privacy')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
@@ -138,8 +138,8 @@ def sync_push(request):
     return success if push successfully
     '''
     try :
-        token = request.POST.get('token')
-        data = request.POST.get('data')
+        token = request.GET.get('token')
+        data = request.GET.get('data')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
@@ -223,9 +223,9 @@ def make_comment(request):
     return success if insert into DB successfully
     '''
     try :
-        token = request.POST.get('token')
-        checkout_id = request.POST.get('checkout_id')
-        comment = request.POST.get('comment')
+        token = request.GET.get('token')
+        checkout_id = request.GET.get('checkout_id')
+        comment = request.GET.get('comment')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
@@ -250,8 +250,8 @@ def make_awesome(request):
     return success if insert into DB successfully
     '''
     try :
-        token = request.POST.get('token')
-        checkout_id = request.POST.get('checkout_id')
+        token = request.GET.get('token')
+        checkout_id = request.GET.get('checkout_id')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
@@ -276,8 +276,8 @@ def goal_status(request):
     '''
     '''
     try :
-        token = request.POST.get('token')
-        checkout_id = request.POST.get('checkout_id')
+        token = request.GET.get('token')
+        checkout_id = request.GET.get('checkout_id')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
