@@ -10,7 +10,6 @@ class User(models.Model):
     email = models.EmailField(max_length=254)    
     date_create = models.DateTimeField(auto_now_add=True)
 
-
 '''
 - user_star is followed by user_fan
 - deprecated: flag whether the follow relationship is still in use
