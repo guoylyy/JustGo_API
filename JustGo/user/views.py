@@ -113,6 +113,9 @@ def data_pull(request):
 ######################################################
 ## private functions start here
 
+def __get_token_result(result,token):
+    return str("{\"result\":\""+result+"\",\"token\":\""+token+"\"}")
+
 def __get_result(result):
     return str("{\"result\":\""+result+"\"}")
 
@@ -204,7 +207,7 @@ def __perform_login(user):
     token = __make_token(user.id)
     save_result = __insert_token(user, token)
     if save_result is True:
-        return HttpResponse(__get_result(token))
+        return HttpResponse(__get_token_result('success',token))
     else:
         print ('Error: register save token fail!')
         return HttpResponse(__get_result('save token fail'))
