@@ -64,8 +64,8 @@ DATABASES = {
         'NAME': 'justgo',
         'USER': 'wptest',
         'PASSWORD': 'wptest',
-        'HOST': '',
-        'PORT': '',
+        'HOST': '115.28.4.78',
+        'PORT': '3306',
     }
 }
 

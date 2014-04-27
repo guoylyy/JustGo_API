@@ -14,16 +14,14 @@ import time
 @csrf_exempt
 def register(request):
     # TODO: prevent DDoS register
-    # TODO: md5 encrypt
     # TODO: password encrypted in the app
     try :
-        username = request.GET.get('username')
-        email = request.GET.get('email')
-        password = request.GET.get('password')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
         default_portrait = __get_default_portrait()
         new_user = User(name = username, password = password, portrait = default_portrait, email = email)
         new_user.save()
-
         if new_user.id is not None:
             # perform login method once registered
             return __perform_login(new_user)
