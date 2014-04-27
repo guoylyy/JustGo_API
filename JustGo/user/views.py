@@ -19,6 +19,7 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        print request.read()
         default_portrait = __get_default_portrait()
         new_user = User(name = username, password = password, portrait = default_portrait, email = email)
         new_user.save()
@@ -33,8 +34,8 @@ def register(request):
 @csrf_exempt
 def login(request):
     try :
-        username = request.GET.get('username')
-        password = request.GET.get('password')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
         users = User.objects.filter(name=username)
         if len(users) > 0:
@@ -52,7 +53,7 @@ def login(request):
 @csrf_exempt
 def login_status(request):
     try :
-        token = request.GET.get('token')
+        token = request.POST.get('token')
         if token is not None or token != '':
             if __check_token(token) is not True:
                 return HttpResponse(__get_result('invalid token'))
@@ -68,7 +69,7 @@ def login_status(request):
 @csrf_exempt
 def logout(request):
     try :
-        token = request.GET.get('token')
+        token = request.POST.get('token')
         if token is not None or token != '':
             if __check_token(token) is not True:
                 return HttpResponse(__get_result('invalid token'))
