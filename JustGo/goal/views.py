@@ -5,78 +5,48 @@ from user.models import *
 from uploadfile.models import *
 from config import get_config
 import simplejson
-
 import datetime
 import time
 
 # Create your views here.
-
 def get_all_category(request):
     '''
     return json list of all names of category
     '''
     try :
         token = request.GET.get('token')
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
-            if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
-
-            cat_names = Category.objects.all().values_list('id', 'name')
-            cat_list = [i[0] for i in list(cat_names)]
-            return HttpResponse(simplejson.dumps(cat_list))
-        else :
-            return HttpResponse(__get_result('fail'))
+        cat_names = Category.objects.all().values('id', 'name')
+        return HttpResponse(simplejson.dumps(list(cat_names)))
     except Exception as e:
-        print (e)
+        print(e)
         return HttpResponse(__get_result('fail'))
 
 
 def get_goal_list(request):
     '''
     return json list of all names of goals to specilized category
-    [ [id, name, detail], [id, name, detail], ... ]
+    [ {"id":value, "name":value, "detail":value}, {"id":value, "name":value, "detail":value}, ... ]
     '''
     try :
-        token = request.GET.get('token')
         cat_id = request.GET.get('category_id')
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
-            if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
-
-            cat = Category.objects.filter(id=cat_id)
-            if cat is None:
-                return HttpResponse(__get_result('wrong category name'))
-            goal_names = Goal.objects.filter(category=cat[0]).values_list('id', 'name', 'detail')
-            return HttpResponse(simplejson.dumps(list(goal_names)))
-        else :
-            return HttpResponse(__get_result('fail'))
+        cat = Category.objects.filter(id=cat_id)
+        if len(cat)==0:
+            return HttpResponse(__get_result('wrong category name'))
+        goal_names = Goal.objects.filter(category=cat[0]).values('id', 'name', 'detail')
+        return HttpResponse(simplejson.dumps(list(goal_names)))
     except Exception as e:
-        print (e)
+        print(e)
         return HttpResponse(__get_result('fail'))
 
 def get_goal_list_all(request):
     '''
     return json list of all names of goals to specilized category
-    [ [id, name, detail], [id, name, detail], ... ]
+    [ {"id":value, "name":value, "detail":value}, {"id":value, "name":value, "detail":value}, ... ]
     '''
     try :
-        token = request.GET.get('token')
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
-            if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
-
-            goals = Goal.objects.all().values_list('id', 'name', 'detail')
-            return HttpResponse(simplejson.dumps(list(goals)))
-        else :
-            return HttpResponse(__get_result('fail'))
+        goals = Goal.objects.all().values('id', 'name', 'detail')
+        return HttpResponse(simplejson.dumps(list(goals)))
     except Exception as e:
-        print (e)
         return HttpResponse(__get_result('fail'))
 
 @csrf_exempt
@@ -107,6 +77,7 @@ def join_goal(request):
         print (e)
         return HttpResponse(__get_result('fail'))
 
+#to post
 def exit_goal(request):
     '''
     return success if exit successfully
@@ -131,6 +102,7 @@ def exit_goal(request):
     except Exception as e :
         print (e)
         return HttpResponse(__get_result('fail'))
+
 # TODO: add picture upload function
 @csrf_exempt
 def sync_push(request):
@@ -163,7 +135,9 @@ def sync_push(request):
         print (e)
         return HttpResponse(__get_result('fail'))
 
+
 # TODO: generate picture path 
+@csrf_exempt
 def sync_pull(request):
     '''
     return json array of all the goals and status
@@ -182,7 +156,7 @@ def sync_pull(request):
       ... ]
     '''
     try :
-        token = request.GET.get('token')
+        token = request.POST.get('token')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
@@ -223,9 +197,9 @@ def make_comment(request):
     return success if insert into DB successfully
     '''
     try :
-        token = request.GET.get('token')
-        checkout_id = request.GET.get('checkout_id')
-        comment = request.GET.get('comment')
+        token = request.POST.get('token')
+        checkout_id = request.POST.get('checkout_id')
+        comment = request.POST.get('comment')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
@@ -250,8 +224,8 @@ def make_awesome(request):
     return success if insert into DB successfully
     '''
     try :
-        token = request.GET.get('token')
-        checkout_id = request.GET.get('checkout_id')
+        token = request.POST.get('token')
+        checkout_id = request.POST.get('checkout_id')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
@@ -271,23 +245,12 @@ def make_awesome(request):
         return HttpResponse(__get_result('fail'))
 
 # TODO : to be finished
-@csrf_exempt
 def goal_status(request):
     '''
     '''
     try :
-        token = request.GET.get('token')
         checkout_id = request.GET.get('checkout_id')
-
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
-            if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
-
-            return HttpResponse(__get_result('success'))
-        else :
-            return HttpResponse(__get_result('fail'))
+        return HttpResponse(__get_result('success'))
     except Exception as e :
         print (e)
         return HttpResponse(__get_result('fail'))

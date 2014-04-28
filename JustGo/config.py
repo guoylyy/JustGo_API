@@ -4,5 +4,5 @@ def get_config(key):
         'md5_random' : 'youdontknow',
         'default_portrait_name' : 'default_portrait.png',
     }
-
+    
     return config[key]
