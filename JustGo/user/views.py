@@ -205,7 +205,7 @@ def __perform_login(user):
     token = __make_token(user.id)
     save_result = __insert_token(user, token)
     if save_result is True:
-        return HttpResponse(__get_token_result('success',token))
+        return HttpResponse(get_page_result('200',__get_token_result('success',token)))
     else:
         print ('Error: register save token fail!')
-        return HttpResponse(__get_result('save token fail'))
+        return HttpResponse(__get_result('save token fail')) #todo 
