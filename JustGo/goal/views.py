@@ -78,13 +78,14 @@ def join_goal(request):
         return HttpResponse(__get_result('fail'))
 
 #to post
+@csrf_exempt
 def exit_goal(request):
     '''
     return success if exit successfully
     '''
     try :
-        token = request.GET.get('token')
-        goal_id = request.GET.get('goal_id')
+        token = request.POST.get('token')
+        goal_id = request.POST.get('goal_id')
 
         if token is not None or token != '':
             if __check_token(token) is not True:
