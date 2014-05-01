@@ -11,13 +11,20 @@ error_codes ={
 	'414' : {"msg_en": 'Prameters missing',"msg_cn":""},
 	'500' : {"msg_en": 'Internal error happen',"msg_cn":""},
 	#login 
-	'001' : {"msg_en": "Email or password is not correct.","msg_cn":""}, 
+	'001' : {"msg_en": "Password is not correct","msg_cn":""}, 
+	'002' : {"msg_en": "No this user","msg_cn":""}, 
 	#register
 	'011' : {"msg_en": "Email is exist","msg_cn":""},
 	'012' : {"msg_en": "Password is too simple","msg_cn":""},
 	'013' : {"msg_en": "","msg_cn":""},
 	'014' : {"msg_en": "","msg_cn":""},
 }
+
+def get_page_result(key,result=None):
+	if key == '200' or key == 200:
+		return str('{"code":"'+key+'","result":'+result+'}')
+	else:
+		return str('{"code":"'+key+'","result":'+get_result(key)+'}')
 
 def get_config(key):
     config = {
@@ -30,7 +37,7 @@ def get_config(key):
 def get_result(code=None):
 	if(type(code)==int):
 		code = "%03d"%code
-	if(code!=None and error_codes.has_key(code)):
+	if(code!=None and code in error_codes):
 		return json.dumps(error_codes[code])
 	else:
 		return None
@@ -40,9 +47,11 @@ def dumps_error_config():
 
 if __name__ == '__main__':
 	if len(sys.argv) == 1:
-		print 'please give function you want to access...'
+		print('please give function you want to access...')
 		sys.exit(0)
 	if 'dumps' == sys.argv[1]:
-		print dumps_error_config()
+		print(dumps_error_config())
 	elif 'config_test' == sys.argv[1]:
-		get_config(001)
+		pass
+	elif 'result' == sys.argv[1]:
+		print(get_page_result('404'))

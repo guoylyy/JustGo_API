@@ -2,9 +2,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from user.models import *
 from uploadfile.models import *
-from config import get_config
+from config import get_config,get_page_result
 import simplejson
-
 import hashlib
 import datetime
 import time
@@ -19,36 +18,35 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        print request.read()
+        if len(User.objects.filter(email=email)) > 0:
+            return HttpResponse(get_page_result('011'))
         default_portrait = __get_default_portrait()
         new_user = User(name = username, password = password, portrait = default_portrait, email = email)
         new_user.save()
         if new_user.id is not None:
-            # perform login method once registered
             return __perform_login(new_user)
+        else:
+            return HttpResponse(get_page_result('500'))
     except Exception as e:
-        print (e)
-        return HttpResponse(__get_result('exception occurs'))
-
+        return HttpResponse(get_page_result('500'))
 
 @csrf_exempt
 def login(request):
     try :
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         users = User.objects.filter(name=username)
         if len(users) > 0:
             user = users[0]
             if user.password == password:
                 return __perform_login(user)
             else:
-                return HttpResponse(__get_result('wrong password'))
+                return HttpResponse(get_page_result('001'))
         else:
-            return HttpResponse(__get_result('no user'))
+            return HttpResponse(get_page_result('002'))
     except Exception as e:
         print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 @csrf_exempt
 def login_status(request):
