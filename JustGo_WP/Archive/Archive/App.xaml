@@ -1,0 +1,36 @@
+<Application x:Class="Archive.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             d1p1:Ignorable="d"
+             xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:uriMapper="clr-namespace:System.Windows.Navigation;assembly=Microsoft.Phone">
+    <!--应用程序资源-->
+    <Application.Resources>
+        <local:LocalizedStrings xmlns:local="clr-namespace:Archive"
+                                x:Key="LocalizedStrings" />
+        <SolidColorBrush x:Key="SystemBlueBrush"
+                         Color="#FF23A7FC" />
+        <SolidColorBrush x:Key="ContentBlackColorBrush"
+                         Color="#FF656565" />
+        <SolidColorBrush x:Key="MainPageContentBackBrush"
+                         Color="#FFECECEC"/>
+        <SolidColorBrush x:Key="ProfileButtonBackBrush"
+                         Color="#FFEF9F3D"/>
+        <SolidColorBrush x:Key="MainPageGoalTextBrush"
+                         Color="#FF0D5F7F"/>
+        <uriMapper:UriMapper x:Name="LoginPageMapper">
+            <uriMapper:UriMapping Uri="/Pages/LoginPage.xaml"
+                                  MappedUri="/MainPage.xaml"/>
+        </uriMapper:UriMapper>
+    </Application.Resources>
+    <Application.ApplicationLifetimeObjects>
+        
+        <shell:PhoneApplicationService Launching="Application_Launching"
+                                       Closing="Application_Closing"
+                                       Activated="Application_Activated"
+                                       Deactivated="Application_Deactivated" />
+    </Application.ApplicationLifetimeObjects>
+</Application>

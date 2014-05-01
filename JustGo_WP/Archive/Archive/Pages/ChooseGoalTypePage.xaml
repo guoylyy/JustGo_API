@@ -1,0 +1,53 @@
+﻿<phone:PhoneApplicationPage x:Class="Archive.Pages.ChooseGoalTypePage"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}"
+                            Foreground="{StaticResource PhoneForegroundBrush}"
+                            SupportedOrientations="Portrait"
+                            Orientation="Portrait"
+                            mc:Ignorable="d"
+                            shell:SystemTray.IsVisible="True"
+                            shell:SystemTray.Opacity="0.01"
+                            shell:SystemTray.ForegroundColor="#FF23A7FC">
+
+    <!--LayoutRoot 是包含所有页面内容的根网格-->
+    <Grid x:Name="LayoutRoot"
+          Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel 包含应用程序的名称和页标题-->
+        <TextBlock Text="Pick up your goal"
+                   FontFamily="Segoe WP Semibold"
+                   FontSize="22.667"
+                   Foreground="{StaticResource SystemBlueBrush}"
+                   Margin="24,27,0,0" />
+        <!--ContentPanel - 在此处放置其他内容-->
+        <Grid x:Name="ContentPanel"
+              Grid.Row="1">
+            <ListBox x:Name="GoalTypeListBox"
+                     ItemsSource="{Binding GoalTypes}"
+                     Foreground="{StaticResource SystemBlueBrush}"
+                     Tap="GoalTypeListBox_Tap">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"
+                                   FontSize="50"
+                                   Margin="22,0,0,0"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <!--<ListBoxItem Content="test text"
+                             FontSize="50"
+                             Margin="24,0,0,0" />-->
+            </ListBox>
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>
