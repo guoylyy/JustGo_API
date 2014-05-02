@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 
 # Quick-start development settings - unsuitable for production
@@ -36,6 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
+    'goal',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -47,6 +50,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+TEMPLATE_DIRS = {
+    os.path.join(BASE_DIR,'templaete')
+}
+
 ROOT_URLCONF = 'JustGo_Backend.urls'
 
 WSGI_APPLICATION = 'JustGo_Backend.wsgi.application'
@@ -57,8 +64,12 @@ WSGI_APPLICATION = 'JustGo_Backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': 'justgo',
+         'USER': 'wptest',
+         'PASSWORD': 'wptest',
+         'HOST': '115.28.4.78',
+         'PORT': '3306',
     }
 }
 
@@ -78,5 +89,48 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
 STATIC_URL = '/static/'
+
+
+GGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+                        '()': 'django.utils.log.RequireDebugFalse'
+                    
+        }
+            
+    },
+    'handlers': {
+        'null':{
+                        'level': 'DEBUG',
+                        'class': 'logging.NullHandler',
+                    
+        },
+        'mail_admins': {
+                        'level': 'ERROR',
+                        'filters': ['require_debug_false'],
+                        'class': 'django.utils.log.AdminEmailHandler'
+                    
+        }
+            
+    },
+    'loggers': {
+        'django': {
+                        'handlers': ['null'],
+                        'level': 'INFO',
+                        'propagate': True,
+                    
+        },
+        'django.request': {
+                        'handlers': ['mail_admins'],
+                        'level': 'ERROR',
+                        'propagate': False,
+                    
+        },
+            
+    }
+
+}
+

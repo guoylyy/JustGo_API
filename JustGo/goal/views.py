@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from goal.models import *
 from user.models import *
 from uploadfile.models import *
-from config import get_config
+from config import get_config,get_page_result
 import simplejson
 import datetime
 import time
@@ -16,11 +16,10 @@ def get_all_category(request):
     try :
         token = request.GET.get('token')
         cat_names = Category.objects.all().values('id', 'name')
-        return HttpResponse(simplejson.dumps(list(cat_names)))
+        return HttpResponse(get_page_result('200',simplejson.dumps(list(cat_names))))
     except Exception as e:
         print(e)
-        return HttpResponse(__get_result('fail'))
-
+        return HttpResponse(get_page_result('500'))
 
 def get_goal_list(request):
     '''
@@ -31,12 +30,12 @@ def get_goal_list(request):
         cat_id = request.GET.get('category_id')
         cat = Category.objects.filter(id=cat_id)
         if len(cat)==0:
-            return HttpResponse(__get_result('wrong category name'))
+            return HttpResponse(get_page_result('031'))
         goal_names = Goal.objects.filter(category=cat[0]).values('id', 'name', 'detail')
-        return HttpResponse(simplejson.dumps(list(goal_names)))
+        return HttpResponse(get_page_result('200',simplejson.dumps(list(goal_names))))
     except Exception as e:
         print(e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 def get_goal_list_all(request):
     '''
@@ -45,9 +44,9 @@ def get_goal_list_all(request):
     '''
     try :
         goals = Goal.objects.all().values('id', 'name', 'detail')
-        return HttpResponse(simplejson.dumps(list(goals)))
+        return HttpResponse(get_page_result('200',simplejson.dumps(list(goals))))
     except Exception as e:
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 @csrf_exempt
 def join_goal(request):
@@ -61,21 +60,21 @@ def join_goal(request):
 
         if token is not None or token != '':
             if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
+                return HttpResponse(get_page_result('022')) #invalid token
             if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
+                return HttpResponse(get_page_result('021')) #expired token
 
             goal = Goal.objects.filter(id=goal_id)[0]
             user_id = token.split(':')[-1]
             user = User.objects.filter(id=user_id)[0]
             user_goal = UserGoal(user=user, goal=goal, privacy=privacy)
             user_goal.save()
-            return HttpResponse(__get_result('success'))
+            return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(__get_result('fail'))
+            return HttpResponse(get_page_result('414')) #parameter missing
     except Exception as e :
         print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 #to post
 @csrf_exempt
@@ -89,20 +88,20 @@ def exit_goal(request):
 
         if token is not None or token != '':
             if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
+                return HttpResponse(get_page_result('022')) #invalid token
             if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
+                return HttpResponse(get_page_result('021')) #expired token
 
             goal = Goal.objects.filter(id=goal_id)[0]
             user_id = token.split(':')[-1]
             user = User.objects.filter(id=user_id)[0]
             UserGoal.objects.filter(user=user, goal=goal).delete()
-            return HttpResponse(__get_result('success'))
+            return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(__get_result('fail'))
+            return HttpResponse(get_page_result('414')) #parameter missing
     except Exception as e :
         print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 # TODO: add picture upload function
 @csrf_exempt
@@ -204,20 +203,20 @@ def make_comment(request):
 
         if token is not None or token != '':
             if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
+                return HttpResponse(get_page_result('022')) #invalid token
             if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
+                return HttpResponse(get_page_result('021')) #expired token
 
             user_id = token.split(':')[-1]
             uuser = User.objects.filter(id=user_id)[0]
             checkout = UserGoalCheckout.objects.filter(id=checkout_id)[0]
             UserGoalComment(checkout = checkout, comment = comment, comment_user = uuser).save()
-            return HttpResponse(__get_result('success'))
+            return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(__get_result('fail'))
+            return HttpResponse(get_page_result('414')) #parameter missing
     except Exception as e :
         print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 @csrf_exempt
 def make_awesome(request):
@@ -230,20 +229,20 @@ def make_awesome(request):
 
         if token is not None or token != '':
             if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
+                return HttpResponse(get_page_result('022')) #invalid token
             if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
+                return HttpResponse(get_page_result('021')) #expired token
 
             user_id = token.split(':')[-1]
             uuser = User.objects.filter(id=user_id)[0]
             checkout = UserGoalCheckout.objects.filter(id=checkout_id)[0]
             UserGoalAwesome(checkout = checkout, awesome_user = uuser).save()
-            return HttpResponse(__get_result('success'))
+            return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(__get_result('fail'))
+            return HttpResponse(get_page_result('414')) #parameter missing
     except Exception as e :
         print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 # TODO : to be finished
 def goal_status(request):

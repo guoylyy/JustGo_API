@@ -10,6 +10,7 @@ error_codes ={
 	'404' : {"msg_en": 'Service not found',"msg_cn":""},
 	'414' : {"msg_en": 'Prameters missing',"msg_cn":""},
 	'500' : {"msg_en": 'Internal error happen',"msg_cn":""},
+
 	#login 
 	'001' : {"msg_en": "Password is not correct","msg_cn":""}, 
 	'002' : {"msg_en": "No this user","msg_cn":""}, 
@@ -18,6 +19,12 @@ error_codes ={
 	'012' : {"msg_en": "Password is too simple","msg_cn":""},
 	'013' : {"msg_en": "","msg_cn":""},
 	'014' : {"msg_en": "","msg_cn":""},
+	#token
+	'021' : {"msg_en":"Token is expired","msg_cn":""},
+	'022' : {"msg_en":"Invalid token","msg_cn":""},
+
+	#goal
+	'031' : {"msg_en":"Wrong category name","msg_cn":""},
 }
 
 def get_page_result(key,result=None):

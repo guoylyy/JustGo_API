@@ -45,7 +45,6 @@ def login(request):
         else:
             return HttpResponse(get_page_result('002'))
     except Exception as e:
-        print (e)
         return HttpResponse(get_page_result('500'))
 
 @csrf_exempt
@@ -54,15 +53,14 @@ def login_status(request):
         token = request.POST.get('token')
         if token is not None or token != '':
             if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
+                return HttpResponse(get_page_result('022')) #invalid token
             if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
-            return HttpResponse(__get_result('success'))
+                return HttpResponse(get_page_result('021')) #expired token
+            return HttpResponse(get_page_result('200'))
         else:
-            return HttpResponse(__get_result('fail'))
+            return HttpResponse(get_page_result('414')) #parameter missing
     except Exception as e:
-        print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 @csrf_exempt
 def logout(request):
@@ -70,30 +68,28 @@ def logout(request):
         token = request.POST.get('token')
         if token is not None or token != '':
             if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
+                return HttpResponse(get_page_result('022')) #invalid token
             if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
+                return HttpResponse(get_page_result('021')) #expired token
             rst = UserToken.objects.filter(token = token).delete()
-            return HttpResponse(__get_result('success'))
+            return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(__get_result('fail'))
+            return HttpResponse(get_page_result('414')) #parameter missing
     except Exception as e:
-        print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 def data_pull(request):
     try :
         token = request.GET.get('token')
         if token is not None or token != '':
-            # check token
             if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
+                return HttpResponse(get_page_result('022')) #invalid token
             if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
+                return HttpResponse(get_page_result('021')) #expired token
             md5, expire, user_id = token.split(":", 3)
             users = User.objects.filter(id=user_id)
             if len(users) == 0:
-                return HttpResponse(__get_result('fail'))
+                return HttpResponse(get_page_result('404'))
 
             # render user data
             user, data = users[0], {}
@@ -101,16 +97,15 @@ def data_pull(request):
             data['email'] = user.email
             portrait = user.portrait
             data['portrait_path'] = portrait.file_name
-            return HttpResponse(simplejson.dumps(str(data)))
+            return HttpResponse(get_page_result('200'simplejson.dumps(str(data))))
         else :
-            return HttpResponse(__get_result('fail'))
+            return HttpResponse(get_page_result('414')) #parameter missing
     except Exception as e:
-        print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 ######################################################
-## private functions start here
-
+# private functions start here
+#
 def __get_token_result(result,token):
     return str("{\"result\":\""+result+"\",\"token\":\""+token+"\"}")
 
@@ -207,5 +202,7 @@ def __perform_login(user):
     if save_result is True:
         return HttpResponse(get_page_result('200',__get_token_result('success',token)))
     else:
-        print ('Error: register save token fail!')
+        print ('Error: register save token fail!') #log support
         return HttpResponse(__get_result('save token fail')) #todo 
+# Private function ends
+###############################################

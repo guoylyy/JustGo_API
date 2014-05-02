@@ -15,7 +15,6 @@ class User(models.Model):
 - user_star is followed by user_fan
 - deprecated: flag whether the follow relationship is still in use
 '''
-
 class Follow(models.Model):
     user_star = models.ForeignKey(User, related_name='user_star_set')
     user_fan = models.ForeignKey(User, related_name='user_fan_set')
