@@ -33,9 +33,9 @@ def register(request):
 @csrf_exempt
 def login(request):
     try :
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
-        users = User.objects.filter(name=username)
+        users = User.objects.filter(email=email)
         if len(users) > 0:
             user = users[0]
             if user.password == password:
@@ -93,11 +93,12 @@ def data_pull(request):
 
             # render user data
             user, data = users[0], {}
+            data['id'] = user.id
             data['username'] = user.name
             data['email'] = user.email
             portrait = user.portrait
             data['portrait_path'] = portrait.file_name
-            return HttpResponse(get_page_result('200'simplejson.dumps(str(data))))
+            return HttpResponse(get_page_result('200',simplejson.dumps(str(data))))
         else :
             return HttpResponse(get_page_result('414')) #parameter missing
     except Exception as e:

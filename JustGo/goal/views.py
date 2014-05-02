@@ -54,21 +54,21 @@ def join_goal(request):
     return success if join successfully
     '''
     try :
-        token = request.GET.get('token')
-        goal_id = request.GET.get('goal_id')
-        privacy = request.GET.get('privacy')
-
+        token = request.POST.get('token')
+        goal_id = request.POST.get('goal_id')
+        privacy = request.POST.get('privacy')
         if token is not None or token != '':
             if __check_token(token) is not True:
                 return HttpResponse(get_page_result('022')) #invalid token
             if __check_expire(token) is not True:
                 return HttpResponse(get_page_result('021')) #expired token
 
-            goal = Goal.objects.filter(id=goal_id)[0]
+            goal = Goal.objects.get(id=goal_id)
             user_id = token.split(':')[-1]
-            user = User.objects.filter(id=user_id)[0]
-            user_goal = UserGoal(user=user, goal=goal, privacy=privacy)
-            user_goal.save()
+            user = User.objects.get(id=user_id)
+            if(len(UserGoal.objects.filter(user=user,goal=goal))==0):
+                user_goal = UserGoal(user=user, goal=goal, privacy=privacy)
+                user_goal.save()
             return HttpResponse(get_page_result('200'))
         else :
             return HttpResponse(get_page_result('414')) #parameter missing

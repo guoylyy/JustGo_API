@@ -28,6 +28,5 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'JustGo.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-
     url(r'^admin/', include(admin.site.urls)),
 ) + user_patterns + goal_patterns

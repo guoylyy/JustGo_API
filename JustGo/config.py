@@ -25,9 +25,10 @@ error_codes ={
 
 	#goal
 	'031' : {"msg_en":"Wrong category name","msg_cn":""},
+	'032' : {"msg_en":"Can't join this goal","msg_cn":""},
 }
 
-def get_page_result(key,result=None):
+def get_page_result(key,result=''):
 	if key == '200' or key == 200:
 		return str('{"code":"'+key+'","result":'+result+'}')
 	else:
