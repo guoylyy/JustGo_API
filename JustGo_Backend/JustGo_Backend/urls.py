@@ -1,7 +1,11 @@
 from django.conf.urls import patterns, include, url
 import JustGo_Backend.settings as settings
 from django.contrib import admin
-admin.autodiscover()
+#admin.autodiscover()
+
+users_url = patterns('users.views',
+    url(r'^users$','index'),
+)
 
 urlpatterns = patterns('',
     # Examples:
@@ -10,4 +14,4 @@ urlpatterns = patterns('',
 
     #    url(r'^admin/', include(admin.site.urls)),
      url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT }),  
-)
+) + users_url
