@@ -22,6 +22,7 @@ error_codes ={
 	#token
 	'021' : {"msg_en":"Token is expired","msg_cn":""},
 	'022' : {"msg_en":"Invalid token","msg_cn":""},
+	'023' : {"msg_en":"Save token fail","msg_cn":""},
 
 	#goal
 	'031' : {"msg_en":"Wrong category name","msg_cn":""},

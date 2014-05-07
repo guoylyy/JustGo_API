@@ -9,6 +9,7 @@ class User(models.Model):
     portrait = models.ForeignKey(UploadFile)
     email = models.EmailField(unique=True,max_length=254)    
     date_create = models.DateTimeField(auto_now_add=True)
+    auth_token = models.CharField(max_length=200)
 
 '''
 - user_star is followed by user_fan

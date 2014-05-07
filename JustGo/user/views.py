@@ -3,17 +3,14 @@ from django.http import HttpResponse
 from user.models import *
 from uploadfile.models import *
 from config import get_config,get_page_result
+from helper import check_token
 import simplejson
 import hashlib
 import datetime
 import time
 
-# Create your views here.
-
 @csrf_exempt
 def register(request):
-    # TODO: prevent DDoS register
-    # TODO: password encrypted in the app
     try :
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -45,6 +42,7 @@ def login(request):
         else:
             return HttpResponse(get_page_result('002'))
     except Exception as e:
+        print(e)
         return HttpResponse(get_page_result('500'))
 
 @csrf_exempt
@@ -108,13 +106,8 @@ def data_pull(request):
 # private functions start here
 #
 def __get_token_result(result,token):
-    return str("{\"result\":\""+result+"\",\"token\":\""+token+"\"}")
+    return str("{\"token\":\""+token+"\"}")
 
-def __get_result(result):
-    return str("{\"result\":\""+result+"\"}")
-
-def __get_error(msg_num):
-    return str("{\"error\":\""+msg_num+"\"}")
 
 def __make_token(id):
     # generate expire date
@@ -198,12 +191,12 @@ def __perform_login(user):
     '''
     generate token and return
     '''
-    token = __make_token(user.id)
-    save_result = __insert_token(user, token)
-    if save_result is True:
-        return HttpResponse(get_page_result('200',__get_token_result('success',token)))
-    else:
-        print ('Error: register save token fail!') #log support
-        return HttpResponse(__get_result('save token fail')) #todo 
+    try:
+        user.auth_token = __make_token(user.id) 
+        user.save()
+        return HttpResponse(get_page_result('200',__get_token_result('success',user.auth_token)))
+    except Exception as e:
+        print(e)
+        return HttpResponse(get_page_result('023'))
 # Private function ends
 ###############################################
