@@ -4,17 +4,16 @@ from goal.models import *
 from user.models import *
 from uploadfile.models import *
 from config import get_config,get_page_result
+from helper import check_token
 import simplejson
 import datetime
 import time
 
-# Create your views here.
 def get_all_category(request):
     '''
     return json list of all names of category
     '''
     try :
-        token = request.GET.get('token')
         cat_names = Category.objects.all().values('id', 'name')
         return HttpResponse(get_page_result('200',simplejson.dumps(list(cat_names))))
     except Exception as e:
@@ -57,12 +56,8 @@ def join_goal(request):
         token = request.POST.get('token')
         goal_id = request.POST.get('goal_id')
         privacy = request.POST.get('privacy')
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(get_page_result('022')) #invalid token
-            if __check_expire(token) is not True:
-                return HttpResponse(get_page_result('021')) #expired token
-
+        response = check_token(token)
+        if response is True:
             goal = Goal.objects.get(id=goal_id)
             user_id = token.split(':')[-1]
             user = User.objects.get(id=user_id)
@@ -71,7 +66,7 @@ def join_goal(request):
                 user_goal.save()
             return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(get_page_result('414')) #parameter missing
+            return response
     except Exception as e :
         print (e)
         return HttpResponse(get_page_result('500'))
@@ -85,20 +80,15 @@ def exit_goal(request):
     try :
         token = request.POST.get('token')
         goal_id = request.POST.get('goal_id')
-
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(get_page_result('022')) #invalid token
-            if __check_expire(token) is not True:
-                return HttpResponse(get_page_result('021')) #expired token
-
+        response = check_token(token)
+        if response is True:
             goal = Goal.objects.filter(id=goal_id)[0]
             user_id = token.split(':')[-1]
             user = User.objects.filter(id=user_id)[0]
             UserGoal.objects.filter(user=user, goal=goal).delete()
             return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(get_page_result('414')) #parameter missing
+            return response
     except Exception as e :
         print (e)
         return HttpResponse(get_page_result('500'))
@@ -112,13 +102,8 @@ def sync_push(request):
     try :
         token = request.GET.get('token')
         data = request.GET.get('data')
-
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
-            if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
-
+        response = check_token(token)
+        if response is True:
             user_id = token.split(':')[-1]
             check_list = simplejson.loads(data)
             print (check_list)
@@ -128,12 +113,12 @@ def sync_push(request):
                 user_goal = UserGoal.objects.filter(user=user, goal=goal)[0]
                 check_date = datetime.datetime.fromtimestamp(int(item['check_date']))
                 UserGoalCheckout(user_goal=user_goal, comment=item['comment'], date_check=check_date).save()
-            return HttpResponse(__get_result('success'))
+            return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(__get_result('fail'))
+            return response
     except Exception as e :
         print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 
 # TODO: generate picture path 
@@ -157,13 +142,8 @@ def sync_pull(request):
     '''
     try :
         token = request.POST.get('token')
-
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(__get_result('invalid token'))
-            if __check_expire(token) is not True:
-                return HttpResponse(__get_result('expired token'))
-
+        response = check_token(token)
+        if response is True:
             user_id = token.split(':')[-1]
             uuser = User.objects.filter(id=user_id)[0]
             all_user_goals = UserGoal.objects.filter(user=uuser)
@@ -186,10 +166,10 @@ def sync_pull(request):
                 res_data.append(tmp_dict)
             return HttpResponse(simplejson.dumps(res_data))
         else :
-            return HttpResponse(__get_result('fail'))
+            return response
     except Exception as e :
         print (e)
-        return HttpResponse(__get_result('fail'))
+        return HttpResponse(get_page_result('500'))
 
 @csrf_exempt
 def make_comment(request):
@@ -200,20 +180,15 @@ def make_comment(request):
         token = request.POST.get('token')
         checkout_id = request.POST.get('checkout_id')
         comment = request.POST.get('comment')
-
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(get_page_result('022')) #invalid token
-            if __check_expire(token) is not True:
-                return HttpResponse(get_page_result('021')) #expired token
-
+        response = check_token(token)
+        if response is True:
             user_id = token.split(':')[-1]
             uuser = User.objects.filter(id=user_id)[0]
             checkout = UserGoalCheckout.objects.filter(id=checkout_id)[0]
             UserGoalComment(checkout = checkout, comment = comment, comment_user = uuser).save()
             return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(get_page_result('414')) #parameter missing
+            return response
     except Exception as e :
         print (e)
         return HttpResponse(get_page_result('500'))
@@ -226,20 +201,15 @@ def make_awesome(request):
     try :
         token = request.POST.get('token')
         checkout_id = request.POST.get('checkout_id')
-
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(get_page_result('022')) #invalid token
-            if __check_expire(token) is not True:
-                return HttpResponse(get_page_result('021')) #expired token
-
+        response = check_token(token)
+        if response is True:
             user_id = token.split(':')[-1]
             uuser = User.objects.filter(id=user_id)[0]
             checkout = UserGoalCheckout.objects.filter(id=checkout_id)[0]
             UserGoalAwesome(checkout = checkout, awesome_user = uuser).save()
             return HttpResponse(get_page_result('200'))
         else :
-            return HttpResponse(get_page_result('414')) #parameter missing
+            return response
     except Exception as e :
         print (e)
         return HttpResponse(get_page_result('500'))
@@ -250,78 +220,7 @@ def goal_status(request):
     '''
     try :
         checkout_id = request.GET.get('checkout_id')
-        return HttpResponse(__get_result('success'))
+        return HttpResponse(get_page_result('200'))
     except Exception as e :
         print (e)
-        return HttpResponse(__get_result('fail'))
-
-
-###############################################################
-## private functions start here
-
-def __get_result(result):
-    return str("{\"result\":\""+result+"\"}")
-
-def __get_error(msg_num):
-    return str("{\"error\":\""+msg_num+"\"}")
-
-def __check_token(token):
-    '''
-    return
-    - True for matched token
-    - False for invalid token
-    '''
-    try :
-        md5, expire, id = token.split(":", 3)
-        tokens = UserToken.objects.filter(user_id = id)
-        if (len(tokens) > 0):
-            return True
-        print ('Token auth Fail: id %s user token not match' % id)
-        return False
-    except Exception as e:
-        print (e)
-        return False
-
-def __check_expire(token):
-    '''
-    return 
-    - True for expire token
-    - False for valid token
-    - None for error token
-    '''
-    try :
-        md5, expire, id = token.split(":", 3)
-        if int(expire) < time.time():
-            return False
-        return True
-    except Exception as e:
-        print (e)
-        return None
-
-def __get_default_portrait():
-    '''
-    return UploadFile object
-    '''
-    try :
-        name = get_config('default_portrait_name')
-        portrait = UploadFile(file_name=name)
-        portrait.save()
-        if portrait.id is not None:
-            return portrait
-        print ('Error: Default portrait save fail!')
-        return None
-    except Exception as e:
-        print (e)
-        return None
-
-def __perform_login(user):
-    '''
-    generate token and return
-    '''
-    token = __make_token(user.id)
-    save_result = __insert_token(user, token)
-    if save_result is True:
-        return HttpResponse(__get_result(token))
-    else:
-        print ('Error: register save token fail!')
-        return HttpResponse(__get_result('save token fail'))
+        return HttpResponse(get_page_result('500'))
