@@ -49,14 +49,11 @@ def login(request):
 def login_status(request):
     try :
         token = request.POST.get('token')
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(get_page_result('022')) #invalid token
-            if __check_expire(token) is not True:
-                return HttpResponse(get_page_result('021')) #expired token
-            return HttpResponse(get_page_result('200'))
+        response = check_token(token)
+        if response is True:
+            return HttpResponse(get_page_result('200',"null"))
         else:
-            return HttpResponse(get_page_result('414')) #parameter missing
+            return response
     except Exception as e:
         return HttpResponse(get_page_result('500'))
 
@@ -64,31 +61,27 @@ def login_status(request):
 def logout(request):
     try :
         token = request.POST.get('token')
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(get_page_result('022')) #invalid token
-            if __check_expire(token) is not True:
-                return HttpResponse(get_page_result('021')) #expired token
-            rst = UserToken.objects.filter(token = token).delete()
-            return HttpResponse(get_page_result('200'))
-        else :
-            return HttpResponse(get_page_result('414')) #parameter missing
+        response = check_token(token)
+        if response is True:
+            user = User.objects.filter(auth_token=token)[0]
+            user.auth_token = ''
+            user.save()
+            return HttpResponse(get_page_result('200',"null"))
+        else:
+            return response
     except Exception as e:
+        print(e)
         return HttpResponse(get_page_result('500'))
 
 def data_pull(request):
     try :
         token = request.GET.get('token')
-        if token is not None or token != '':
-            if __check_token(token) is not True:
-                return HttpResponse(get_page_result('022')) #invalid token
-            if __check_expire(token) is not True:
-                return HttpResponse(get_page_result('021')) #expired token
+        response = check_token(token)
+        if response is True:
             md5, expire, user_id = token.split(":", 3)
             users = User.objects.filter(id=user_id)
             if len(users) == 0:
                 return HttpResponse(get_page_result('404'))
-
             # render user data
             user, data = users[0], {}
             data['id'] = user.id
@@ -97,8 +90,8 @@ def data_pull(request):
             portrait = user.portrait
             data['portrait_path'] = portrait.file_name
             return HttpResponse(get_page_result('200',simplejson.dumps(str(data))))
-        else :
-            return HttpResponse(get_page_result('414')) #parameter missing
+        else:
+            return response
     except Exception as e:
         return HttpResponse(get_page_result('500'))
 
@@ -115,61 +108,12 @@ def __make_token(id):
     expire_time = (datetime.datetime.now() + datetime.timedelta(expire_day,0)).timetuple();
     expire_datetime = time.mktime(expire_time)
     expire = str(int(expire_datetime))
-
     # token
     s = '%s:%s:%s' % (id, expire, get_config('md5_random'))
     md5 = hashlib.md5(s.encode('utf-8')).hexdigest()
 
     return md5+":"+expire+":"+str(id)
 
-
-def __insert_token(id, token):
-    '''
-    return True if store successfully
-    '''
-    try :
-        new_token = UserToken(user_id = id, token = token)
-        new_token.save()
-        if new_token.id is not None:
-            return True
-        print ('Error: token insert fail!')
-        return False
-    except Exception as e:
-        print (e)
-        return False
-
-def __check_token(token):
-    '''
-    return
-    - True for matched token
-    - False for invalid token
-    '''
-    try :
-        md5, expire, id = token.split(":", 3)
-        tokens = UserToken.objects.filter(user_id = id)
-        if (len(tokens) > 0):
-            return True
-        print ('Token auth Fail: id %s user token not match' % id)
-        return False
-    except Exception as e:
-        print (e)
-        return False
-
-def __check_expire(token):
-    '''
-    return 
-    - True for expire token
-    - False for valid token
-    - None for error token
-    '''
-    try :
-        md5, expire, id = token.split(":", 3)
-        if int(expire) < time.time():
-            return False
-        return True
-    except Exception as e:
-        print (e)
-        return None
 
 def __get_default_portrait():
     '''

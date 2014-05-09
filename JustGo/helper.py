@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from user.models import *
-
+from config import get_page_result
+import time
 
 def check_token(token):
     """
@@ -22,8 +23,8 @@ def __check_token(token):
     '''
     try :
         md5, expire, id = token.split(":", 3)
-        tokens = UserToken.objects.filter(user_id = id)
-        if (len(tokens) > 0):
+        user_token = User.objects.get(id=id).auth_token
+        if user_token == token:
             return True
         print ('Token auth Fail: id %s user token not match' % id)
         return False
