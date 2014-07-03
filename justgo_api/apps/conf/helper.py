@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-from user.models import *
-from config import get_page_result
+from apps.users.models import *
+from apps.conf.config import get_page_result
 import time
 
 def check_token(token):

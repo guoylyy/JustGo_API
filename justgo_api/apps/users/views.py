@@ -1,9 +1,8 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from user.models import *
-from uploadfile.models import *
-from config import get_config,get_page_result
-from helper import check_token
+from apps.users.models import *
+from apps.conf.config import get_config,get_page_result
+from apps.conf.helper import check_token
 import simplejson
 import hashlib
 import datetime
