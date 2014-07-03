@@ -2,16 +2,15 @@
 
 Server side for JustGo app.
 
-TODO
+
+DOC
 ====
-- Upload and Download picture
-- Delete : add flag but not delete item
+- /doc
 
 Moduels
 ======
-- user
-- goal
-- uploadfile
+- apps/users
+- apps/goals
 
 Packages
 ========
