@@ -16,8 +16,8 @@ def register(request):
         password = request.POST.get('password')
         if len(User.objects.filter(email=email)) > 0:
             return HttpResponse(get_page_result('011'))
-        default_portrait = __get_default_portrait()
-        new_user = User(name = username, password = password, portrait = default_portrait, email = email)
+        #default_portrait = __get_default_portrait()
+        new_user = User(name = username, password = password,  email = email)
         new_user.save()
         if new_user.id is not None:
             return __perform_login(new_user)
