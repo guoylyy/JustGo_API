@@ -1,0 +1,50 @@
+{
+    "200": {
+        "msg_cn": "", 
+        "msg_en": "Success"
+    }, 
+    "400": {
+        "msg_cn": "", 
+        "msg_en": "Bad request"
+    }, 
+    "401": {
+        "msg_cn": "", 
+        "msg_en": "You are not authoried to access this service"
+    }, 
+    "403": {
+        "msg_cn": "", 
+        "msg_en": "Forbidden by server"
+    }, 
+    "404": {
+        "msg_cn": "", 
+        "msg_en": "Service not found"
+    }, 
+    "414": {
+        "msg_cn": "", 
+        "msg_en": "Prameters missing"
+    }, 
+    "500": {
+        "msg_cn": "", 
+        "msg_en": "Internal error happen"
+    }, 
+    "011": {
+        "msg_cn": "", 
+        "msg_en": "Email is exist"
+    }, 
+    "001": {
+        "msg_cn": "", 
+        "msg_en": "Email or password is not correct."
+    }, 
+    "013": {
+        "msg_cn": "", 
+        "msg_en": ""
+    }, 
+    "014": {
+        "msg_cn": "", 
+        "msg_en": ""
+    }, 
+    "012": {
+        "msg_cn": "", 
+        "msg_en": "Password is too simple"
+    }
+}
