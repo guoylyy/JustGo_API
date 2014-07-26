@@ -16,7 +16,6 @@ def register(request):
         password = request.POST.get('password')
         if len(User.objects.filter(email=email)) > 0:
             return HttpResponse(get_page_result('011'))
-        #default_portrait = __get_default_portrait()
         new_user = User(name = username, password = password,  email = email)
         new_user.save()
         if new_user.id is not None:
@@ -69,7 +68,6 @@ def logout(request):
         else:
             return response
     except Exception as e:
-        print(e)
         return HttpResponse(get_page_result('500'))
 
 def data_pull(request):
@@ -86,12 +84,13 @@ def data_pull(request):
             data['id'] = user.id
             data['username'] = user.name
             data['email'] = user.email
-            portrait = user.portrait
-            data['portrait_path'] = portrait.file_name
+            #portrait = user.portrait
+            #data['portrait_path'] = portrait.file_name
             return HttpResponse(get_page_result('200',simplejson.dumps(str(data))))
         else:
             return response
     except Exception as e:
+        print(e)
         return HttpResponse(get_page_result('500'))
 
 ######################################################

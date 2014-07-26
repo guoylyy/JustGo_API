@@ -1,5 +1,9 @@
 import os
+import sys
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(BASE_DIR, 'justgo_api/apps/'))
+
 SECRET_KEY = 'mn7g50%jo5im_)fuwq-em+k-@o@lj3_0jf!bs4x_yk(3zslm76'
 
 DEBUG = True
