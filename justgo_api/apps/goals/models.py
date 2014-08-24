@@ -38,5 +38,3 @@ class UserGoalAwesome(models.Model):
     awesome_user = models.ForeignKey(User)
     checkout = models.ForeignKey(UserGoalCheckout)
     date_create = models.DateTimeField(auto_now=True)
-
-
