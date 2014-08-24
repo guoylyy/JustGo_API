@@ -35,15 +35,20 @@ namespace Archive.Pages
             //DoneImage.Margin = new Thickness(0, 10, (LayoutRoot.ActualWidth - TestBlock.ActualWidth) / 2 - 35, 0);
         }
 
-        private void DoneGrid_OnTap(object sender, GestureEventArgs e)
+        private void DoneGrid_OnTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             Global.SelectedGoal.IsFinished = true;
             Global.SelectedGoal.PassedDays++;
         }
 
-        private void BottomGrid_Tap(object sender, GestureEventArgs e)
+        private void BottomGrid_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/RecordsForGoalPage.xaml",UriKind.Relative));
+        }
+
+        private void MoreComments_OnClick(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/CommentsPage.xaml", UriKind.Relative));
         }
     }
 }

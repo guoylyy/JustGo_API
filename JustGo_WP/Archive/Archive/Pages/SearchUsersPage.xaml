@@ -1,0 +1,93 @@
+﻿<phone:PhoneApplicationPage x:Class="Archive.Pages.SearchUsersPage"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:viewModel="clr-namespace:Archive.ViewModel"
+                            xmlns:converter="clr-namespace:Archive.Converter"
+                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}"
+                            Foreground="{StaticResource PhoneForegroundBrush}"
+                            SupportedOrientations="Portrait"
+                            Orientation="Portrait"
+                            mc:Ignorable="d"
+                            shell:SystemTray.IsVisible="True"
+                            shell:SystemTray.ForegroundColor="#FF23A7FC"
+                            shell:SystemTray.Opacity="0.01">
+
+    <phone:PhoneApplicationPage.Resources>
+        <converter:CountToGoalStringConverter x:Key="CountToGoalStringConverter"/>
+    </phone:PhoneApplicationPage.Resources>
+    
+    <!--LayoutRoot 是包含所有页面内容的根网格-->
+    <Grid x:Name="LayoutRoot"
+          Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel 包含应用程序的名称和页标题-->
+        <TextBlock Text="SEARCH USERS"
+                   FontFamily="Segoe WP Semibold"
+                   FontSize="22"
+                   Foreground="{StaticResource SystemBlueBrush}"
+                   Margin="24,30,0,0" />
+
+        <!--ContentPanel - 在此处放置其他内容-->
+        <Grid x:Name="ContentPanel"
+              Grid.Row="1"
+              Margin="12,0,12,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBox Text="小"
+                     Foreground="Black"
+                     Background="{StaticResource MainPageContentBackBrush}"
+                     VerticalAlignment="Top"
+                     Margin="0,10,0,0" />
+
+            <phone:LongListSelector Grid.Row="1"
+                                    ItemsSource="{Binding SearchedUsers}">
+                <phone:LongListSelector.DataContext>
+                    <viewModel:SearchUsersViewModel />
+                </phone:LongListSelector.DataContext>
+
+                <phone:LongListSelector.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="15,15,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Width="80"
+                                   Height="80"
+                                   Source="{Binding ImageSource}"
+                                   Margin="0,0,20,0" />
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="{Binding UserName}"
+                                           Foreground="{StaticResource ContentBlackColorBrush}"
+                                           FontSize="30" />
+                                <TextBlock Grid.Row="1"
+                                           Foreground="{StaticResource ContentGrayColorBrush}"
+                                           FontSize="20"
+                                           Text="{Binding GoalCount,Converter={StaticResource CountToGoalStringConverter}}" />
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </phone:LongListSelector.ItemTemplate>
+            </phone:LongListSelector>
+
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>

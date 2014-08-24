@@ -16,6 +16,95 @@
                             Orientation="Portrait"
                             shell:SystemTray.IsVisible="True"
                             shell:SystemTray.Opacity="0.01">
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="ButtonStyle1"
+               TargetType="Button">
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource PhoneForegroundBrush}" />
+            <Setter Property="Foreground"
+                    Value="{StaticResource PhoneForegroundBrush}" />
+            <Setter Property="BorderThickness"
+                    Value="{StaticResource PhoneBorderThickness}" />
+            <Setter Property="FontFamily"
+                    Value="{StaticResource PhoneFontFamilySemiBold}" />
+            <Setter Property="FontSize"
+                    Value="{StaticResource PhoneFontSizeMedium}" />
+            <Setter Property="Padding"
+                    Value="10,5,10,6" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver" />
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground"
+                                                                           Storyboard.TargetName="ContentContainer">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{StaticResource PhoneButtonBasePressedForegroundBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                           Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{StaticResource PhoneAccentBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground"
+                                                                           Storyboard.TargetName="ContentContainer">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{StaticResource PhoneDisabledBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                           Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{StaticResource PhoneDisabledBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                           Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="Transparent" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="ButtonBackground"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="0"
+                                    Margin="{StaticResource PhoneTouchTargetOverhang}">
+                                <Grid>
+                                    <Path Width="60"
+                                          HorizontalAlignment="Left"
+                                          Data="F1M19.98,9.457C19.98,9.457 25.556,9.457 25.556,9.457 25.556,9.457 25.556,1.108 25.556,1.108 25.556,1.108 18.43,1.108 18.43,1.108 18.43,1.108 18.43,1.144 18.43,1.144 9.074,1.471 7.153,6.693 6.986,12.179 6.986,12.179 6.967,12.179 6.967,12.179 6.967,12.179 6.967,17.978 6.967,17.978 6.967,17.978 1.391,17.978 1.391,17.978 1.391,17.978 1.391,26.328 1.391,26.328 1.391,26.328 6.967,26.328 6.967,26.328 6.967,26.328 6.967,51.719 6.967,51.719 6.967,51.719 16.971,51.719 16.971,51.719 16.971,51.719 16.971,26.328 16.971,26.328 16.971,26.328 24.139,26.328 24.139,26.328 24.139,26.328 25.556,17.978 25.556,17.978 25.556,17.978 16.971,17.978 16.971,17.978 16.971,17.978 16.971,12.796 16.971,12.796 16.971,10.951 18.21,9.457 19.98,9.457z"
+                                          Fill="{TemplateBinding Foreground}"
+                                          Margin="30,9,0,-9"
+                                          UseLayoutRounding="False" />
+                                    <ContentControl x:Name="ContentContainer"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                    Content="{TemplateBinding Content}"
+                                                    Foreground="{TemplateBinding Foreground}"
+                                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    Padding="{TemplateBinding Padding}"
+                                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                    Margin="30,0,0,0" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
 
     <!--<phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="#FFB1D4E8"
@@ -72,8 +161,8 @@
                                     </StackPanel>-->
                                 </ContentPresenter>
                                 <primitives:PivotHeadersControl x:Name="HeadersListElement"
-                                                                        Foreground="White"
-                                                                        Grid.Row="1" />
+                                                                Foreground="White"
+                                                                Grid.Row="1" />
                                 <ItemsPresenter x:Name="PivotItemPresenter"
                                                 Margin="{TemplateBinding Padding}"
                                                 Grid.Row="2" />
@@ -81,7 +170,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-             </Style>
+            </Style>
         </Grid.Resources>
 
         <!--ContentPanel - 在此处放置其他内容-->
@@ -99,7 +188,7 @@
             </phone:Pivot.HeaderTemplate>-->
             <phone:PivotItem Name="GoalsPivotItem"
                              Header="My goals"
-                             Margin="0,28,0,0">
+                             Margin="0,28,0,60">
                 <phone:LongListSelector ItemsSource="{Binding MyGoals}"
                                         Background="{StaticResource MainPageContentBackBrush}"
                                         Tap="GoalList_OnTap">
@@ -268,15 +357,39 @@
                              Margin="0,28,0,0">
                 <Grid Background="{StaticResource SystemBlueBrush}"
                       Margin="0,-1,0,0">
-                    <Image Margin="0,-132,0,330"
-                           Source="/Assets\MainPage\DefaulHead.jpg"
+                    <Grid x:Name="UnLoginGrid" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Button BorderBrush="#FF0C607C"
+                                Height="100"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Left"
+                                Width="375"
+                                Margin="10,0,0,0"
+                                Style="{StaticResource ButtonStyle1}"
+                                Content="Facebook login"
+                                Foreground="#FF0C607C" />
+                        <TextBlock Text="With login, you can follow users, give comments and sync your goals on the cloud."
+                                   Foreground="#FF0C607C" 
+                                   Margin="24,12,0,0"
+                                   Grid.Row="1"
+                                   TextWrapping="Wrap"
+                                   Width="375"
+                                   HorizontalAlignment="Left"/>
+                    </Grid>
+
+                    <Image Margin="0,-132,0,298"
+                           Source="/Assets/MainPage/DefaulHead.jpg"
                            Stretch="UniformToFill"
                            Opacity="0.15" />
                     <StackPanel>
                         <circleImage:CircleImage Width="150"
                                                  Height="150"
                                                  Source="/Assets/MainPage/DefaulHead.jpg"
-                                                 Margin="0,15,0,0" />
+                                                 Margin="0,15,0,0"
+                                                 Tap="headImage_OnTap" />
                         <TextBlock Text="我叫金将军"
                                    TextAlignment="Center"
                                    FontSize="24"
@@ -309,7 +422,8 @@
                                   Margin="0,-3,0,0" />
                             <Grid x:Name="FollowerGrid"
                                   Grid.Row="1"
-                                  Grid.Column="0">
+                                  Grid.Column="0"
+                                  Tap="FollowerGrid_OnTap">
                                 <TextBlock x:Name="FollowerBlock"
                                            Foreground="White"
                                            FontWeight="Bold"
@@ -333,7 +447,8 @@
                             </Grid>
                             <Grid x:Name="FollowingGrid"
                                   Grid.Row="1"
-                                  Grid.Column="2">
+                                  Grid.Column="2"
+                                  Tap="FollowingGrid_OnTap">
                                 <TextBlock Foreground="White"
                                            FontSize="18"
                                            FontFamily="Helvetica"
@@ -363,7 +478,8 @@
                                   Margin="14,9,0,155"
                                   HorizontalAlignment="Left"
                                   VerticalAlignment="Top"
-                                  Width="210">
+                                  Width="210"
+                                  Tap="NotificationsGrid_OnTap">
                                 <Rectangle Fill="{StaticResource ProfileButtonBackBrush}" />
                                 <TextBlock Foreground="White"
                                            FontSize="18"
@@ -387,7 +503,8 @@
                                   HorizontalAlignment="Right"
                                   VerticalAlignment="Top"
                                   Width="210"
-                                  Height="135">
+                                  Height="135"
+                                  Tap="FightingGrid_OnTap">
                                 <Rectangle Fill="{StaticResource ProfileButtonBackBrush}" />
                                 <TextBlock Foreground="White"
                                            FontSize="18"
@@ -409,7 +526,8 @@
                                   Margin="14,0,0,9"
                                   HorizontalAlignment="Left"
                                   VerticalAlignment="Bottom"
-                                  Width="210">
+                                  Width="210"
+                                  Tap="FriendsGrid_OnTap">
                                 <Rectangle Fill="{StaticResource ProfileButtonBackBrush}" />
                                 <TextBlock Foreground="White"
                                            FontSize="18"
@@ -427,11 +545,12 @@
                                       Margin="73,21,73,62"
                                       UseLayoutRounding="False" />
                             </Grid>
-                            <Grid Name="BadgesGrid"
+                            <Grid Name="AchievementsGrid"
                                   Margin="0,0,14,9"
                                   VerticalAlignment="Bottom"
                                   HorizontalAlignment="Right"
-                                  Width="210">
+                                  Width="210"
+                                  Tap="AchievementsGrid_OnTap">
                                 <Rectangle Fill="{StaticResource ProfileButtonBackBrush}" />
                                 <TextBlock Foreground="White"
                                            FontSize="18"
@@ -440,7 +559,7 @@
                                            LineHeight="18"
                                            TextAlignment="Center"
                                            TextWrapping="Wrap"
-                                           Text="Badges"
+                                           Text="Achivements"
                                            Margin="38,94,35,12" />
                                 <Path Data="F1M22.058,45.439C24.468,47.645 27.323,49.317 30.68,50.477 34.035,49.317 36.887,47.647 39.297,45.443 41.369,45.534 43.439,45.656 45.508,45.809 41.564,50.707 36.531,53.79 30.68,55.51 24.831,53.791 19.8,50.71 15.857,45.816 17.922,45.656 19.989,45.53 22.058,45.439z M54.33,37.948C54.33,37.948 59.968,37.948 59.968,37.948 59.968,37.948 56.729,45.538 56.729,45.538 56.729,45.538 59.968,48.5 59.968,48.5 59.968,48.5 48.676,48.5 48.676,48.5 48.676,48.5 48.676,45.752 48.676,45.752 50.08,45.882 51.483,46.028 52.886,46.191 52.886,46.191 54.33,46.358 54.33,46.358 54.33,46.358 54.33,44.905 54.33,44.905 54.33,44.905 54.33,37.948 54.33,37.948z M1.727,37.948C1.727,37.948 7.367,37.948 7.367,37.948 7.367,37.948 7.367,44.905 7.367,44.905 7.367,44.905 7.367,46.358 7.367,46.358 7.367,46.358 8.81,46.191 8.81,46.191 10.213,46.028 11.616,45.882 13.02,45.752 13.02,45.752 13.02,48.5 13.02,48.5 13.02,48.5 1.727,48.5 1.727,48.5 1.727,48.5 4.967,45.538 4.967,45.538 4.967,45.538 1.727,37.948 1.727,37.948z M30.954,33.008C38.365,33.016 45.756,33.531 53.129,34.529 53.129,37.988 53.129,41.446 53.129,44.905 37.891,43.233 23.068,43.233 8.661,44.905 8.661,41.446 8.661,37.988 8.661,34.529 16.112,33.5 23.542,33 30.954,33.008z M30.68,2.582C37.66,2.582 44.639,3.578 49.589,5.569 49.589,5.569 49.589,32.479 49.589,32.479 47.991,32.298 46.393,32.141 44.794,32.005 44.794,32.005 44.794,9.025 44.794,9.025 36.696,6.828 24.664,6.828 16.566,9.025 16.566,9.025 16.566,32.031 16.566,32.031 14.967,32.17 13.368,32.334 11.77,32.521 11.77,32.521 11.77,5.569 11.77,5.569 16.72,3.578 23.7,2.582 30.68,2.582z"
                                       Fill="White"

@@ -75,10 +75,13 @@ namespace Archive.Pages
 
                     //把Token写入本地文档中
                     JObject jObject = JObject.Parse(response);
-                    if ((string)jObject["result"] == "success")
+
+                    //todo:解析json
+                    if ((string)jObject["code"] == ServerApi.CorrectCode)
                     {
                         //保存Token并写入文件
-                        Global.Token = (string)jObject["token"];
+                        JObject resultJson = (JObject)jObject["result"];
+                        Global.Token = (string)resultJson["token"];
                         StaticMethods.WriteTokenAsync(Global.Token);
                         //导航到主界面
                         Dispatcher.BeginInvoke(() => NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative)));
@@ -87,13 +90,9 @@ namespace Archive.Pages
                         //    NavigationService.RemoveBackEntry();
                         //}
                     }
-                    else if((string)jObject["result"] == "no user")
+                    else if((string)jObject["code"] == ServerApi.LoginFailCode)
                     {
-                        MessageBox.Show("用户名不存在");
-                    }
-                    else
-                    {
-                        MessageBox.Show("密码错误");
+                        MessageBox.Show("用户名或密码错误");
                     }
                     
 

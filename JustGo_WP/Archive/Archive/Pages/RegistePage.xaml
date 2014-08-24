@@ -45,7 +45,8 @@
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
                        Margin="23,46,0,0" />
-            <TextBox x:Name="UserNameBox" HorizontalAlignment="Left"
+            <TextBox x:Name="UserNameBox"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Top"
                      Margin="132,21,0,0"
                      Width="301" />
@@ -57,11 +58,13 @@
                        Margin="23,131,0,0"
                        Width="92"
                        TextAlignment="Center" />
-            <PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left"
+            <PasswordBox x:Name="PasswordBox"
+                         HorizontalAlignment="Left"
                          VerticalAlignment="Top"
                          Margin="132,106,0,0"
-                         Width="301" />
-            
+                         Width="301"
+                         LostFocus="PasswordBox_LostFocus" />
+
             <TextBlock Text="Email"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
@@ -72,7 +75,9 @@
                      HorizontalAlignment="Left"
                      VerticalAlignment="Top"
                      Margin="132,215,0,0"
-                     Width="301" />
+                     Width="301"
+                     InputScope="EmailSmtpAddress"
+                     TextChanged="EmailBox_TextChanged" />
             <TextBlock HorizontalAlignment="Left"
                        TextWrapping="Wrap"
                        Text="TextBlock"

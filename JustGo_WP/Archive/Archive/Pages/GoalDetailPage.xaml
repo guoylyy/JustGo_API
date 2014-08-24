@@ -14,6 +14,7 @@
                             Orientation="Portrait"
                             mc:Ignorable="d"
                             shell:SystemTray.IsVisible="True"
+                            shell:SystemTray.ForegroundColor="#FF23A7FC"
                             shell:SystemTray.Opacity="0.01"
                             Loaded="PhoneApplicationPage_Loaded">
 
@@ -61,11 +62,18 @@
                            FontSize="34"
                            TextAlignment="Center"
                            Margin="0,40,0,0" />
+                <Button Grid.Row="2"
+                        Content="JOIN"
+                        Background="{StaticResource SystemBlueBrush}"
+                        BorderThickness="0"
+                        Width="160"
+                        Click="JoinButton_OnClick"/>
                 <TextBlock Grid.Row="2"
                            FontSize="22"
                            Text="joined"
                            TextAlignment="Center"
-                           Margin="0,20,0,0" />
+                           Margin="0,20,0,0" 
+                           Visibility="Collapsed"/>
             </Grid>
 
             <TextBlock Grid.Row="1"

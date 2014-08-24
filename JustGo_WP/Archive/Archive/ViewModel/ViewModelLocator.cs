@@ -46,6 +46,9 @@ namespace Archive.ViewModel
             SimpleIoc.Default.Register<MyRecordsViewModel>();
             SimpleIoc.Default.Register<RecordsForGoalViewModel>();
             SimpleIoc.Default.Register<CommentsViewModel>();
+            SimpleIoc.Default.Register<FollowViewModel>();
+            SimpleIoc.Default.Register<FightingCenterViewModel>();
+            SimpleIoc.Default.Register<AwesomeViewModel>();
         }
 
         public static GoalViewModel GoalViewModel
@@ -77,6 +80,30 @@ namespace Archive.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<CommentsViewModel>();
+            }
+        }
+
+        public static FollowViewModel FollowViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<FollowViewModel>();
+            }
+        }
+
+        public static FightingCenterViewModel FightingCenterViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<FightingCenterViewModel>();
+            }
+        }
+
+        public static AwesomeViewModel AwesomeViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<AwesomeViewModel>();
             }
         }
         

@@ -1,0 +1,157 @@
+﻿<phone:PhoneApplicationPage x:Class="Archive.Pages.GoalSettingPage"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+                            xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}"
+                            Foreground="{StaticResource PhoneForegroundBrush}"
+                            SupportedOrientations="Portrait"
+                            Orientation="Portrait"
+                            mc:Ignorable="d"
+                            shell:SystemTray.IsVisible="True"
+                            shell:SystemTray.ForegroundColor="#FF23A7FC"
+                            shell:SystemTray.Opacity="0.01">
+
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="HeaderTemplate">
+            <TextBlock Foreground="{StaticResource ContentGrayColorBrush}"
+                       Text="{Binding}" />
+        </DataTemplate>
+        
+    </phone:PhoneApplicationPage.Resources>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar BackgroundColor="#FFB3D3E8"
+                              ForegroundColor="#FF23A7FC">
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png"
+                                            Text="refresh" 
+                                            Click="SettingDoneButton_OnClick"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+    
+    <!--LayoutRoot 是包含所有页面内容的根网格-->
+    <ScrollViewer Background="White">
+        <Grid x:Name="LayoutRoot"
+              Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--TitlePanel 包含应用程序的名称和页标题-->
+            <TextBlock Text="GOAL SETTINGS"
+                       FontFamily="Segoe WP Semibold"
+                       FontSize="22"
+                       Foreground="{StaticResource SystemBlueBrush}"
+                       Margin="24,30,0,0" />
+
+            <!--ContentPanel - 在此处放置其他内容-->
+            <Grid x:Name="ContentPanel"
+                  Grid.Row="1"
+                  Margin="12,20,12,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <toolkit:ListPicker Background="{StaticResource MainPageContentBackBrush}"
+                                    Foreground="Black"
+                                    Header="Reminders"
+                                    HeaderTemplate="{StaticResource HeaderTemplate}">
+                    <sys:String>On</sys:String>
+                    <sys:String>Off</sys:String>
+                </toolkit:ListPicker>
+
+                <toolkit:TimePicker Grid.Row="1"
+                                    Header="Reminder time"
+                                    HeaderTemplate="{StaticResource HeaderTemplate}"
+                                    Background="{StaticResource MainPageContentBackBrush}"
+                                    Foreground="Black" />
+
+                <TextBlock Grid.Row="2"
+                           Foreground="{StaticResource ContentGrayColorBrush}"
+                           Text="Reminder frequency"
+                           Margin="12,0,0,0" />
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox IsChecked="True"
+                              Content="Monday"
+                              Foreground="Black"
+                              Background="{StaticResource MainPageContentBackBrush}"
+                              Style="{StaticResource CheckBoxStyle1}" />
+                    <CheckBox IsChecked="True"
+                              Content="Tuesday"
+                              Foreground="Black"
+                              Background="{StaticResource MainPageContentBackBrush}"
+                              Style="{StaticResource CheckBoxStyle1}"
+                              Grid.Row="0"
+                              Grid.Column="1" />
+                    <CheckBox IsChecked="True"
+                              Content="Wednesday"
+                              Foreground="Black"
+                              Background="{StaticResource MainPageContentBackBrush}"
+                              Style="{StaticResource CheckBoxStyle1}"
+                              Grid.Row="1"
+                              Grid.Column="0" />
+                    <CheckBox IsChecked="True"
+                              Content="Thursday"
+                              Foreground="Black"
+                              Background="{StaticResource MainPageContentBackBrush}"
+                              Style="{StaticResource CheckBoxStyle1}"
+                              Grid.Row="1"
+                              Grid.Column="1" />
+                    <CheckBox IsChecked="True"
+                              Content="Friday"
+                              Foreground="Black"
+                              Background="{StaticResource MainPageContentBackBrush}"
+                              Style="{StaticResource CheckBoxStyle1}"
+                              Grid.Row="2"
+                              Grid.Column="0" />
+                    <CheckBox IsChecked="True"
+                              Content="Saturday"
+                              Foreground="Black"
+                              Background="{StaticResource MainPageContentBackBrush}"
+                              Style="{StaticResource CheckBoxStyle1}"
+                              Grid.Row="2"
+                              Grid.Column="1" />
+                    <CheckBox IsChecked="True"
+                              Content="Sunday"
+                              Foreground="Black"
+                              Background="{StaticResource MainPageContentBackBrush}"
+                              Style="{StaticResource CheckBoxStyle1}"
+                              Grid.Row="3"
+                              Grid.Column="0" />
+                </Grid>
+
+                <toolkit:ListPicker Grid.Row="4"
+                                    Background="{StaticResource MainPageContentBackBrush}"
+                                    Foreground="Black"
+                                    Header="Reminders"
+                                    HeaderTemplate="{StaticResource HeaderTemplate}">
+                    <sys:String>7 days</sys:String>
+                    <sys:String>14 days</sys:String>
+                    <sys:String>30 days</sys:String>
+                </toolkit:ListPicker>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+    
+
+</phone:PhoneApplicationPage>

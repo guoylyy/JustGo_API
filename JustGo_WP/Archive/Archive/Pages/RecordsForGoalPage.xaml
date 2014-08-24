@@ -23,6 +23,16 @@
     <phone:PhoneApplicationPage.Resources>
         <converter:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
     </phone:PhoneApplicationPage.Resources>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar BackgroundColor="#FFB3D3E8"
+                              ForegroundColor="#FF23A7FC"
+                              Mode="Minimized">
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/refresh2.png"
+                                            Text="refresh" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
     <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
           Background="White">
@@ -41,12 +51,12 @@
             <TextBlock Text="Goal - "
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontFamily="Segoe WP Semibold"
-                       FontSize="22.667" />
+                       FontSize="22" />
             <TextBlock Text="{Binding GoalName}"
                        Grid.Column="1"
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontFamily="Segoe WP Semibold"
-                       FontSize="22.667" />
+                       FontSize="22" />
         </Grid>
 
 
@@ -89,16 +99,41 @@
 
                             <StackPanel Grid.Column="1"
                                         Margin="10,0,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Image Width="46"
+                                           Height="46"
+                                           Source="{Binding User.ImageSource}" />
+
+                                    <Grid Grid.Column="1"
+                                          Margin="10,0,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Text="{Binding User.UserName}"
+                                                   Foreground="{StaticResource ContentBlackColorBrush}"
+                                                   FontSize="22" />
+                                        <TextBlock Text="{Binding RecordTime,Converter={StaticResource DateTimeToStringConverter}}"
+                                                   Grid.Row="1"
+                                                   Foreground="#FF999999"
+                                                   FontSize="18" />
+                                    </Grid>
+                                </Grid>
                                 <TextBlock Text="{Binding RecordContent}"
                                            TextWrapping="Wrap"
                                            Foreground="#FF656565"
                                            FontSize="22"
                                            FontFamily="Helvetica-Bold"
-                                           FontWeight="Bold" />
-                                <TextBlock Text="{Binding RecordTime,Converter={StaticResource DateTimeToStringConverter}}"
-                                           Foreground="#FF999999"
-                                           Margin="0,5,0,0" />
-                                <Grid>
+                                           FontWeight="Bold"
+                                           Margin="0,10,0,0" />
+                                
+                                <Grid Margin="0,15,0,0" Tap="AwesomeUsers_OnTap">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -164,15 +199,17 @@
                                                            Grid.RowSpan="2"
                                                            Stretch="UniformToFill"
                                                            Source="{Binding User.ImageSource}"
-                                                           Margin="10,0,0,0" />
+                                                           Margin="10,0,10,10" />
                                                     <TextBlock Grid.Row="0"
                                                                Grid.Column="1"
                                                                Text="{Binding User.UserName}"
-                                                               Foreground="{StaticResource SystemBlueBrush}" />
+                                                               Foreground="{StaticResource SystemBlueBrush}"
+                                                               FontSize="18" />
                                                     <TextBlock Grid.Row="1"
                                                                Grid.Column="1"
                                                                Text="{Binding CommentContent}"
-                                                               Foreground="Black" />
+                                                               Foreground="Black"
+                                                               FontSize="18" />
                                                 </Grid>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
