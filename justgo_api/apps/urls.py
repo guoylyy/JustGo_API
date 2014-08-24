@@ -1,15 +1,19 @@
 import os.path
 from django.conf.urls import patterns, include, url
 
-
 APP_PATH = os.path.dirname(__file__)
 
 user_patterns = patterns('apps.users.views',
-    url(r'^user/register$', 'register'),
-    url(r'^user/login$', 'login'),
+    #url(r'^user/register$', 'register'),
+    url(r'^user/login$', 'facebook_login'),
     url(r'^user/login_status$', 'login_status'),
     url(r'^user/logout$', 'logout'),
     url(r'^user/data_pull$', 'data_pull'),
+    url(r'^user/profile$', 'user_profile'),
+    url(r'^user/follow$', 'follow'),
+    url(r'^user/unfollow$', 'unfollow'),
+    url(r'^user/follows$', 'follows'),
+    url(r'^user/followings$', 'followings'),
 )
 
 goal_patterns = patterns('apps.goals.views',

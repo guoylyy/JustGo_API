@@ -2,12 +2,19 @@
 from django.db import models
 
 class User(models.Model):
-    name = models.CharField(max_length=50)
-    password = models.CharField(max_length=254)
-    #portrait = models.ForeignKey(UploadFile)
-    email = models.EmailField(unique=True,max_length=254)    
     date_create = models.DateTimeField(auto_now_add=True)
     auth_token = models.CharField(max_length=200)
+    facebook_token = models.CharField(max_length=200)
+    facebook_id = models.CharField(max_length=200)
+    nickname = models.CharField(max_length=100)
+    icon = models.CharField(max_length=200)
+
+    def get_data_map(self):
+        data = {}
+        data['id'] = self.id
+        data['nickname'] = self.nickname
+        data['icon'] = self.icon
+        return data
 
 '''
 - user_star is followed by user_fan

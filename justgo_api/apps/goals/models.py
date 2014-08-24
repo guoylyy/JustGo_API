@@ -13,8 +13,8 @@ class Goal(models.Model):
 
 class UserGoal(models.Model):
     '''
-    - privacy: public | private
-    - finished: 0 for doing | 1 for done
+        - privacy: public | private
+        - finished: 0 for doing | 1 for done
     '''
     user = models.ForeignKey(User)
     goal = models.ForeignKey(Goal)

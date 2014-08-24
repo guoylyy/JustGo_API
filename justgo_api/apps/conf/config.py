@@ -1,6 +1,8 @@
 import simplejson as json
 import sys
 
+PAGE_SIZE = 10
+
 error_codes ={
 	#global
 	'200' : {"msg_en": 'Success',"msg_cn":""},
