@@ -47,7 +47,7 @@ def check_authorization():
 		restful.abort(500, message="Authorization Failed")
 	else:
 		# Check expired
-		return User.query.filter(User.token=token).first()
+		return User.query.filter(User.token==token).first()
 
 #============= End of UDF ===========#
 
