@@ -1,0 +1,86 @@
+﻿<phone:PhoneApplicationPage x:Class="Archive.Pages.NotificationSettingPage"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+                            xmlns:system="clr-namespace:System;assembly=mscorlib"
+                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}"
+                            Foreground="{StaticResource PhoneForegroundBrush}"
+                            SupportedOrientations="Portrait"
+                            Orientation="Portrait"
+                            mc:Ignorable="d"
+                            shell:SystemTray.IsVisible="True"
+                            shell:SystemTray.ForegroundColor="#FF23A7FC"
+                            shell:SystemTray.Opacity="0.01">
+
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="HeaderTemplate">
+            <TextBlock Foreground="{StaticResource ContentGrayColorBrush}"
+                       Text="{Binding}" />
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+
+    <!--LayoutRoot 是包含所有页面内容的根网格-->
+    <Grid x:Name="LayoutRoot"
+          Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel 包含应用程序的名称和页标题-->
+        <TextBlock Text="NOTIFICATION SETTINGS"
+                   FontFamily="Segoe WP Semibold"
+                   FontSize="22"
+                   Foreground="{StaticResource SystemBlueBrush}"
+                   Margin="25,27,0,0" />
+
+        <!--ContentPanel - 在此处放置其他内容-->
+        <Grid x:Name="ContentPanel"
+              Grid.Row="1"
+              Margin="12,0,12,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <toolkit:ListPicker Background="{StaticResource MainPageContentBackBrush}"
+                                Foreground="Black"
+                                Header="Push notification"
+                                HeaderTemplate="{StaticResource HeaderTemplate}">
+                <system:String>On</system:String>
+                <system:String>Off</system:String>
+            </toolkit:ListPicker>
+
+            <TextBlock Grid.Row="1"
+                       Foreground="{StaticResource ContentGrayColorBrush}"
+                       Text="Notification content"
+                       Margin="12,0,0,0" />
+            <CheckBox IsChecked="True"
+                      Content="Encourages"
+                      Foreground="Black"
+                      Background="{StaticResource MainPageContentBackBrush}"
+                      Style="{StaticResource CheckBoxStyle1}" 
+                      Grid.Row="2"/>
+            <CheckBox IsChecked="True"
+                      Content="New followers"
+                      Foreground="Black"
+                      Background="{StaticResource MainPageContentBackBrush}"
+                      Style="{StaticResource CheckBoxStyle1}"
+                      Grid.Row="3" />
+            <CheckBox IsChecked="True"
+                      Content="Comments received"
+                      Foreground="Black"
+                      Background="{StaticResource MainPageContentBackBrush}"
+                      Style="{StaticResource CheckBoxStyle1}"
+                      Grid.Row="4" />
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>

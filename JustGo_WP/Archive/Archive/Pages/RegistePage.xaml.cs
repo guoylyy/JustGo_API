@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel.Security;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,11 +20,20 @@ namespace Archive.Pages
 {
     public partial class RegistePage : PhoneApplicationPage
     {
-        private static ManualResetEvent _postReset = new ManualResetEvent(false);
+        private bool _isPasswordOK;
+        private Regex _emailRegex = new Regex(@"^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
+        private bool _isEmailOK;
+        private ApplicationBarIconButton _registerButton;
 
         public RegistePage()
         {
             InitializeComponent();
+            Loaded += RegistePage_Loaded;
+        }
+
+        void RegistePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            _registerButton = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
         }
 
         private async void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
@@ -71,18 +81,24 @@ namespace Archive.Pages
 
                     //把Token写入本地文档中
                     JObject jObject = JObject.Parse(response);
-                    if ((string)jObject["result"] == "success")
+                    if ((string)jObject["code"] == ServerApi.CorrectCode)
                     {
                         //保存Token并写入文件
-                        Global.Token = (string)jObject["token"];
+                        JObject resultJson = (JObject)jObject["result"];
+                        Global.Token = (string)resultJson["token"];
                         StaticMethods.WriteTokenAsync(Global.Token);
                         //导航到主界面
                         Dispatcher.BeginInvoke(() => NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative)));
                     }
-                    //else if ((string)jObject["result"] == "no user")
-                    //{
-                    //    MessageBox.Show("用户名不存在");
-                    //}
+                    else if ((string)jObject["code"] == ServerApi.EmailExistCode)
+                    {
+                        Dispatcher.BeginInvoke(() =>
+                        {
+                            MessageBox.Show("邮箱已存在");
+                            EmailBox.Focus();
+                        });
+                        //MessageBox.Show("邮箱已存在");
+                    }
                     //else
                     //{
                     //    MessageBox.Show("密码错误");
@@ -99,8 +115,48 @@ namespace Archive.Pages
                 });
             }
 
+        }
 
+        private void PasswordBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (PasswordBox.Password.Count() < 6)
+            {
+                ShowText.Text = "密码长度至少6位";
+                _isPasswordOK = false;
+            }
+            else
+            {
+                _isPasswordOK = true;
+            }
+            CheckRegister();
+        }
 
+        private void EmailBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Match emailMatch = _emailRegex.Match(EmailBox.Text);
+            if (emailMatch.Success)
+            {
+                _isEmailOK = true;
+            }
+            else
+            {
+                ShowText.Text = "请输入正确的邮箱";
+                _isEmailOK = false;
+            }
+            CheckRegister();
+        }
+
+        private void CheckRegister()
+        {
+            if (_isEmailOK && _isPasswordOK)
+            {
+                
+                _registerButton.IsEnabled = true;
+            }
+            else
+            {
+                _registerButton.IsEnabled = false;
+            }
         }
     }
 }

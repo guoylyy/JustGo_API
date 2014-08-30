@@ -16,12 +16,33 @@ namespace Archive
 {
     public class ServerApi
     {
+        #region URL变量
         private const string SerVerUrl = "http://115.28.4.78:8888";
         public const string Register = SerVerUrl + "/user/register";
         public const string Login = SerVerUrl + "/user/login";
         public const string Logout = SerVerUrl + "/user/logout";
         public const string DataPull = SerVerUrl + "/user/data_pull";
         public const string FormContentType = "application/x-www-form-urlencoded";
+
+        #endregion
+
+
+        #region 请求返回码
+
+        public const string CorrectCode = "200";
+        public const string BadRequestCode = "400";
+        public const string WrongAuthoriedCode = "401";
+        public const string ForbiddenCode = "403";
+        public const string NotFoundCode = "404";
+        public const string PrametersMissingCode = "414";
+        public const string InternalErrorCode = "500";
+
+        public const string LoginFailCode = "001";
+
+        public const string EmailExistCode = "011";
+        public const string PassWordSimpleCode = "012";
+
+        #endregion
 
         //private static ManualResetEvent _waitSignal = new ManualResetEvent(false);
         //public static string JsonResponse;
@@ -66,7 +87,7 @@ namespace Archive
         //    {
         //        Debug.WriteLine(e.Message);
         //    }
-            
+
         // }
 
         //private static void ResphonseCallBack(IAsyncResult ar)

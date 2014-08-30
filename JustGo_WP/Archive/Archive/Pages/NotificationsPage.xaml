@@ -1,0 +1,165 @@
+﻿<phone:PhoneApplicationPage x:Class="Archive.Pages.NotificationsPage"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}"
+                            Foreground="{StaticResource PhoneForegroundBrush}"
+                            SupportedOrientations="Portrait"
+                            Orientation="Portrait"
+                            mc:Ignorable="d"
+                            shell:SystemTray.IsVisible="True"
+                            shell:SystemTray.ForegroundColor="#FF23A7FC"
+                            shell:SystemTray.Opacity="0.01">
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar BackgroundColor="#FFB3D3E8"
+                              ForegroundColor="#FF23A7FC"
+                              Opacity="0.99">
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/refresh2.png"
+                                            Text="refresh" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+    <!--LayoutRoot 是包含所有页面内容的根网格-->
+    <Grid x:Name="LayoutRoot"
+          Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel 包含应用程序的名称和页标题-->
+        <TextBlock Text="NOTIFICATIONS(2)"
+                   FontFamily="Segoe WP Semibold"
+                   FontSize="22"
+                   Foreground="{StaticResource SystemBlueBrush}"
+                   Margin="25,27,0,0" />
+
+        <!--ContentPanel - 在此处放置其他内容-->
+        <Grid x:Name="ContentPanel"
+              Grid.Row="1"
+              Margin="12,0,12,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Margin="15,30,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Path Data="F1M5.917,1.715C5.917,1.715 57.241,1.715 57.241,1.715 59.636,1.715 61.577,3.656 61.577,6.051 61.577,6.051 61.577,57.375 61.577,57.375 61.577,59.77 59.636,61.712 57.241,61.712 57.241,61.712 5.917,61.712 5.917,61.712 3.522,61.712 1.58,59.77 1.58,57.375 1.58,57.375 1.58,6.051 1.58,6.051 1.58,3.656 3.522,1.715 5.917,1.715z"
+                      Fill="{StaticResource SystemBlueBrush}"
+                      Height="63"
+                      Width="63" />
+                <Path Grid.Column="0"
+                      Data="F1M32.104,1.744C32.583,1.744 32.979,1.894 33.289,2.192 33.6,2.491 33.756,2.869 33.756,3.324 33.756,4.042 33.3,4.641 32.389,5.12 30.209,6.244 28.615,7.357 27.608,8.458 26.65,9.487 26.17,10.241 26.17,10.72 26.17,11.174 26.529,11.45 27.247,11.546 27.247,11.546 27.715,11.619 27.715,11.619 27.715,11.619 28.255,11.654 28.255,11.654 29.812,11.893 31.075,12.617 32.045,13.826 33.015,15.035 33.5,16.501 33.5,18.225 33.5,19.061 33.339,19.887 33.016,20.702 32.694,21.516 32.256,22.222 31.707,22.82 30.343,24.28 28.608,25.011 26.503,25.011 24.446,25.011 22.688,24.209 21.228,22.605 20.535,21.862 19.984,20.959 19.578,19.894 19.171,18.828 18.967,17.758 18.967,16.681 18.967,14.406 19.709,12.103 21.193,9.769 22.677,7.434 24.663,5.454 27.151,3.827 29.257,2.439 30.908,1.744 32.104,1.744z M14.96,1.744C15.438,1.744 15.833,1.894 16.143,2.192 16.454,2.491 16.608,2.869 16.608,3.324 16.608,4.042 16.155,4.641 15.247,5.12 13.051,6.292 11.463,7.405 10.484,8.458 9.553,9.487 9.086,10.241 9.086,10.72 9.086,11.174 9.445,11.45 10.16,11.546 10.16,11.546 10.591,11.619 10.591,11.619 10.591,11.619 11.163,11.654 11.163,11.654 12.715,11.87 13.968,12.587 14.922,13.808 15.876,15.029 16.354,16.501 16.354,18.225 16.354,19.038 16.193,19.857 15.87,20.684 15.548,21.51 15.112,22.222 14.563,22.82 13.226,24.28 11.495,25.011 9.37,25.011 7.34,25.011 5.597,24.209 4.141,22.605 3.448,21.862 2.9,20.959 2.493,19.894 2.087,18.828 1.884,17.758 1.884,16.681 1.884,14.406 2.619,12.103 4.087,9.769 5.556,7.434 7.532,5.454 10.016,3.827 12.119,2.439 13.767,1.744 14.96,1.744z"
+                      Fill="White"
+                      Height="27"
+                      Width="35" />
+                <TextBlock Grid.Column="1"
+                           Foreground="Black"
+                           Text="Encourages"
+                           FontSize="22"
+                           Margin="20,15,0,0"
+                           FontWeight="Bold" />
+            </Grid>
+
+            <Grid Margin="15,30,0,0"
+                  Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Width="63"
+                       Height="63"
+                       Source="/Assets/Heads/head1.png" />
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Foreground="Black"
+                               FontSize="22"
+                               Margin="20,0,0,0"
+                               FontWeight="Bold">
+                        	<Run Text="Stefan  " />
+                        	<Run FontWeight="Normal"
+                                 FontSize="20"
+                                 Text="started to follow you">
+                        		<Run.Foreground>
+                        			<SolidColorBrush Color="#FF999999">
+                        				<SolidColorBrush.RelativeTransform>
+                        					<MatrixTransform Matrix="Identity" />
+                        				</SolidColorBrush.RelativeTransform>
+                        				<SolidColorBrush.Transform>
+                        					<MatrixTransform Matrix="Identity" />
+                        				</SolidColorBrush.Transform>
+                        			</SolidColorBrush>
+                        		</Run.Foreground>
+                        	</Run>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="1"
+                               Foreground="{StaticResource ContentGrayColorBrush}"
+                               Text="1 hour ago"
+                               Margin="20,0,0,0"
+                               FontSize="18" />
+                </Grid>
+            </Grid>
+
+            <Grid Margin="15,30,0,0"
+                  Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Width="63"
+                       Height="63"
+                       Source="/Assets/Heads/head6.png" />
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Foreground="Black"
+                               FontSize="22"
+                               Margin="20,0,0,0"
+                               FontWeight="Bold"
+                               TextWrapping="Wrap"
+                               Width="350">
+                    		<Run Text="Rebecca " />
+                    		<Run FontWeight="Normal"
+                                 Text="commented on your goal - Drink more water">
+                    			<Run.Foreground>
+                    				<SolidColorBrush Color="#FF999999">
+                    					<SolidColorBrush.RelativeTransform>
+                    						<MatrixTransform Matrix="Identity" />
+                    					</SolidColorBrush.RelativeTransform>
+                    					<SolidColorBrush.Transform>
+                    						<MatrixTransform Matrix="Identity" />
+                    					</SolidColorBrush.Transform>
+                    				</SolidColorBrush>
+                    			</Run.Foreground>
+                    		</Run>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="1"
+                               Foreground="{StaticResource ContentGrayColorBrush}"
+                               Text="2014-3-12 5:00 PM"
+                               Margin="20,0,0,0"
+                               FontSize="18" />
+                </Grid>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+</phone:PhoneApplicationPage>

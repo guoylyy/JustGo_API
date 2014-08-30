@@ -24,23 +24,24 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel 包含应用程序的名称和页标题-->
-        <TextBlock Text="Pick up your goal"
+        <TextBlock Text="PICK UP A GOAL"
                    FontFamily="Segoe WP Semibold"
-                   FontSize="22.667"
+                   FontSize="22"
                    Foreground="{StaticResource SystemBlueBrush}"
-                   Margin="24,27,0,0" />
+                   Margin="24,30,0,0" />
         <!--ContentPanel - 在此处放置其他内容-->
         <Grid x:Name="ContentPanel"
               Grid.Row="1">
             <ListBox x:Name="GoalTypeListBox"
                      ItemsSource="{Binding GoalTypes}"
-                     Foreground="{StaticResource SystemBlueBrush}"
-                     Tap="GoalTypeListBox_Tap">
+                     Foreground="{StaticResource ContentBlackColorBrush}"
+                     Tap="GoalTypeListBox_Tap"
+                     Margin="0,31,0,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}"
-                                   FontSize="50"
-                                   Margin="22,0,0,0"/>
+                                   FontSize="40"
+                                   Margin="22,10,0,0"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <!--<ListBoxItem Content="test text"

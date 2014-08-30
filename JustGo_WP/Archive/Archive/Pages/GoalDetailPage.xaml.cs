@@ -59,5 +59,10 @@ namespace Archive.Pages
                 ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head9.png", UriKind.Relative))
             });
         }
+
+        private void JoinButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/GoalSettingPage.xaml", UriKind.Relative));
+        }
     }
 }

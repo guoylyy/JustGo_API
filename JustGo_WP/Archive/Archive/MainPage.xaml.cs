@@ -18,11 +18,15 @@ using Microsoft.Phone.Shell;
 using Archive.Resources;
 using Archive.ViewModel;
 using Newtonsoft.Json.Linq;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Archive
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        private ApplicationBar _goalApplicationBar;
+        private ApplicationBar _profileApplicationBar;
+
         // 构造函数
         public MainPage()
         {
@@ -63,49 +67,68 @@ namespace Archive
         // 用于生成本地化 ApplicationBar 
         private void BuildLocalizedApplicationBar()
         {
-            // 将页面的 ApplicationBar 设置为 ApplicationBar 的新实例。
-            ApplicationBar = new ApplicationBar();
-            //ApplicationBar.Opacity = 0.99;
-
-            ApplicationBar.BackgroundColor = new Color { R = 177, G = 212, B = 232, A = 255 };
-            ApplicationBar.ForegroundColor = new Color { R = 28, G = 158, B = 244, A = 255 };
+            _goalApplicationBar = new ApplicationBar();
+            _goalApplicationBar.BackgroundColor = new Color { R = 177, G = 212, B = 232, A = 255 };
+            _goalApplicationBar.ForegroundColor = new Color { R = 28, G = 158, B = 244, A = 255 };
+            _goalApplicationBar.Opacity = 0.99;
             // 创建新按钮并将文本值设置为 AppResources 中的本地化字符串。
             ApplicationBarIconButton addBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/add.png", UriKind.Relative));
             addBarButton.Text = "add";
             addBarButton.Click += appBarButton_Click;
 
-            ApplicationBarIconButton logoutBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/back.png", UriKind.Relative));
-            logoutBarButton.Text = "logout";
-            logoutBarButton.Click += logoutBarButton_Click;
+            //ApplicationBarIconButton logoutBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/back.png", UriKind.Relative));
+            //logoutBarButton.Text = "logout";
+            //logoutBarButton.Click += logoutBarButton_Click;
 
-            ApplicationBar.Buttons.Add(addBarButton);
-            ApplicationBar.Buttons.Add(logoutBarButton);
+            _goalApplicationBar.Buttons.Add(addBarButton);
+            //_goalApplicationBar.Buttons.Add(logoutBarButton);
 
+
+            _profileApplicationBar = new ApplicationBar();
+            _profileApplicationBar.BackgroundColor = new Color { R = 177, G = 212, B = 232, A = 255 };
+            _profileApplicationBar.ForegroundColor = new Color { R = 28, G = 158, B = 244, A = 255 };
+            _profileApplicationBar.Opacity = 0.99;
+
+            ApplicationBarIconButton settingButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/feature.settings.png",UriKind.Relative));
+            settingButton.Text = "settings";
+            settingButton.Click += settingButton_Click;
+            _profileApplicationBar.Buttons.Add(settingButton);
+            // 将页面的 ApplicationBar 设置为 ApplicationBar 的新实例。
+            //ApplicationBar = new ApplicationBar();
+            //ApplicationBar.Opacity = 0.99;
+
+
+            ApplicationBar = _goalApplicationBar;
             //// 使用 AppResources 中的本地化字符串创建新菜单项。
             //ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
             //ApplicationBar.MenuItems.Add(appBarMenuItem);
         }
 
-        private async void logoutBarButton_Click(object sender, EventArgs e)
+        void settingButton_Click(object sender, EventArgs e)
         {
-            //todo:登出
-            string postString = string.Format("token={0}", Global.Token);
-            string url = ServerApi.Logout;
+            NavigationService.Navigate(new Uri("/Pages/SettingPage.xaml", UriKind.Relative));
+        }
 
-            HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
-            request.Method = "POST";
-            request.ContentType = ServerApi.FormContentType;
+        private void logoutBarButton_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/SettingPage.xaml", UriKind.Relative));
+            //string postString = string.Format("token={0}", Global.Token);
+            //string url = ServerApi.Logout;
 
-            using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream, request.EndGetRequestStream, null))
-            {
-                //将用户名和密码写入post请求中
-                byte[] postBytes = Encoding.UTF8.GetBytes(postString);
-                await stream.WriteAsync(postBytes, 0, postBytes.Length);
-            }
+            //HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
+            //request.Method = "POST";
+            //request.ContentType = ServerApi.FormContentType;
 
-            request.BeginGetResponse(ResphonseCallBack, request);
-            App.RootFrame.UriMapper = null;
-            App.RootFrame.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative));
+            //using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream, request.EndGetRequestStream, null))
+            //{
+            //    //将用户名和密码写入post请求中
+            //    byte[] postBytes = Encoding.UTF8.GetBytes(postString);
+            //    await stream.WriteAsync(postBytes, 0, postBytes.Length);
+            //}
+
+            //request.BeginGetResponse(ResphonseCallBack, request);
+            //App.RootFrame.UriMapper = null;
+            //App.RootFrame.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative));
         }
 
         private void ResphonseCallBack(IAsyncResult ar)
@@ -156,11 +179,13 @@ namespace Archive
             }
             else if (e.AddedItems[0].Equals(GoalsPivotItem))
             {
+                ApplicationBar = _goalApplicationBar;
                 ApplicationBar.IsVisible = true;
-                ApplicationBar.Mode = ApplicationBarMode.Default;
+                ApplicationBar.Mode = ApplicationBarMode.Default;    
             }
             else//profile页面
             {
+                ApplicationBar = _profileApplicationBar;
                 ApplicationBar.IsVisible = true;
                 ApplicationBar.Mode = ApplicationBarMode.Minimized;
             }
@@ -173,6 +198,41 @@ namespace Archive
             if (list != null) Global.SelectedGoal = list.SelectedItem as Goal;
 
             NavigationService.Navigate(new Uri("/Pages/MyRecordPage.xaml", UriKind.Relative));
+        }
+
+        private void headImage_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/ProfilePage.xaml", UriKind.Relative));
+        }
+
+        private void NotificationsGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/NotificationsPage.xaml", UriKind.Relative));
+        }
+
+        private void FollowerGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/FollowPage.xaml?type=follower", UriKind.Relative));
+        }
+
+        private void FollowingGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/FollowPage.xaml?type=following", UriKind.Relative));
+        }
+
+        private void AchievementsGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/AchievementsPage.xaml", UriKind.Relative));
+        }
+
+        private void FightingGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/FightingCenterPage.xaml", UriKind.Relative));
+        }
+
+        private void FriendsGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/FindFriendsPage.xaml", UriKind.Relative));
         }
     }
 }

@@ -331,10 +331,12 @@
                                                     </DataTemplate>
                                                 </ListBox.ItemTemplate>
                                             </ListBox>
-                                            <TextBlock Grid.Row="1"
+                                            <HyperlinkButton Grid.Row="1"
                                                        Grid.Column="1"
-                                                       Text="view all comments(10)"
-                                                       Foreground="{StaticResource SystemBlueBrush}"/>
+                                                       Content="view all comments(10)"
+                                                       Foreground="{StaticResource SystemBlueBrush}"
+                                                       HorizontalAlignment="Left" 
+                                                       Click="MoreComments_OnClick"/>
                                         </Grid>
                                     </StackPanel>
                                 </Grid>
