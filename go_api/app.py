@@ -2,6 +2,7 @@ import os
 import random
 import json
 import csv
+import time
 import simplejson as json
 from datetime import datetime,timedelta
 from flask import Flask, request, flash, url_for, redirect, \
@@ -318,7 +319,7 @@ class GoalRecordComment(db.Model):
 			'goal_record_id' : self.goal_record_id,
 			'user_id' : self.user_id,
 			'content' : self.content,
-			'create_time' : self.create_time
+			'create_time' : time.mktime(self.create_time.timetuple())
 		}
 
 
