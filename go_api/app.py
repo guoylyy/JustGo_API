@@ -2,7 +2,6 @@ import os
 import random
 import json
 import csv
-import xlrd as excel
 import simplejson as json
 from datetime import datetime,timedelta
 from flask import Flask, request, flash, url_for, redirect, \
@@ -13,8 +12,7 @@ from sqlalchemy.sql import or_
 from sqlalchemy import Table 
 from flask.ext import restful
 from flask.ext.restful import reqparse
-from marshmallow import Serializer, fields, pprint
-from werkzeug import secure_filename
+
 
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
@@ -77,7 +75,6 @@ class UserRest(restful.Resource):
 	def post(self):
 		#check_authorization()
 		up = self.__user_parser()
-		print up
 		user = User.query.filter(User.facebook_token==up['facebook_token']).first()
 		if user is None:
 			#register
@@ -98,43 +95,78 @@ class UserRest(restful.Resource):
 
 class GoalRecordRest(restful.Resource):
 	def get(self, record_id):
-		return "", 200
+		g = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
+		if g:
+			return g.to_json(), 200
+		else:
+			restful.abort(404, 'Goal Record with ID {} does exist.'.format(record_id))
 
 	def post(self):
 		""" Add a record for specific goal
 		"""
 		user = check_authorization()
+		up = self.__record_parser()
+		g = GoalRecord(up['goal_id'], user.user_id, up['content'], 'fdsafa')
+		db.session.add(g)
+		flag = db.session.commit()
+		return {'result':'success'}, 200
 
-		return "", 200
+	def __record_parser(self):
+		up = reqparse.RequestParser()
+		up.add_argument('content', type=str, location='form')
+		up.add_argument('goal_id', type=int, location='form')
+		return up.parse_args()
 
-	def __list_all_records(self):
-		return ""
-
-	def __list_preview_records(self):
-		return ""
 
 class GoalRecordCommentRest(restful.Resource):
-	def get(self, goal_record_id):
-		return "", 200
+	def get(self, record_id):
+		""" Get all comments of a goal_record
+		"""
+		gr = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
+		return [grc.to_json() for grc in gr.comments.all()], 200
 
-	def post(self):
-		return "", 200
+	def post(self, record_id):
+		""" Add a comment to specific goal_record
+		"""
+		user = check_authorization()
+		up = self.__comment_parser()
+		grc = GoalRecordComment(record_id, user.user_id, up['content'])
+		db.session.add(grc)
+		flag = db.session.commit()
+		return {'result' : flag}, 200
 
-	def __list_preview_comment(self):
-		return ""
+	def __comment_parser(self):
+		up = reqparse.RequestParser()
+		up.add_argument('content', type=str, location='form')
+		return up.parse_args()		
 
-	def __list_all_comment(self):
-		return ""
 
+class GoalRecordAwesomeRest(restful.Resource):
+	"""docstring for GoalRecordAwesomeRest"""
+	def get(self, record_id):
+		gr = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
+		return [gra.to_json() for gra in gr.awesomes.all()], 200
+
+	def post(self, record_id):
+		user = check_authorization()
+		gra = GoalRecordAwesome(record_id, user.user_id)
+		db.session.add(gra)
+		db.session.commit()
+		return {'result':'success'}, 200
+		
 
 #============== End of APIs =============#
 
 
 #============== Routes ============#
+api.add_resource(UserRest, '/'+ app.config['VERSION'] + '/user/<string:user_id>','/'+ app.config['VERSION'] + '/user')
+
 api.add_resource(GoalCategoryRest, '/'+ app.config['VERSION'] + '/goal_category')
 api.add_resource(GoalRest, '/'+ app.config['VERSION'] + '/goal/<string:category_id>')
-api.add_resource(UserRest, '/'+ app.config['VERSION'] + '/user/<string:user_id>','/'+ app.config['VERSION'] + '/user')
-api.add_resource(GoalRecordRest, '/'+ app.config['VERSION'] + '/goal_record/<string:record_id>')
+api.add_resource(GoalRecordRest, '/'+ app.config['VERSION'] + '/goal_record/<int:record_id>','/'+ app.config['VERSION'] + '/goal_record')
+api.add_resource(GoalRecordCommentRest, '/'+ app.config['VERSION'] + '/goal_record_comment/<int:record_id>')
+api.add_resource(GoalRecordAwesomeRest, '/'+ app.config['VERSION'] + '/goal_record_awesome/<int:record_id>')
+
 
 #============== End of Routes =====#
 
@@ -164,6 +196,11 @@ class User(db.Model):
 			'name' : self.name,
 			'description': self.description
 		}
+
+user_follow = db.Table('user_follow',
+	db.Column('follow_id', db.Integer, db.ForeignKey('user.user_id')),
+	db.Column('followed_id', db.Integer, db.ForeignKey('user.user_id'))
+)
 
 goal_category = db.Table('goal_category',
 	db.Column('goal_id', db.Integer, db.ForeignKey('goal.goal_id')),
@@ -241,12 +278,22 @@ class GoalRecord(db.Model):
 	content = db.Column(db.String)
 	image = db.Column(db.String)
 	update_time = db.Column(db.DateTime)
+	comments = db.relationship('GoalRecordComment', backref='goal_record', lazy='dynamic')
+	awesomes = db.relationship('GoalRecordAwesome', backref='goal_record', lazy='dynamic')
 
 	def __init__(self, goal_id, user_id, content, image):
-		self.goal_id = goal
+		self.goal_id = goal_id
 		self.user_id = user_id
 		self.content = content
 		self.image = image
+
+	def to_json(self):
+		return {
+			'goal_record_id': self.goal_record_id,
+			'goal_id' : self.goal_id,
+			'content' : self.content,
+			'image' : self.image
+		}
 
 class GoalRecordComment(db.Model):
 	"""docstring for GoalRecordComment"""
@@ -255,10 +302,25 @@ class GoalRecordComment(db.Model):
 	goal_record_id = db.Column(db.Integer, db.ForeignKey('goal_record.goal_record_id'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	content = db.Column(db.String)
-	update_time = (db.DateTime)
+	update_time = db.Column(db.DateTime)
+	create_time = db.Column(db.DateTime)
 
-	def __init__(self, arg):
-		self.arg = arg
+	def __init__(self, goal_record_id, user_id, content):
+		self.goal_record_id = goal_record_id
+		self.user_id = user_id
+		self.content = content
+		self.update_time = datetime.now()
+		self.create_time = datetime.now()
+
+	def to_json(self):
+		return {
+			'comment_id' : self.comment_id,
+			'goal_record_id' : self.goal_record_id,
+			'user_id' : self.user_id,
+			'content' : self.content,
+			'create_time' : self.create_time
+		}
+
 
 class GoalRecordAwesome(db.Model):
 	"""docstring for GoalRecordAwesome"""
@@ -266,22 +328,47 @@ class GoalRecordAwesome(db.Model):
 	awesome_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	goal_record_id = db.Column(db.Integer, db.ForeignKey('goal_record.goal_record_id'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-	update_time = (db.DateTime)
+	update_time = db.Column(db.DateTime)
+	create_time = db.Column(db.DateTime)
 	
-	def __init__(self, arg):
-		self.arg = arg
+	def __init__(self, goal_record_id, user_id):
+		self.goal_record_id = goal_record_id
+		self.user_id = user_id
+		self.create_time = datetime.now()
+		self.update_time = datetime.now()
+
+	def to_json(self):
+		return {
+			'awesome_id' : self.awesome_id,
+			'goal_record_id' : self.goal_record_id,
+			'user_id' : self.user_id
+		}
 
 class Notification(db.Model):
 	"""docstring for Notification"""
 	__tablename__ = 'notification'
 	notificaion_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+	notificaion_type = db.Column(db.String)
+	sender_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+	receiver_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	content = db.Column(db.String)
 	update_time = db.Column(db.DateTime)
+	create_time = db.Column(db.DateTime)
+	is_readed = db.Column(db.Boolean, default=False)
 	
+	def __init__(self, notificaion_type, sender_id, receiver_id, content):
+		self.notificaion_type = notificaion_type
+		self.sender_id = sender_id
+		self.receiver_id = receiver_id
+		self.content = content
+		self.update_time = self.create_time = datetime.now()
 
-	def __init__(self, arg):
-		self.arg = arg
+	def to_json(self):
+		return {
+			'notificaion_id' : self.notificaion_id,
+			'user_id' : self.user_id,
+			'content' : self.content
+		}
 
 #============== End of Models ============================#
 		
@@ -289,6 +376,9 @@ def init_db():
 	db.drop_all()
 	db.create_all()
 	make_wp_data()
+
+def update_db():
+	db.update()
 
 def make_wp_data():
 	categories = ['Popular', 'Health Diet', 'Train plans', 'Habits', 'Learning']
@@ -301,12 +391,9 @@ def _test_categories():
 	print c
 
 def make_goal_data():
-
 	pass
 
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port=5000)
-	#_test_categories()
-	#init_db()
 #================= APIs ========================#
