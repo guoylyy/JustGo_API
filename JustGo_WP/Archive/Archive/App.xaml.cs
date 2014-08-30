@@ -71,12 +71,7 @@ namespace Archive
                 {
                     //使用Mapper来直接跳转到MainPage
                     RootFrame.UriMapper = Resources["LoginPageMapper"] as UriMapper;
-                    //RootFrame.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative));
                 }
-                //else
-                //{
-                //    RootFrame.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
-                //}
             }
             catch (Exception)
             {

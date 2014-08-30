@@ -6,7 +6,6 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:vm="clr-namespace:Archive.ViewModel"
-                            xmlns:converter="clr-namespace:Archive.Converter"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
@@ -14,26 +13,7 @@
                             Orientation="Portrait"
                             mc:Ignorable="d"
                             shell:SystemTray.IsVisible="True"
-                            shell:SystemTray.ForegroundColor="#FF23A7FC"
                             shell:SystemTray.Opacity="0.01">
-
-    <phone:PhoneApplicationPage.Resources>
-        <converter:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
-    </phone:PhoneApplicationPage.Resources>
-    
-    <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar BackgroundColor="#FFB3D3E8"
-                              ForegroundColor="#FF23A7FC"
-                              Opacity="0.99">
-            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/favorite.png"
-                                            Text="refresh" 
-                                            Click="AwesomeButton_OnClick"/>
-            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/comment.png"
-                                            Text="refresh" 
-                                            Click="CommentsButton_OnClick"/>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
-
     <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
           Background="White">
@@ -75,14 +55,13 @@
                        FontSize="30" />
         </Grid>
         <TextBlock Grid.Row="1"
-                   Text="{Binding Topic}"
+                   Text="test"
                    Foreground="{StaticResource ContentBlackColorBrush}"
                    FontFamily="Helvetica"
                    FontSize="24"
-                   Margin="20,10,0,0" 
-                   TextWrapping="Wrap"/>
+                   Margin="20,10,0,0" />
         <TextBlock Grid.Row="2"
-                   Text="{Binding Time, Converter={StaticResource DateTimeToStringConverter}}"
+                   Text="time"
                    Foreground="#FF999999"
                    FontFamily="Helvetica"
                    FontSize="18"
@@ -152,7 +131,7 @@
                                    Grid.RowSpan="2"
                                    Stretch="UniformToFill"
                                    Source="{Binding User.ImageSource}"
-                                   Margin="10,0,10,0" />
+                                   Margin="10,0,0,0" />
                             <TextBlock Grid.Row="0"
                                        Grid.Column="1"
                                        Text="{Binding User.UserName}"

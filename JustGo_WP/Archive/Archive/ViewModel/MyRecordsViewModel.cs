@@ -21,25 +21,25 @@ namespace Archive.ViewModel
             Records.Add(new UserRecord
             {
                 User = Global.LoginUser,
-                RecordContent = "今天终于开始执行我的健身计划了，已经向前迈进一大步了！",
+                RecordContent = "今天又发射一个导弹，米国都吓cry了",
                 RecordTime = DateTime.Now,
                 AwesomeUsers = new ObservableCollection<User>()
                 {
                     //new BitmapImage(new Uri("/Assets/MainPage/DefaulHead",UriKind.Relative))
-                    new User{UserName = "金大叔",ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head1.png", UriKind.Relative))},
-                    new User{UserName = "金二叔",ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head2.png", UriKind.Relative))}
+                    new User{UserName = "金大叔",ImageSource = new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg",UriKind.Relative))},
+                    new User{UserName = "金二叔",ImageSource = new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg",UriKind.Relative))}
                 },
                 Comments = new ObservableCollection<Comment>
                 {
                     new Comment
                     {
-                        User = new User{UserName = "小红",ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head3.png", UriKind.Relative))},
-                        CommentContent = "太厉害了！下次也带上我吧。"
+                        User = new User{UserName = "金大伯",ImageSource = new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg",UriKind.Relative))},
+                        CommentContent = "大金国崛起指日可待！"
                     },
                     new Comment
                     {
-                        User = new User{UserName = "小明",ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head4.png", UriKind.Relative))},
-                        CommentContent = "算上我一个！"
+                        User = new User{UserName = "金二伯",ImageSource = new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg",UriKind.Relative))},
+                        CommentContent = "立马就能干翻米国！"
                     }
                 }
             });

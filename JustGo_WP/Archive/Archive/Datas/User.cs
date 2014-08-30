@@ -55,21 +55,6 @@ namespace Archive.Datas
             }
         }
 
-        private int _goalCount;
-
-        public int GoalCount
-        {
-            get { return _goalCount; }
-            set
-            {
-                if (value != _goalCount)
-                {
-                    _goalCount = value;
-                    NotifyPropertyChanged("GoalCount");
-                }
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
         {

@@ -16,15 +16,5 @@ namespace Archive.Pages
         {
             InitializeComponent();
         }
-
-        private void CommentsButton_OnClick(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/Pages/CommentAddPage.xaml", UriKind.Relative));
-        }
-
-        private void AwesomeButton_OnClick(object sender, EventArgs e)
-        {
-            //todo:点赞
-        }
     }
 }

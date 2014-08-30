@@ -13,25 +13,20 @@ namespace Archive.ViewModel
     {
         public ObservableCollection<User> AwesomeUsers { get; set; }
         public ObservableCollection<Comment> Comments { get; set; }
-        public string Topic { get; set; }
-        public DateTime Time { get; set; }
 
         public CommentsViewModel()
         {
-            Topic = "今天终于开始执行我的健身计划了，已经向前迈进一大步了！";
-            Time = DateTime.Now;
-
             AwesomeUsers = new ObservableCollection<User>
             {
                 new User
                 {
-                    UserName = "小红",
-                    ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head1.png", UriKind.Relative))
+                    UserName = "金大叔",
+                    ImageSource = new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg", UriKind.Relative))
                 },
                 new User
                 {
-                    UserName = "小明",
-                    ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head2.png", UriKind.Relative))
+                    UserName = "金二叔",
+                    ImageSource = new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg", UriKind.Relative))
                 }
             };
 
@@ -43,22 +38,22 @@ namespace Archive.ViewModel
                     User =
                         new User
                         {
-                            UserName = "小红",
+                            UserName = "李野汉",
                             ImageSource =
-                                new BitmapImage(new Uri(@"/Assets/Heads/head3.png", UriKind.Relative))
+                                new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg", UriKind.Relative))
                         },
-                    CommentContent = "太厉害了！下次也带上我吧。"
+                    CommentContent = "大金国崛起指日可待！"
                 },
                 new Comment
                 {
                     User =
                         new User
                         {
-                            UserName = "小明",
+                            UserName = "永动机",
                             ImageSource =
-                                new BitmapImage(new Uri(@"/Assets/Heads/head4.png", UriKind.Relative))
+                                new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg", UriKind.Relative))
                         },
-                    CommentContent = "算上我一个！"
+                    CommentContent = "立马就能干翻米国！"
                 }
             };
         }

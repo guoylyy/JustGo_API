@@ -8,7 +8,6 @@ using System.Windows.Navigation;
 using Archive.Datas;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Archive.Pages
 {
@@ -35,9 +34,5 @@ namespace Archive.Pages
         }
 
 
-        private void AwesomeUsers_OnTap(object sender, GestureEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/Pages/AwesomePage.xaml", UriKind.Relative));
-        }
     }
 }

@@ -91,18 +91,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AlphaKeyGroup.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converter\BoolToOnOffConverter.cs" />
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Converter\BoolToVisibilityReversalConverter.cs" />
-    <Compile Include="Converter\CountToGoalStringConverter.cs" />
     <Compile Include="Converter\DateTimeToStringConverter.cs" />
     <Compile Include="Datas\Comment.cs" />
     <Compile Include="Datas\Goal.cs" />
-    <Compile Include="Datas\Person.cs" />
     <Compile Include="Datas\User.cs" />
     <Compile Include="Datas\UserRecord.cs" />
     <Compile Include="Global.cs" />
@@ -110,38 +106,17 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\AchievementsPage.xaml.cs">
-      <DependentUpon>AchievementsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\AwesomePage.xaml.cs">
-      <DependentUpon>AwesomePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\ChooseDirectGoalPage.xaml.cs">
       <DependentUpon>ChooseDirectGoalPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ChooseGoalTypePage.xaml.cs">
       <DependentUpon>ChooseGoalTypePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\CommentAddPage.xaml.cs">
-      <DependentUpon>CommentAddPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\CommentsPage.xaml.cs">
       <DependentUpon>CommentsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FightingCenterPage.xaml.cs">
-      <DependentUpon>FightingCenterPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\FindFriendsPage.xaml.cs">
-      <DependentUpon>FindFriendsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\FollowPage.xaml.cs">
-      <DependentUpon>FollowPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\GoalDetailPage.xaml.cs">
       <DependentUpon>GoalDetailPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\GoalSettingPage.xaml.cs">
-      <DependentUpon>GoalSettingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
@@ -149,26 +124,11 @@
     <Compile Include="Pages\MyRecordPage.xaml.cs">
       <DependentUpon>MyRecordPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\NotificationSettingPage.xaml.cs">
-      <DependentUpon>NotificationSettingPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\NotificationsPage.xaml.cs">
-      <DependentUpon>NotificationsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\ProfilePage.xaml.cs">
-      <DependentUpon>ProfilePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\RecordsForGoalPage.xaml.cs">
       <DependentUpon>RecordsForGoalPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\RegistePage.xaml.cs">
       <DependentUpon>RegistePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\SearchUsersPage.xaml.cs">
-      <DependentUpon>SearchUsersPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\SettingPage.xaml.cs">
-      <DependentUpon>SettingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
@@ -179,14 +139,10 @@
     <Compile Include="ServerApi.cs" />
     <Compile Include="StaticMethods.cs" />
     <Compile Include="TiltEffect.cs" />
-    <Compile Include="ViewModel\AwesomeViewModel.cs" />
     <Compile Include="ViewModel\CommentsViewModel.cs" />
-    <Compile Include="ViewModel\FightingCenterViewModel.cs" />
-    <Compile Include="ViewModel\FollowViewModel.cs" />
     <Compile Include="ViewModel\GoalViewModel.cs" />
     <Compile Include="ViewModel\MyRecordsViewModel.cs" />
     <Compile Include="ViewModel\RecordsForGoalViewModel.cs" />
-    <Compile Include="ViewModel\SearchUsersViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -198,14 +154,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\AchievementsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\AwesomePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\ChooseDirectGoalPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,31 +162,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\CommentAddPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\CommentsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FightingCenterPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\FindFriendsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\FollowPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\GoalDetailPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\GoalSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -250,31 +178,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\NotificationSettingPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\NotificationsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\ProfilePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\RecordsForGoalPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\RegistePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\SearchUsersPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\SettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -294,26 +202,18 @@
     <Content Include="Assets\AppBar\back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\AppBar\basecircle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\AppBar\check.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\AppBar\comment.png" />
     <Content Include="Assets\AppBar\delete.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\AppBar\edit.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\AppBar\favorite.png" />
-    <Content Include="Assets\AppBar\feature.settings.png" />
     <Content Include="Assets\AppBar\like.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\AppBar\refresh.png" />
-    <Content Include="Assets\AppBar\refresh2.png" />
     <Content Include="Assets\AppBar\save.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -359,12 +259,6 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="README_FIRST.txt" />
-    <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Select.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">
@@ -382,10 +276,6 @@
     </Reference>
     <Reference Include="GalaSoft.MvvmLight.WP8">
       <HintPath>..\packages\MvvmLightLibs.4.3.31.0\lib\wp8\GalaSoft.MvvmLight.WP8.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=8.0.1.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\MvvmLightLibs.4.3.31.0\lib\wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>

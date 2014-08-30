@@ -26,7 +26,7 @@
 
         <!--TitlePanel 包含应用程序的名称和页标题-->
         <Grid x:Name="HeadGrid"
-              Margin="24,30,0,0">
+              Margin="24,27,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -34,12 +34,12 @@
             <TextBlock Text="Goals - "
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontFamily="Segoe WP Semibold"
-                       FontSize="22" />
+                       FontSize="22.667" />
             <TextBlock x:Name="TypeName"
                        Grid.Column="1"
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontFamily="Segoe WP Semibold"
-                       FontSize="22" />
+                       FontSize="22.667" />
         </Grid>
         <!--ContentPanel - 在此处放置其他内容-->
         <Grid x:Name="ContentPanel"
@@ -49,14 +49,14 @@
                      Tap="DirectGoalListBox_Tap">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="22,20,0,0">
+                        <Grid Margin="22,10,0,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Text="{Binding GoalName}"
-                                       FontSize="40"
-                                       Foreground="{StaticResource ContentBlackColorBrush}"/>
+                                       FontSize="50"
+                                       Foreground="{StaticResource SystemBlueBrush}"/>
                             <TextBlock Grid.Row="1"
                                        Foreground="{StaticResource SystemBlueBrush}"
                                        Text="{Binding Participants}"/>
