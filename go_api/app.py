@@ -3,6 +3,7 @@ import random
 import json
 import csv
 import time
+import hashlib
 import simplejson as json
 from datetime import datetime,timedelta
 from flask import Flask, request, flash, url_for, redirect, \
@@ -12,8 +13,8 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import or_
 from sqlalchemy import Table 
 from flask.ext import restful
+from flask.ext.restful import fields, marshal, abort
 from flask.ext.restful import reqparse
-
 
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
@@ -41,17 +42,72 @@ def abort_if_user_doesnt_exit(user_id):
 
 def check_authorization():
 	token = parser.parse_args()['Authorization']
-	#TO-DO: Check token exipred and invalid
 	if not token:
 		restful.abort(500, message="Authorization Failed")
 	else:
 		# Check expired
-		return User.query.filter(User.token==token).first()
-
+		check_expire(token)
+		u = User.query.filter(User.token==token).first()
+		if u:
+			return u
+		else:
+			restful.abort(500, message='Invalid Authorization')
 #============= End of UDF ===========#
 
 
 #============== APIs =============#
+class UserRest(restful.Resource):
+	def get(self, user_id):
+		""" Get the basic information of one user
+		"""
+		user = abort_if_user_doesnt_exit(user_id)
+		return user.to_json(), 200
+
+	def post(self):
+		""" Update information of one user
+		"""
+		user = check_authorization()
+		up = self.__user_update_parser()
+		user.user_name = up['name']
+		user.description = up['description']
+		db.session.add(user)
+		db.session.commit()
+		return user.to_json(), 200
+
+	def __user_update_parser(self):
+		up = reqparse.RequestParser()
+		up.add_argument('name', type=str, location='form')
+		up.add_argument('description', type=str, location='form')
+		return up.parse_args()
+
+
+class LoginRest(restful.Resource):
+	def post(self):
+		""" Login restful api
+		"""
+		up = self.__user_parser()
+		user = User.query.filter(User.facebook_token==up['facebook_token']).first()
+		if user is None:
+			#register
+			token = "fdsafsafas"
+			u = User(up['name'],up['description'],token,up['facebook_token'],'header')	
+			db.session.add(u)
+			flag = db.session.commit()
+			u.token = make_token(u.user_id)
+			db.session.add(u)
+			db.session.commit()
+			return {'token': u.token}, 200
+		else:
+			check_expire(user.token)
+			return {'token': user.token}, 200
+
+	def __user_parser(self):
+		up = reqparse.RequestParser()
+		up.add_argument('facebook_token', type=str, location='form')
+		up.add_argument('name', type=str, location='form')
+		up.add_argument('description', type=str, location='form')
+		return up.parse_args()
+
 class GoalCategoryRest(restful.Resource):
 	def get(self):
 		l = Category.query.all()
@@ -68,37 +124,23 @@ class GoalRest(restful.Resource):
 	def __goal_details(self, goal_id):
 		return ""
 
-class UserRest(restful.Resource):
-	def get(self, user_id):
-		user = abort_if_user_doesnt_exit(user_id)
-		return user.to_json(), 200
+class GoalJoinRecord(restful.Resource):
+	""" API for Goal Join Record
+	"""
+	def get(self, goal_id):
+		user = check_authorization()
+		records = GoalRecord.query.filter(GoalRecord.goal_id==goal_id, GoalRecord.user_id == user.user_id)
+		return [gr.to_json(user) for gr in records], 200
 
-	def post(self):
-		#check_authorization()
-		up = self.__user_parser()
-		user = User.query.filter(User.facebook_token==up['facebook_token']).first()
-		if user is None:
-			#register
-			token = "fdsafsafas"
-			u = User(up['name'],up['description'],token,up['facebook_token'],'header')	
-			db.session.add(u)
-			flag = db.session.commit()
-			return {'token': u.token}, 204
-		else:
-			return {'token': user.token}, 200
-
-	def __user_parser(self):
-		up = reqparse.RequestParser()
-		up.add_argument('facebook_token', type=str, location='form')
-		up.add_argument('name', type=str, location='form')
-		up.add_argument('description', type=str, location='form')
-		return up.parse_args()
 
 class GoalRecordRest(restful.Resource):
 	def get(self, record_id):
+		u = check_authorization()
 		g = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
 		if g:
-			return g.to_json(), 200
+			g.comments = g.comments.all()
+			g.awesomes = g.awesomes.all()
+			return g.to_json(u), 200
 		else:
 			restful.abort(404, 'Goal Record with ID {} does exist.'.format(record_id))
 
@@ -110,7 +152,7 @@ class GoalRecordRest(restful.Resource):
 		g = GoalRecord(up['goal_id'], user.user_id, up['content'], 'fdsafa')
 		db.session.add(g)
 		flag = db.session.commit()
-		return {'result':'success'}, 200
+		return g.to_json(user), 200
 
 	def __record_parser(self):
 		up = reqparse.RequestParser()
@@ -134,7 +176,7 @@ class GoalRecordCommentRest(restful.Resource):
 		grc = GoalRecordComment(record_id, user.user_id, up['content'])
 		db.session.add(grc)
 		flag = db.session.commit()
-		return {'result' : flag}, 200
+		return {'result' : 'success'}, 200
 
 	def __comment_parser(self):
 		up = reqparse.RequestParser()
@@ -149,29 +191,37 @@ class GoalRecordAwesomeRest(restful.Resource):
 		return [gra.to_json() for gra in gr.awesomes.all()], 200
 
 	def post(self, record_id):
+		#TO-DO:forbid duplicate awesome operation
 		user = check_authorization()
 		gra = GoalRecordAwesome(record_id, user.user_id)
 		db.session.add(gra)
 		db.session.commit()
-		return {'result':'success'}, 200
+		gr = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
+		return [gra.to_json() for gra in gr.awesomes.all()], 200
 		
 
 #============== End of APIs =============#
 
 
 #============== Routes ============#
-api.add_resource(UserRest, '/'+ app.config['VERSION'] + '/user/<string:user_id>','/'+ app.config['VERSION'] + '/user')
+api.add_resource(LoginRest,'/'+ app.config['VERSION'] + '/login')
+api.add_resource(UserRest,'/'+ app.config['VERSION'] + '/user/<int:user_id>','/'+ app.config['VERSION'] + '/user')
 
 api.add_resource(GoalCategoryRest, '/'+ app.config['VERSION'] + '/goal_category')
 api.add_resource(GoalRest, '/'+ app.config['VERSION'] + '/goal/<string:category_id>')
 api.add_resource(GoalRecordRest, '/'+ app.config['VERSION'] + '/goal_record/<int:record_id>','/'+ app.config['VERSION'] + '/goal_record')
 api.add_resource(GoalRecordCommentRest, '/'+ app.config['VERSION'] + '/goal_record_comment/<int:record_id>')
 api.add_resource(GoalRecordAwesomeRest, '/'+ app.config['VERSION'] + '/goal_record_awesome/<int:record_id>')
+api.add_resource(GoalJoinRecord, '/'+ app.config['VERSION'] + '/goal_join_record/<int:goal_id>')
 
 
 #============== End of Routes =====#
 
 #================== Models =====================#
+user_follow = db.Table('user_follow',
+	db.Column('follow_id', db.Integer, db.ForeignKey('user.user_id')),
+	db.Column('followed_id', db.Integer, db.ForeignKey('user.user_id'))
+)
 
 class User(db.Model):
 	__tablename__ = "user"
@@ -183,6 +233,12 @@ class User(db.Model):
 	facebook_token = db.Column(db.String)
 	header_icon = db.Column(db.String)
 
+	followings = db.relationship('User', secondary=user_follow, primaryjoin=user_id==user_follow.c.follow_id, \
+		secondaryjoin=user_id==user_follow.c.followed_id,backref=db.backref('u_fans', lazy='dynamic'))
+	
+	fans = db.relationship('User', secondary=user_follow, primaryjoin=user_id==user_follow.c.followed_id, \
+		secondaryjoin=user_id==user_follow.c.follow_id,backref=db.backref('u_followings', lazy='dynamic'))
+
 	def __init__(self, name, description, token, facebook_token, header_icon):
 		self.name = name
 		self.description = description
@@ -191,17 +247,22 @@ class User(db.Model):
 		self.header_icon = header_icon
 		self.update_time = datetime.now()
 
+	def header_json(self):
+		return {
+			'user_id' : self.user_id,
+			'header' : 'fdsafasf',
+			'user_name' : self.name
+		}
+
 	def to_json(self):
 		return {
 			'user_id' : self.user_id,
 			'name' : self.name,
-			'description': self.description
+			'description': self.description,
+			'fans' : [f.header_json() for f in self.fans],
+			'followings' : [fo.header_json() for fo in self.followings],
+			'can_follow' : True
 		}
-
-user_follow = db.Table('user_follow',
-	db.Column('follow_id', db.Integer, db.ForeignKey('user.user_id')),
-	db.Column('followed_id', db.Integer, db.ForeignKey('user.user_id'))
-)
 
 goal_category = db.Table('goal_category',
 	db.Column('goal_id', db.Integer, db.ForeignKey('goal.goal_id')),
@@ -209,7 +270,8 @@ goal_category = db.Table('goal_category',
 )
 
 class Category(db.Model):
-	"""docstring for GoalCategory"""
+	""" GoalCategory
+	"""
 	__tablename__ = "category"
 	category_name = db.Column(db.String, primary_key=True)
 	desciprtion = db.Column(db.String)
@@ -235,13 +297,14 @@ class Goal(db.Model):
 	image = db.Column(db.String)
 	desciprtion = db.Column(db.String)
 	update_time = db.Column(db.DateTime)
-	#goal_joins = db.relationship('goal_join', lazy='dynamic')
+	goal_joins = db.relationship('GoalJoin', backref='goal', lazy='dynamic')
 
 	def to_json(self):
 		return {
 			'goal_id' : self.goal_id,
 			'goal_name' : self.goal_name,
-			'desciprtion' : self.desciprtion
+			'desciprtion' : self.desciprtion,
+			'joins' : self.goal_joins.count()
 		}
 	
 class GoalJoin(db.Model):
@@ -258,8 +321,6 @@ class GoalJoin(db.Model):
 	is_finished = db.Column(db.Boolean)
 	update_time = db.Column(db.DateTime)
 
-	#goal_tracks = db.relationship('goal_track', lazy='dynamic')
-
 
 class GoalTrack(db.Model):
 	""" Track everydays' status of a goal for one user """
@@ -274,7 +335,7 @@ class GoalRecord(db.Model):
 	""" Records for a specific goal """
 	__tablename__ = 'goal_record'
 	goal_record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	goal_id = db.Column(db.Integer)
+	goal_id = db.Column(db.Integer, db.ForeignKey('goal.goal_id'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	content = db.Column(db.String)
 	image = db.Column(db.String)
@@ -288,12 +349,21 @@ class GoalRecord(db.Model):
 		self.content = content
 		self.image = image
 
-	def to_json(self):
+	def __can_awesome(self, user):
+		if (user.user_id == self.user_id) or (user.user_id in [ga.user_id for ga in self.awesomes.all()]):
+			return False
+		else:
+			return True
+
+	def to_json(self, user):
 		return {
 			'goal_record_id': self.goal_record_id,
 			'goal_id' : self.goal_id,
 			'content' : self.content,
-			'image' : self.image
+			'image' : self.image,
+			'comments' : [c.to_json() for c in self.comments.all()],
+			'awesomes' : [a.to_json() for a in self.awesomes.all()],
+			'can_awesome' : self.__can_awesome(user)
 		}
 
 class GoalRecordComment(db.Model):
@@ -346,7 +416,8 @@ class GoalRecordAwesome(db.Model):
 		}
 
 class Notification(db.Model):
-	"""docstring for Notification"""
+	"""docstring for Notification
+	"""
 	__tablename__ = 'notification'
 	notificaion_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	notificaion_type = db.Column(db.String)
@@ -372,7 +443,32 @@ class Notification(db.Model):
 		}
 
 #============== End of Models ============================#
-		
+
+def make_token(id):
+    expire_day = app.config['SESSION_EXPIRE_DAYS']
+    expire_time = (datetime.now() + timedelta(expire_day,0)).timetuple();
+    expire_datetime = time.mktime(expire_time)
+    expire = str(int(expire_datetime))
+    s = '%s:%s:%s' % (id, expire, app.config['MD5_RANDOM'])
+    md5 = hashlib.md5(s.encode('utf-8')).hexdigest()
+    return md5+":"+expire+":"+str(id)
+
+def check_expire(token):
+    '''
+    return 
+    - True for expire token
+    - False for valid token
+    - None for error token
+    '''
+    try :
+        md5, expire, id = token.split(":", 3)
+        if int(expire) > time.time():
+            return False
+        abort(500, message='Expire Token')
+    except Exception as e:
+        abort(500, message='Invalid Authorization')
+
+
 def init_db():
 	db.drop_all()
 	db.create_all()
@@ -394,7 +490,11 @@ def _test_categories():
 def make_goal_data():
 	pass
 
+def user_test():
+	u = User.query.filter(User.user_id==1).first()
+	print u.user_id
+	print u.fans
 
 if __name__ == '__main__':
+	#user_test()
 	app.run(host='0.0.0.0',port=5000)
-#================= APIs ========================#
