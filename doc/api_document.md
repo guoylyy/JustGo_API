@@ -15,7 +15,6 @@ The api requirement of WP.
 
 ##1. Users API
 
-
 ###1.1 登陆API
 用户登陆，即重新刷新token，依然用已经fackbook账户登录。 需要调用facebook api做认证. 这里用户需要
 
@@ -360,6 +359,14 @@ method: get | post
 
 
 ###3.1 拉取通知
+通知分为几类：
+    1. 系统通知
+    2. follow的通知
+    3. encourage通知
+
+封装成一个接口，然后拉取和添加通知
+
+
 
 未完成
 

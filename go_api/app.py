@@ -2,10 +2,10 @@ import os
 import random
 import json
 import csv
-import time
+import time as stime
 import hashlib
 import simplejson as json
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta, time , date
 from flask import Flask, request, flash, url_for, redirect, \
 	 render_template, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -23,11 +23,6 @@ api = restful.Api(app)
 
 parser = reqparse.RequestParser()
 parser.add_argument('Authorization', type=str, location='headers')
-
-#============== Decorators =============#
-
-#=============  End Decorators =========#
-
 
 #============= UDF ==================#
 def abort_if_category_doesnt_exist(category_name):
@@ -52,6 +47,7 @@ def check_authorization():
 			return u
 		else:
 			restful.abort(500, message='Invalid Authorization')
+
 #============= End of UDF ===========#
 
 
@@ -124,7 +120,20 @@ class GoalRest(restful.Resource):
 	def __goal_details(self, goal_id):
 		return ""
 
-class GoalJoinRecord(restful.Resource):
+class GoalJoinRest(restful.Resource):
+	def get(self):
+		user = check_authorization()
+		gjs = GoalJoin.query.filter(GoalJoin.user_id==user.user_id)
+		return [gj.to_json() for gj in gjs]
+
+
+class GoalJoinTrackRest(restful.Resource):
+	def get(self):
+		user = check_authorization()
+		gjts = GoalTrack.query.filter(GoalTrack.user_id==user.user_id)
+		return [gjt.to_json() for gjt in gjts]
+
+class GoalJoinRecordRest(restful.Resource):
 	""" API for Goal Join Record
 	"""
 	def get(self, goal_id):
@@ -200,20 +209,132 @@ class GoalRecordAwesomeRest(restful.Resource):
 		return [gra.to_json() for gra in gr.awesomes.all()], 200
 		
 
+class NotificationRest(restful.Resource):
+	""" Methods to visit user's notification
+	"""
+	def get(self):
+		""" Get user notifications
+		"""
+		user = check_authorization()
+		notifications = Notification.query.filter(Notification.receiver_id==user.id, Notification.is_readed==False)
+		return [n.to_json() for n in notifications]
+
+class EncourageRest(restful.Resource):
+	""" Send Encourage to someone's goal
+	"""
+	def post(self, goal_join_id):
+		user = check_authorization()
+		gj = GoalJoin.query.filter(GoalJoin.goal_join_id==goal_join_id).first()
+		if gj:
+			content = "%s encourage you to finish %s" % (user.name, gj.goal.goal_name)
+			ntf = Notification('encourage', user.user_id, gj.user_id, content, gj.goal_id)
+			db.session.add(ntf)
+			db.session.commit()
+		else:
+			restful.abort(404, 'User %s didn\'t join this goal' % user.name)
+
+class FollowRest(restful.Resource):
+	"""
+	"""
+	def post(self, user_id):
+		user = check_authorization()
+		target_user = User.query.filter(User.user_id==user_id)
+		target_user.fans.add(user)
+		db.session.add(user)
+		db.session.commit()
+		return {'result':'success'}, 200
+
+class UnFollowRest(restful.Resource):
+	"""
+	"""
+	def post(self, user_id):
+		user = check_authorization()
+		target_user = User.query.filter(User.user_id==user_id)
+		target_user.fans.remove(user)
+		db.session.add(target_user)
+		db.session.commit()
+		return {'result':'success'}, 200
+
+
+class SyncGoalJoinRest(restful.Resource):
+	""" Sync GoalJoin and GoalJoinTrack
+	"""
+
+	def post(self):
+		user = check_authorization()
+		objs =  request.get_json(force=True)
+		for gj in objs:
+			gjd = GoalJoin.query.filter(GoalJoin.goal_join_id==gj['goal_join_id']).first()
+			if gjd:
+				gjd.update_from_json(**gj)
+				db.session.add(gjd)
+			else:
+				gjo = GoalJoin(**gj)
+				db.session.add(gjo)
+		db.session.commit()
+		return {'result':'success'} ,200
+
+	def get(self):
+		""" 
+		"""
+		user = check_authorization()
+		gj = GoalJoin.query.filter(GoalJoin.user_id==user.user_id).order_by(GoalJoin.update_time).first()
+		if gj:
+			return {'update_time' : _mk_timestamp(gj.update_time) }, 200
+		else:
+			return {'update_time' : None}, 200
+
+class SyncGoalJoinTrackRest(restful.Resource):
+	""" Sync GoalJoin and GoalJoinTrack
+	"""
+	def post(self):
+		user = check_authorization()
+		objs =  request.get_json(force=True)
+		for gjt in objs:
+			s_gjt = GoalTrack.query.filter(GoalTrack.goal_join_id==gjt['goal_join_id'], \
+				GoalTrack.track_date==_str2date(gjt['track_date'])).first()
+			if s_gjt:
+				s_gjt.update_from_json(**gjt)
+				db.session.add(s_gjt)
+			else:
+				n_gjt = GoalTrack(**gjt)
+				db.session.add(n_gjt)
+		db.session.commit()
+		return {'result':'success'} ,200
+
+	def get(self):
+		""" Get 
+		"""
+		user = check_authorization()
+		gjt = GoalTrack.query.filter(GoalTrack.user_id==user.user_id).order_by(GoalTrack.update_time).first()
+		if gjt:
+			return {'update_time' : _mk_timestamp(gjt.update_time)}, 200
+		else:
+			return {'update_time' : None}, 200
 #============== End of APIs =============#
 
 
 #============== Routes ============#
-api.add_resource(LoginRest,'/'+ app.config['VERSION'] + '/login')
-api.add_resource(UserRest,'/'+ app.config['VERSION'] + '/user/<int:user_id>','/'+ app.config['VERSION'] + '/user')
+BASE_URL = '/' + app.config['VERSION']
 
-api.add_resource(GoalCategoryRest, '/'+ app.config['VERSION'] + '/goal_category')
-api.add_resource(GoalRest, '/'+ app.config['VERSION'] + '/goal/<string:category_id>')
-api.add_resource(GoalRecordRest, '/'+ app.config['VERSION'] + '/goal_record/<int:record_id>','/'+ app.config['VERSION'] + '/goal_record')
-api.add_resource(GoalRecordCommentRest, '/'+ app.config['VERSION'] + '/goal_record_comment/<int:record_id>')
-api.add_resource(GoalRecordAwesomeRest, '/'+ app.config['VERSION'] + '/goal_record_awesome/<int:record_id>')
-api.add_resource(GoalJoinRecord, '/'+ app.config['VERSION'] + '/goal_join_record/<int:goal_id>')
+api.add_resource(GoalJoinTrackRest, BASE_URL + '/goal_join_track')
+api.add_resource(GoalJoinRest, BASE_URL + '/goal_join')
+api.add_resource(SyncGoalJoinRest, BASE_URL + '/sync_goal_join', BASE_URL + '/goal_join/update_time')
+api.add_resource(SyncGoalJoinTrackRest, BASE_URL + '/sync_goal_join_track', BASE_URL + '/goal_join_track/update_time')
 
+api.add_resource(LoginRest, BASE_URL + '/login')
+api.add_resource(UserRest, BASE_URL + '/user/<int:user_id>', BASE_URL + '/user')
+api.add_resource(FollowRest, BASE_URL + '/user/follow/<int:user_id>')
+api.add_resource(UnFollowRest, BASE_URL + '/user/unfollow/<int:user_id>')
+
+api.add_resource(GoalCategoryRest,  BASE_URL + '/goal_category')
+api.add_resource(GoalRest,  BASE_URL + '/goal/<string:category_id>')
+api.add_resource(GoalRecordRest,  BASE_URL + '/goal_record/<int:record_id>', BASE_URL + '/goal_record')
+api.add_resource(GoalRecordCommentRest,  BASE_URL + '/goal_record_comment/<int:record_id>')
+api.add_resource(GoalRecordAwesomeRest,  BASE_URL + '/goal_record_awesome/<int:record_id>')
+api.add_resource(GoalJoinRecordRest,  BASE_URL + '/goal_join_record/<int:goal_id>')
+
+api.add_resource(NotificationRest,  BASE_URL + '/notification')
 
 #============== End of Routes =====#
 
@@ -228,10 +349,11 @@ class User(db.Model):
 	user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	name = db.Column(db.String)
 	description = db.Column(db.String)
-	update_time = db.Column(db.DateTime)
 	token = db.Column(db.String)
 	facebook_token = db.Column(db.String)
 	header_icon = db.Column(db.String)
+	update_time = db.Column(db.DateTime)
+	create_time = db.Column(db.DateTime)
 
 	followings = db.relationship('User', secondary=user_follow, primaryjoin=user_id==user_follow.c.follow_id, \
 		secondaryjoin=user_id==user_follow.c.followed_id,backref=db.backref('u_fans', lazy='dynamic'))
@@ -246,6 +368,7 @@ class User(db.Model):
 		self.facebook_token = facebook_token
 		self.header_icon = header_icon
 		self.update_time = datetime.now()
+		self.create_time = datetime.now()
 
 	def header_json(self):
 		return {
@@ -275,6 +398,7 @@ class Category(db.Model):
 	__tablename__ = "category"
 	category_name = db.Column(db.String, primary_key=True)
 	desciprtion = db.Column(db.String)
+	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	goals = db.relationship('Goal', secondary=goal_category, backref=db.backref('categorys', lazy='dynamic'))
 
@@ -282,6 +406,7 @@ class Category(db.Model):
 		self.category_name = category_name
 		self.desciprtion = desciprtion
 		self.update_time = update_time
+		self.create_time = datetime.now()
 
 	def to_json(self):
 		return {
@@ -296,8 +421,16 @@ class Goal(db.Model):
 	goal_name = db.Column(db.String, unique=True)
 	image = db.Column(db.String)
 	desciprtion = db.Column(db.String)
+	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	goal_joins = db.relationship('GoalJoin', backref='goal', lazy='dynamic')
+
+	def __init__(self, goal_name, description):
+		self.goal_name = goal_name
+		self.description = description
+		self.image = "fdsafas"
+		self.create_time = datetime.now()
+		self.update_time = datetime.now()
 
 	def to_json(self):
 		return {
@@ -311,25 +444,109 @@ class GoalJoin(db.Model):
 	__tablename__ = "goal_join"
 	goal_join_id = db.Column(db.String, primary_key=True)
 	goal_id = db.Column(db.Integer, db.ForeignKey('goal.goal_id'))
-	user_id = db.Column(db.Integer)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	time_span = db.Column(db.Integer)
 	frequency = db.Column(db.String)
 	is_reminder = db.Column(db.Boolean)
 	reminder_time = db.Column(db.Time)
-	start_date = db.Column(db.DateTime)
-	end_date = db.Column(db.DateTime)
-	is_finished = db.Column(db.Boolean)
+	start_date = db.Column(db.Date)
+	end_date = db.Column(db.Date)
+	is_finished = db.Column(db.Boolean, default=False)
 	update_time = db.Column(db.DateTime)
+	create_time = db.Column(db.DateTime)
+	
+	def __init__(self, *args , **kwargs):
+		if args:
+			self.goal_join_id = args[0]
+			self.goal_id = args[1]
+			self.user_id = args[2]
+			self.time_span = args[3]
+			self.frequency = args[4]
+			self.is_reminder = args[5]
+			self.reminder_time = args[6]
+			self.start_date = args[7]
+			self.end_date = args[8]
+			self.is_finished = args[9]
+			self.update_time = self.create_time = datetime.now()
+		else:
+			self.goal_join_id = kwargs['goal_join_id']
+			self.__receive_from_json(kwargs)
 
+
+	def update_from_json(self, **kwargs):
+		self.__receive_from_json(kwargs)
+
+	def __receive_from_json(self, kwargs):
+		self.goal_id = kwargs['goal_id']
+		self.user_id = kwargs['user_id']
+		self.time_span = kwargs['time_span']
+		self.frequency = kwargs['frequency']
+		self.is_reminder = kwargs['is_reminder']
+		self.reminder_time = _str2time(kwargs['reminder_time'])
+		self.start_date = _str2date(kwargs['start_date'])
+		self.end_date = _str2date(kwargs['end_date'])
+		self.is_finished = kwargs['is_finished']
+		self.update_time = datetime.now()
+		self.create_time = datetime.fromtimestamp(kwargs['create_time'])
+
+	def to_json(self):
+		return {
+			'goal_join_id' : self.goal_join_id,
+			'goal_id' : self.goal_id,
+			'user_id' : self.user_id,
+			'time_span': self.time_span,
+			'frequency' : self.frequency,
+			'is_reminder' : self.is_reminder,
+			'reminder_time' : self.reminder_time.isoformat(),
+			'start_date' : self.start_date.isoformat(),
+			'end_date' : self.end_date.isoformat(),
+			'is_finished': self.is_finished,
+			'update_time' : _mk_timestamp(self.update_time),
+			'create_time' : _mk_timestamp(self.create_time)
+		}
+
+	def __get_goal(self):
+		return Goal.query.filter(Goal.goal_id==self.goal_id).first()
+
+	goal = property(__get_goal)
 
 class GoalTrack(db.Model):
 	""" Track everydays' status of a goal for one user """
 	__tablename__ = "goal_track"
 	goal_track_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	goal_join_id = db.Column(db.Integer, db.ForeignKey('goal_join.goal_join_id'))
-	track_date = db.Column(db.DateTime)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+	track_date = db.Column(db.Date)
 	update_time = db.Column(db.DateTime)
+	create_time = db.Column(db.DateTime)
 
+	def __init__(self, *args, **kwargs):
+		if args:
+			self.goal_join_id = args[0]
+			self.user_id = args[1]
+			self.track_date = args[2]
+			self.update_time = self.create_time = datetime.now()
+		else:
+			self.__receive_from_json(kwargs)
+
+	def update_from_json(self, **kwargs):
+		self.__receive_from_json(kwargs)
+
+	def __receive_from_json(self, kwargs):
+		self.goal_join_id = kwargs['goal_join_id']
+		self.user_id = kwargs['user_id']
+		self.track_date = _str2date(kwargs['track_date'])
+		self.update_time = datetime.now()
+
+	def to_json(self):
+		return {
+			'goal_track_id' : self.goal_track_id,
+			'goal_join_id' : self.goal_join_id,
+			'user_id' : self.user_id,
+			'track_date' : self.track_date.isoformat(),
+			'update_time' : _mk_timestamp(self.update_time),
+			'create_time' : _mk_timestamp(self.create_time)
+		}
 
 class GoalRecord(db.Model):
 	""" Records for a specific goal """
@@ -339,6 +556,7 @@ class GoalRecord(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	content = db.Column(db.String)
 	image = db.Column(db.String)
+	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	comments = db.relationship('GoalRecordComment', backref='goal_record', lazy='dynamic')
 	awesomes = db.relationship('GoalRecordAwesome', backref='goal_record', lazy='dynamic')
@@ -348,6 +566,8 @@ class GoalRecord(db.Model):
 		self.user_id = user_id
 		self.content = content
 		self.image = image
+		self.update_time = datetime.now()
+		self.create_time = datetime.now()
 
 	def __can_awesome(self, user):
 		if (user.user_id == self.user_id) or (user.user_id in [ga.user_id for ga in self.awesomes.all()]):
@@ -424,15 +644,17 @@ class Notification(db.Model):
 	sender_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	receiver_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	content = db.Column(db.String)
+	attach_key = db.Column(db.String)
 	update_time = db.Column(db.DateTime)
 	create_time = db.Column(db.DateTime)
 	is_readed = db.Column(db.Boolean, default=False)
 	
-	def __init__(self, notificaion_type, sender_id, receiver_id, content):
+	def __init__(self, notificaion_type, sender_id, receiver_id, content, attach_key):
 		self.notificaion_type = notificaion_type
 		self.sender_id = sender_id
 		self.receiver_id = receiver_id
 		self.content = content
+		self.attach_key = str(attach_key)
 		self.update_time = self.create_time = datetime.now()
 
 	def to_json(self):
@@ -442,7 +664,13 @@ class Notification(db.Model):
 			'content' : self.content
 		}
 
+
 #============== End of Models ============================#
+
+#============== Query ===============#
+
+
+#============== End Query ===========#
 
 def make_token(id):
     expire_day = app.config['SESSION_EXPIRE_DAYS']
@@ -455,14 +683,10 @@ def make_token(id):
 
 def check_expire(token):
     '''
-    return 
-    - True for expire token
-    - False for valid token
-    - None for error token
     '''
     try :
         md5, expire, id = token.split(":", 3)
-        if int(expire) > time.time():
+        if int(expire) > stime.time():
             return False
         abort(500, message='Expire Token')
     except Exception as e:
@@ -481,14 +705,48 @@ def make_wp_data():
 	categories = ['Popular', 'Health Diet', 'Train plans', 'Habits', 'Learning']
 	for cat in categories:
 		db.session.add(Category(cat, datetime.now(), ''))
+	goals = [
+			['Drink water','description','Popular'],
+			['Make love Every Day','description','Popular'],
+			['Write article ','description','Popular'],
+			['Do fitness','description','Health Diet'],
+			['Watch Movie','description','Train plans']
+		]
 	db.session.commit()
+	c = Category.query.filter(Category.category_name=='Popular').first()
+
+	g_list = []
+	for g in goals:
+		goal = Goal(g[0], g[1])
+		g_list.append(goal)
+		db.session.add(goal)
+	c.goals = g_list
+	db.session.add(c)
+	db.session.commit()
+
+def _str2date(dstr):
+	ym = [int(d) for d in dstr.split('-')]
+	return date(ym[0],ym[1],ym[2])
+
+def _str2time(tstr):
+	tm = [int(t) for t in tstr.split(':')]
+	return time(tm[0],tm[1])
+
+def _mk_timestamp(datetime):
+	return stime.mktime(datetime.timetuple())
 
 def _test_categories():
 	c = Category.query.filter(Category.category_name=='Popular').count()
 	print c
-
-def make_goal_data():
-	pass
+	
+def make_test_goal_join():
+	gj = GoalJoin('fs332ab',1,1,7,'1,2,3,4,5',True,time(12,2), date(2014,8,8),date(2014,8,20), False)
+	gt1 = GoalTrack('fs332ab',1, date(2014,8,9))
+	gt2 = GoalTrack('fs332ab',1, date(2014,8,10))
+	db.session.add(gj)
+	db.session.add(gt1)
+	db.session.add(gt2)
+	db.session.commit()
 
 def user_test():
 	u = User.query.filter(User.user_id==1).first()
@@ -496,5 +754,6 @@ def user_test():
 	print u.fans
 
 if __name__ == '__main__':
-	#user_test()
+	#init_db()
+	#make_test_goal_join()
 	app.run(host='0.0.0.0',port=5000)
