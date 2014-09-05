@@ -1,7 +1,6 @@
-import os 
+import os
 import random
 import json
-import csv
 import time as stime
 import hashlib
 import simplejson as json
@@ -773,7 +772,6 @@ def _find_or_create_thumbnail(obj, imageset, width=None, height=None):
 		image = imageset.find_thumbnail(width=width, height=height)
 	return image
 
-	
 def make_test_goal_join():
 	gj = GoalJoin('fs332ab',1,1,7,'1,2,3,4,5',True,time(12,2), date(2014,8,8),date(2014,8,20), False)
 	gt1 = GoalTrack('fs332ab',1, date(2014,8,9))
