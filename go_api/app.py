@@ -12,6 +12,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import or_
 from sqlalchemy import Table 
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy_imageattach.entity import Image, image_attachment, store_context
+from sqlalchemy_imageattach.stores.fs import HttpExposedFileSystemStore, FileSystemStore
 from flask.ext import restful
 from flask.ext.restful import fields, marshal, abort
 from flask.ext.restful import reqparse
@@ -20,6 +23,8 @@ app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
 db = SQLAlchemy(app)
 api = restful.Api(app)
+
+fs_store = FileSystemStore(app.config['IMAGE_UPLOAD_URL'], app.config['IMAGE_URL'])
 
 parser = reqparse.RequestParser()
 parser.add_argument('Authorization', type=str, location='headers')
@@ -86,9 +91,12 @@ class LoginRest(restful.Resource):
 		if user is None:
 			#register
 			token = "fdsafsafas"
-			u = User(up['name'],up['description'],token,up['facebook_token'],'header')	
-			db.session.add(u)
-			flag = db.session.commit()
+			u = User(up['name'],up['description'],token,up['facebook_token'],'header')
+			with store_context(fs_store):	
+				with open('pic1.jpg','rb') as f:
+					u.header_icon.from_blob(f.read())
+				db.session.add(u)
+				flag = db.session.commit()
 			u.token = make_token(u.user_id)
 			db.session.add(u)
 			db.session.commit()
@@ -351,7 +359,7 @@ class User(db.Model):
 	description = db.Column(db.String)
 	token = db.Column(db.String)
 	facebook_token = db.Column(db.String)
-	header_icon = db.Column(db.String)
+	header_icon = image_attachment('UserHeader')
 	update_time = db.Column(db.DateTime)
 	create_time = db.Column(db.DateTime)
 
@@ -366,26 +374,33 @@ class User(db.Model):
 		self.description = description
 		self.token = token
 		self.facebook_token = facebook_token
-		self.header_icon = header_icon
 		self.update_time = datetime.now()
 		self.create_time = datetime.now()
 
 	def header_json(self):
 		return {
 			'user_id' : self.user_id,
-			'header' : 'fdsafasf',
+			'header' : _find_or_create_thumbnail(self, self.header_icon,48).locate(),
 			'user_name' : self.name
 		}
 
 	def to_json(self):
-		return {
-			'user_id' : self.user_id,
-			'name' : self.name,
-			'description': self.description,
-			'fans' : [f.header_json() for f in self.fans],
-			'followings' : [fo.header_json() for fo in self.followings],
-			'can_follow' : True
-		}
+		with store_context(fs_store):
+			return {
+				'user_id' : self.user_id,
+				'name' : self.name,
+				'description': self.description,
+				'fans' : [f.header_json() for f in self.fans],
+				'followings' : [fo.header_json() for fo in self.followings],
+				'can_follow' : True,
+				'header_icon' : _find_or_create_thumbnail(self, self.header_icon,48).locate()
+			}
+
+class UserHeader(db.Model, Image):
+	__tablename__ = 'user_header'
+	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+	user = db.relationship('User')
+
 
 goal_category = db.Table('goal_category',
 	db.Column('goal_id', db.Integer, db.ForeignKey('goal.goal_id')),
@@ -419,7 +434,7 @@ class Goal(db.Model):
 	__tablename__ = "goal"
 	goal_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	goal_name = db.Column(db.String, unique=True)
-	image = db.Column(db.String)
+	image = image_attachment('GoalImage')
 	desciprtion = db.Column(db.String)
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
@@ -428,18 +443,24 @@ class Goal(db.Model):
 	def __init__(self, goal_name, description):
 		self.goal_name = goal_name
 		self.description = description
-		self.image = "fdsafas"
 		self.create_time = datetime.now()
 		self.update_time = datetime.now()
 
 	def to_json(self):
-		return {
-			'goal_id' : self.goal_id,
-			'goal_name' : self.goal_name,
-			'desciprtion' : self.desciprtion,
-			'joins' : self.goal_joins.count()
-		}
-	
+		with store_context(fs_store):
+			return {
+				'goal_id' : self.goal_id,
+				'goal_name' : self.goal_name,
+				'desciprtion' : self.desciprtion,
+				'joins' : self.goal_joins.count(),
+				'image' : self.image.locate()
+			}
+
+class GoalImage(db.Model, Image):
+	__tablename__ = 'goal_image'
+	user_id = db.Column(db.Integer, db.ForeignKey('goal.goal_id'), primary_key=True)
+	user = db.relationship('Goal')
+
 class GoalJoin(db.Model):
 	__tablename__ = "goal_join"
 	goal_join_id = db.Column(db.String, primary_key=True)
@@ -675,7 +696,7 @@ class Notification(db.Model):
 def make_token(id):
     expire_day = app.config['SESSION_EXPIRE_DAYS']
     expire_time = (datetime.now() + timedelta(expire_day,0)).timetuple();
-    expire_datetime = time.mktime(expire_time)
+    expire_datetime = stime.mktime(expire_time)
     expire = str(int(expire_datetime))
     s = '%s:%s:%s' % (id, expire, app.config['MD5_RANDOM'])
     md5 = hashlib.md5(s.encode('utf-8')).hexdigest()
@@ -691,7 +712,6 @@ def check_expire(token):
         abort(500, message='Expire Token')
     except Exception as e:
         abort(500, message='Invalid Authorization')
-
 
 def init_db():
 	db.drop_all()
@@ -716,13 +736,16 @@ def make_wp_data():
 	c = Category.query.filter(Category.category_name=='Popular').first()
 
 	g_list = []
-	for g in goals:
-		goal = Goal(g[0], g[1])
-		g_list.append(goal)
-		db.session.add(goal)
-	c.goals = g_list
-	db.session.add(c)
-	db.session.commit()
+	with store_context(fs_store):
+		for g in goals:
+			goal = Goal(g[0], g[1])
+			with open('pic1.jpg','rb') as f:
+				goal.image.from_blob(f.read())
+			g_list.append(goal)
+			db.session.add(goal)
+		c.goals = g_list
+		db.session.add(c)
+		db.session.commit()
 
 def _str2date(dstr):
 	ym = [int(d) for d in dstr.split('-')]
@@ -738,6 +761,18 @@ def _mk_timestamp(datetime):
 def _test_categories():
 	c = Category.query.filter(Category.category_name=='Popular').count()
 	print c
+
+def _find_or_create_thumbnail(obj, imageset, width=None, height=None):
+	assert width is not None or height is not None 
+	try:
+		image = imageset.find_thumbnail(width=width, height=height)
+	except NoResultFound:
+		imageset.generate_thumbnail(width=width, height=height) 
+		db.session.add(obj)
+		db.session.commit()
+		image = imageset.find_thumbnail(width=width, height=height)
+	return image
+
 	
 def make_test_goal_join():
 	gj = GoalJoin('fs332ab',1,1,7,'1,2,3,4,5',True,time(12,2), date(2014,8,8),date(2014,8,20), False)
@@ -751,9 +786,13 @@ def make_test_goal_join():
 def user_test():
 	u = User.query.filter(User.user_id==1).first()
 	print u.user_id
-	print u.fans
+	with store_context(fs_store):
+		tb = _find_or_create_thumbnail(u, u.header_icon, 55)
+		print tb.locate()
+		print u.header_icon.locate()
 
 if __name__ == '__main__':
 	#init_db()
 	#make_test_goal_join()
+	#user_test()
 	app.run(host='0.0.0.0',port=5000)
