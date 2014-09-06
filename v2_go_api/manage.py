@@ -78,6 +78,8 @@ def goal_join_test_data():
 	db.session.add(gt2)
 	db.session.commit()
 
+
+
 if __name__ == '__main__':
     manager.run()
 

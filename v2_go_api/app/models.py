@@ -243,17 +243,16 @@ class GoalRecord(db.Model):
 	goal_id = db.Column(db.Integer, db.ForeignKey('goal.goal_id'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	content = db.Column(db.String)
-	image = db.Column(db.String)
+	image = image_attachment('GoalRecordImage')
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	comments = db.relationship('GoalRecordComment', backref='goal_record', lazy='dynamic')
 	awesomes = db.relationship('GoalRecordAwesome', backref='goal_record', lazy='dynamic')
 
-	def __init__(self, goal_id, user_id, content, image):
+	def __init__(self, goal_id, user_id, content):
 		self.goal_id = goal_id
 		self.user_id = user_id
 		self.content = content
-		self.image = image
 		self.update_time = datetime.now()
 		self.create_time = datetime.now()
 
@@ -264,15 +263,26 @@ class GoalRecord(db.Model):
 			return True
 
 	def to_json(self, user):
-		return {
-			'goal_record_id': self.goal_record_id,
-			'goal_id' : self.goal_id,
-			'content' : self.content,
-			'image' : self.image,
-			'comments' : [c.to_json() for c in self.comments.all()],
-			'awesomes' : [a.to_json() for a in self.awesomes.all()],
-			'can_awesome' : self.__can_awesome(user)
-		}
+		with store_context(fs_store):
+			return {
+				'goal_record_id': self.goal_record_id,
+				'goal_id' : self.goal_id,
+				'content' : self.content,
+				'image' : self.image.locate(),
+				'comments' : [c.to_json() for c in self.comments.all()],
+				'awesomes' : [a.to_json() for a in self.awesomes.all()],
+				'can_awesome' : self.__can_awesome(user)
+			}
+
+
+class GoalRecordImage(db.Model, Image):
+	""" Image with sqlalchemy_imageattach
+	"""
+	__tablename__ = 'goal_record_image'
+	goal_record_id = db.Column(db.Integer, db.ForeignKey('goal_record.goal_record_id'),\
+		 primary_key=True)
+	goal_record = relationship('GoalRecord')
+
 
 class GoalRecordComment(db.Model):
 	"""docstring for GoalRecordComment"""

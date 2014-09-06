@@ -57,10 +57,13 @@ class GoalRecordRest(Resource):
 		"""
 		user = check_authorization()
 		up = self.__record_parser()
-		g = GoalRecord(up['goal_id'], user.user_id, up['content'], 'fdsafa')
-		db.session.add(g)
-		flag = db.session.commit()
-		return g.to_json(user), 200
+		g = GoalRecord(up['goal_id'], user.user_id, up['content'])
+		with store_context(fs_store):	
+			with open('pic1.jpg','rb') as f:
+				g.image.from_blob(f.read())
+			db.session.add(g)
+			flag = db.session.commit()
+			return g.to_json(user), 200
 
 	def __record_parser(self):
 		up = reqparse.RequestParser()
