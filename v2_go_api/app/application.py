@@ -20,7 +20,7 @@ from sqlalchemy_imageattach.stores.fs import FileSystemStore
 
 __all__ = ['create_app']
 
-DEFAULT_APP_NAME = 'just_go'
+DEFAULT_APP_NAME = 'app'
 
 REGISTER_BLUE_PRINTS = (
         (test.instance,''),

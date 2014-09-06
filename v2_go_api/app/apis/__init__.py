@@ -20,4 +20,5 @@ def create_api(api, base_url):
 	api.add_resource(GoalJoinRecordRest,  base_url + '/goal_join_record/<int:goal_id>')
 
 	api.add_resource(NotificationRest,  base_url + '/notification')
+	api.add_resource(EncourageRest,  base_url + '/encourage/<string:goal_join_id>')
 	return api

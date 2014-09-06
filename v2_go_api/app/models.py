@@ -5,10 +5,11 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import or_
 from sqlalchemy import Table 
 from datetime import datetime, timedelta, time , date
-from extensions import db
+from extensions import db, fs_store
 from sqlalchemy_imageattach.entity import Image, image_attachment, store_context
 from sqlalchemy_imageattach.stores.fs import HttpExposedFileSystemStore, FileSystemStore
-from app.helpers import *
+from app.helpers import _str2date, _find_or_create_thumbnail, _mk_timestamp
+
 
 #================== Models =====================#
 user_follow = db.Table('user_follow',
@@ -117,7 +118,9 @@ class Goal(db.Model):
 				'goal_name' : self.goal_name,
 				'desciprtion' : self.desciprtion,
 				'joins' : self.goal_joins.count(),
-				'image' : self.image.locate()
+				'image' : self.image.locate(),
+				'joins' : self.goal_joins.count()
+
 			}
 
 class GoalImage(db.Model, Image):
@@ -294,7 +297,7 @@ class GoalRecordComment(db.Model):
 			'goal_record_id' : self.goal_record_id,
 			'user_id' : self.user_id,
 			'content' : self.content,
-			'create_time' : time.mktime(self.create_time.timetuple())
+			'create_time' : stime.mktime(self.create_time.timetuple())
 		}
 
 
@@ -345,7 +348,7 @@ class Notification(db.Model):
 	def to_json(self):
 		return {
 			'notificaion_id' : self.notificaion_id,
-			'user_id' : self.user_id,
+			'user_id' : self.sender_id,
 			'content' : self.content
 		}
 

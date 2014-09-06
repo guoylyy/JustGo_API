@@ -74,12 +74,16 @@ method: get | post
         }
     ],
     "name": "yiliangg",
-    "user_id": 1
+    "user_id": 1,
+    "header_icon": "http:///Users/globit/git/JustGo_Project/go_api/userimages/user-header/1/0/1.48x52.jpe?_ts=20140906050939000000"
 }
+
 
 ```
 
 ####数据说明-更新 POST
+更新用户基本信息
+
 ```
 发送数据
 	headers: 
@@ -106,15 +110,60 @@ method: get | post
         }
     ],
     "name": "yiliangg",
-    "user_id": 1
+    "user_id": 1,
+    "header_icon": "file:///Users/globit/git/JustGo_Project/go_api/userimages/user-header/1/0/1.48x52.jpe?_ts=20140906050939000000"
 }
 ```
 
 
 ###1.3 查询用户API
 输入用户名，进行模糊匹配查询
-//未开发
+//未开发 待开发
 
+
+###1.4 关注API
+关注某用户
+
+```
+url: /user/follow/<int:user_id> //被关注用户的ID
+method:post
+```
+####数据说明
+
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'		//当前用户的authorisation
+		
+返回数据：
+{
+    "result": "success"
+}
+	
+```
+
+
+###1.5 取消关注API
+取消关注
+
+
+```
+url: /user/unfollow/<int:user_id> //被取消关注用户的ID
+method:post
+```
+####数据说明
+
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'		//当前用户的authorisation
+		
+返回数据：
+{
+    "result": "success"
+}
+	
+```
 
 
 ##2. Goals API
@@ -123,7 +172,7 @@ method: get | post
 (未完成) 
 
 ###2.2 获取目标所有Category
-RT
+获取各个category的名字和描述，这个描述就是主键
 
 ```
 url: goal_category
@@ -164,21 +213,17 @@ method: get
 返回数据：
 [
     {
-        "desciprtion": "I can naje it ",
+        "desciprtion": null,
         "goal_id": 1,
-        "goal_name": "Write A Ariticle",
+        "goal_name": "Drink water",
+        "image": "file:///Users/globit/git/JustGo_Project/go_api/userimages/goal-image/1/0/1.301x328.jpe?_ts=20140906060541000000",
         "joins": 0
-    },
-    {
-        "desciprtion": "NULfdsafasfL",
-        "goal_id": 2,
-        "goal_name": "This is a test",
-        "joins": 0
-    }
+    }.....
+    
 ]
 ```
 
-###2.4 当前用户添加关于某个goal的record
+###2.4 添加和获取goal的record
 添加关于某个goal 的 record
 
 ```
@@ -353,6 +398,73 @@ method: get | post
 ]
 ```
 
+###2.7 拉取用户所有join的goals情况
+获取用户join的goal
+
+```
+url: goal_join
+method: get
+```
+####数据说明 GET
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'
+		
+返回数据：
+[
+    {
+        "create_time": 1409985233,
+        "end_date": "2014-08-20",
+        "frequency": "1,2,3,4,5",
+        "goal_id": 1,
+        "goal_join_id": "fs332ab",
+        "is_finished": false,
+        "is_reminder": true,
+        "reminder_time": "12:02:00",
+        "start_date": "2014-08-08",
+        "time_span": 7,
+        "update_time": 1409985233,
+        "user_id": 1
+    }
+]
+```
+
+###2.6 拉取用户所有goal的 track记录
+获取用户所有的track
+
+```
+url: goal_join_track
+method: get
+```
+####数据说明 GET
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'
+
+返回数据：
+[
+    {
+        "create_time": 1409985233,
+        "goal_join_id": "fs332ab",
+        "goal_track_id": 1,
+        "track_date": "2014-08-09",
+        "update_time": 1409985233,
+        "user_id": 1
+    },
+    {
+        "create_time": 1409985233,
+        "goal_join_id": "fs332ab",
+        "goal_track_id": 2,
+        "track_date": "2014-08-10",
+        "update_time": 1409985233,
+        "user_id": 1
+    }
+]
+```
+
+
 
 
 ##3. Notification API
@@ -366,9 +478,59 @@ method: get | post
 
 封装成一个接口，然后拉取和添加通知
 
+```
+url:  notification
+method: get
+```
+####数据说明 GET
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'
+
+返回数据：
+[
+    {
+        "create_time": 1409985233,
+        "goal_join_id": "fs332ab",
+        "goal_track_id": 1,
+        "track_date": "2014-08-09",
+        "update_time": 1409985233,
+        "user_id": 1
+    }
+]
+```
 
 
-未完成
+###3.2 Encourage用户
+就某好友参加的Goal发送鼓励信息
+
+```
+url: 
+method: get
+```
+####数据说明 GET
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'
+
+返回数据：
+[
+    {
+        "create_time": 1409985233,
+        "goal_join_id": "fs332ab",
+        "goal_track_id": 1,
+        "track_date": "2014-08-09",
+        "update_time": 1409985233,
+        "user_id": 1
+    }
+]
+```
+
+
+
+
 
 
 

@@ -3,7 +3,7 @@ from sqlalchemy_imageattach.entity import Image, image_attachment, store_context
 from flask.ext.restful import Resource, reqparse
 from app.helpers import * 
 from app.extensions import db, fs_store
-#from app.helpers import get_fs_store
+from api_helpers import *
 
 class UserRest(Resource):
 	def get(self, user_id):
@@ -35,8 +35,8 @@ class FollowRest(Resource):
 	"""
 	def post(self, user_id):
 		user = check_authorization()
-		target_user = User.query.filter(User.user_id==user_id)
-		target_user.fans.add(user)
+		target_user = User.query.filter(User.user_id==user_id).first()
+		target_user.fans.append(user)
 		db.session.add(user)
 		db.session.commit()
 		return {'result':'success'}, 200
@@ -46,7 +46,7 @@ class UnFollowRest(Resource):
 	"""
 	def post(self, user_id):
 		user = check_authorization()
-		target_user = User.query.filter(User.user_id==user_id)
+		target_user = User.query.filter(User.user_id==user_id).first()
 		target_user.fans.remove(user)
 		db.session.add(target_user)
 		db.session.commit()
