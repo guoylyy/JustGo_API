@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
+import unittest
 import json
 from tests import TestCase
-
 
 class TestSite(TestCase):
 

@@ -8,9 +8,9 @@
 	:copyrght: (c) 2014 by 404Design Workshop
 	:license: BSD, see LICENSE for more details.
 """
-
 import os
 import sys
+
 from flask import current_app
 from flask.ext.script import Manager,prompt,prompt_pass,\
         prompt_bool,prompt_choices, Server, Shell, Command, prompt_bool
@@ -21,13 +21,19 @@ from sqlalchemy_imageattach.entity import Image, image_attachment, store_context
 from app.extensions import db, fs_store
 from app import create_app
 
+#from tests.test_site import TestSite
+#from test import run_test
+
 manager = Manager(create_app)
 manager.add_command('runserver', Server())
 
 def _make_context():
     return dict(db=db)
-
 manager.add_command("shell", Shell(make_context=_make_context))
+
+@manager.command
+def test():
+	run_test()
 
 @manager.command
 def create_all():
@@ -36,10 +42,6 @@ def create_all():
 @manager.command
 def drop_all():
 	db.drop_all()
-
-@manager.command
-def make_test_data():
-	pass
 
 @manager.command
 def make_test_data():
@@ -77,8 +79,6 @@ def goal_join_test_data():
 	db.session.add(gt1)
 	db.session.add(gt2)
 	db.session.commit()
-
-
 
 if __name__ == '__main__':
     manager.run()

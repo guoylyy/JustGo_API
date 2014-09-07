@@ -5,6 +5,7 @@ import tempfile
 
 class FlaskrTestCase(unittest.TestCase):
     def setUp(self):
+        print "This is test"
         self.db_fd, app.app.config['DATABASE'] = tempfile.mkstemp()
         app.app.config['TESTING'] = True
         self.app = app.app.test_client()

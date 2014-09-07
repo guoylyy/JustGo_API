@@ -3,7 +3,7 @@
 
 import os
 import logging
-from flask import Flask
+from flask import Flask, g
 from app import configs
 from app.views import test_view as test
 
@@ -27,7 +27,7 @@ REGISTER_BLUE_PRINTS = (
         # add your blue print here
         )
 
-def create_app(config=None,app_name=None):
+def create_app(config=None,app_name=None,is_test=False):
     
     if app_name is None:
         app_name = DEFAULT_APP_NAME
@@ -38,6 +38,7 @@ def create_app(config=None,app_name=None):
     configure_extensions(app)
     confgiure_api(app)
     configure_blueprints(app)
+
     #configure_cache(app)
     return app
 
