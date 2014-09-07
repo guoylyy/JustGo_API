@@ -16,8 +16,7 @@ from app.extensions import db, fs_store
 from app import create_app
 from app import configs
 
-from tests import GoalTest
-
+from tests import B_GoalTest, A_UserTest, C_NotificationTest
 
 manager = Manager(create_app(configs.TestConfig,'test_app',True))
 
@@ -30,6 +29,13 @@ def create_all():
 @manager.command
 def drop_all():
     db.drop_all()
+
+@manager.command
+def refresh():
+    db.drop_all()
+    db.create_all()
+    make_test_data()
+    goal_join_test_data()
 
 
 def make_test_data():
@@ -73,8 +79,3 @@ if __name__ == '__main__':
         unittest.main()
     else:
         manager.run()
-    #if len(sys.argv) >= 2 and sys.argv[1] == 'test':
-    #    print 'Test'
-    #    unittest.main()
-    #else:
-    #    manager.run()

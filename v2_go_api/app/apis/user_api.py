@@ -29,6 +29,10 @@ class UserRest(Resource):
 		up.add_argument('description', type=str, location='form')
 		return up.parse_args()
 
+class ProfileRest(Resource):
+	def get(self):
+		user = check_authorization()
+		return user.to_json(), 200
 
 class FollowRest(Resource):
 	"""

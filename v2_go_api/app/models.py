@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, time , date
 from extensions import db, fs_store
 from sqlalchemy_imageattach.entity import Image, image_attachment, store_context
 from sqlalchemy_imageattach.stores.fs import HttpExposedFileSystemStore, FileSystemStore
-from app.helpers import _str2date, _find_or_create_thumbnail, _mk_timestamp
+from app.helpers import _str2date, _find_or_create_thumbnail, _mk_timestamp, _str2time
 
 
 #================== Models =====================#

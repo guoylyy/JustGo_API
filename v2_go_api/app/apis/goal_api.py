@@ -1,10 +1,15 @@
+from flask import request
 from datetime import datetime
 from sqlalchemy_imageattach.entity import Image, image_attachment, store_context
 from flask.ext.restful import Resource, reqparse, abort
-from app.helpers import * 
+from app.helpers import _str2date 
+from app.helpers import _mk_timestamp
 from app.extensions import db, fs_store
 from app.models import *
-from api_helpers import abort_if_category_doesnt_exist, check_authorization
+from api_helpers import abort_if_category_doesnt_exist
+from api_helpers import check_authorization
+ 
+
 
 class GoalCategoryRest(Resource):
 	def get(self):
@@ -104,7 +109,7 @@ class GoalRecordAwesomeRest(Resource):
 
 	def post(self, record_id):
 		user = check_authorization()
-		tg = GoalRecordAwesome.query.filter(GoalRecordAwesome.record_id==record_id,
+		tg = GoalRecordAwesome.query.filter(GoalRecordAwesome.goal_record_id==record_id,
 			GoalRecordAwesome.user_id == user.user_id).first()
 		if tg:
 			return tg.to_json(), 200
@@ -118,7 +123,6 @@ class GoalRecordAwesomeRest(Resource):
 class SyncGoalJoinRest(Resource):
 	""" Sync GoalJoin and GoalJoinTrack
 	"""
-
 	def post(self):
 		user = check_authorization()
 		objs =  request.get_json(force=True)
@@ -181,6 +185,8 @@ class NotificationRest(Resource):
 		notifications = Notification.query.filter(Notification.receiver_id==user.user_id,\
 			 Notification.is_readed==False)
 		return [n.to_json() for n in notifications]
+
+
 
 class EncourageRest(Resource):
 	""" Send Encourage to someone's goal

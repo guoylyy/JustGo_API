@@ -6,6 +6,7 @@ def create_api(api, base_url):
 	api.add_resource(LoginRest, base_url + '/login')
 	api.add_resource(FollowRest, base_url + '/user/follow/<int:user_id>')
 	api.add_resource(UnFollowRest, base_url + '/user/unfollow/<int:user_id>')
+	api.add_resource(ProfileRest, base_url + '/user/profile')
 	
 	api.add_resource(GoalJoinTrackRest, base_url + '/goal_join_track')
 	api.add_resource(GoalJoinRest, base_url + '/goal_join')
