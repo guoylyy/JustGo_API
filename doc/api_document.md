@@ -11,8 +11,6 @@ The api requirement of WP.
 ###0.2 系统错误消息代码
 系统消息代码是系统前后台用户通信错误信息的口令，可以方便统一消息意义
 
-
-
 ##1. Users API
 
 ###1.1 登陆API
@@ -169,7 +167,116 @@ method:post
 ##2. Goals API
 
 ###2.1 同步目标API
-(未完成) 
+
+####2.1.1 获取Goal Join最后同步时间
+```
+ url: sync_goal_join
+ method : get
+```
+##### 数据说明
+
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'		//当前用户的authorisation
+		
+返回数据：
+{
+    "updatetime": 21324123124.00
+}
+
+```
+
+####2.1.2 同步Goal Join
+```
+url: sync_goal_join
+method: post
+```
+
+#####数据说明
+
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'		//当前用户的authorisation
+		-'Content-Type' : 'application/json'
+		
+	data: //把要同步的goaljoin信息转成json str 发送
+		[
+    	{
+        "create_time": 1409985233,
+        "end_date": "2014-08-20",
+        "frequency": "1,2,3,4,5",
+        "goal_id": 1,
+        "goal_join_id": "fs332ab",
+        "is_finished": false,
+        "is_reminder": true,
+        "reminder_time": "12:02:00",
+        "start_date": "2014-08-08",
+        "time_span": 7,
+        "update_time": 1409985233,
+   	     "user_id": 1
+		}
+		]
+		
+返回数据：
+{
+    'result':'success'
+}
+```	
+
+####2.1.3 获取Goal Join Track最后同步时间
+```
+ url: sync_goal_join_track
+ method : get
+```
+##### 数据说明
+
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'		//当前用户的authorisation
+		
+返回数据：
+{
+    "updatetime": 21324123124.00
+}
+
+```
+
+
+
+####2.1.4 同步Goal Join Track
+```
+url: sync_goal_join
+method: post
+```
+
+#####数据说明
+
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'		//当前用户的authorisation
+		-'Content-Type' : 'application/json'
+	data: //把要同步的goaljoin tack信息转成json发送
+		[
+                {
+                    "create_time": 1409846950,
+                    "goal_join_id": "fsafasf",
+                    "goal_track_id": 1,
+                    "track_date": "2014-08-09",
+                    "update_time": 1409846950,
+                    "user_id": 1
+                }
+       ]
+		
+返回数据：
+{
+    'result':'success'
+}
+```	
+
 
 ###2.2 获取目标所有Category
 获取各个category的名字和描述，这个描述就是主键
@@ -489,14 +596,12 @@ method: get
 		-Authorization : 'dfasfsa'
 
 返回数据：
+//还不够完善，应该给用户头像等
 [
     {
-        "create_time": 1409985233,
-        "goal_join_id": "fs332ab",
-        "goal_track_id": 1,
-        "track_date": "2014-08-09",
-        "update_time": 1409985233,
-        "user_id": 1
+        "content": "tu_1410142753.0745_t encourage you to finish Drink water",
+        "notificaion_id": 3,
+        "user_id": 6
     }
 ]
 ```
@@ -506,9 +611,10 @@ method: get
 就某好友参加的Goal发送鼓励信息
 
 ```
-url: 
+url: /encourage/<str:goal_join_id>
 method: get
 ```
+
 ####数据说明 GET
 ```
 发送数据
@@ -516,16 +622,13 @@ method: get
 		-Authorization : 'dfasfsa'
 
 返回数据：
-[
-    {
-        "create_time": 1409985233,
-        "goal_join_id": "fs332ab",
-        "goal_track_id": 1,
-        "track_date": "2014-08-09",
-        "update_time": 1409985233,
-        "user_id": 1
-    }
-]
+//目前还没有完善
+{
+    "content": "tu_1410142753.0745_t encourage you to finish Drink water",
+    "notificaion_id": 3,
+    "user_id": 6
+}
+
 ```
 
 

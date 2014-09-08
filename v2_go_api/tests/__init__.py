@@ -191,10 +191,12 @@ class C_NotificationTest(BaseTest):
         rep = self.client.post(self.base_url + '/encourage/goal_' + user_name,
             headers={'Authorization' : self.stranger_token})
         assert b'content' in rep.data
+        print rep.data
 
         rep = self.client.get(self.base_url + '/notification',
             headers={'Authorization' : self.token})
         assert b'content' in rep.data
+        print rep.data
 
     def test_02_mark_all_as_readed(self):
         
