@@ -100,9 +100,16 @@
     <Compile Include="Converter\BoolToVisibilityReversalConverter.cs" />
     <Compile Include="Converter\CountToGoalStringConverter.cs" />
     <Compile Include="Converter\DateTimeToStringConverter.cs" />
+    <Compile Include="Converter\IntToParticipantsConverter.cs" />
+    <Compile Include="DataBase\CsvUtil.cs" />
     <Compile Include="Datas\Comment.cs" />
     <Compile Include="Datas\Goal.cs" />
+    <Compile Include="Datas\GoalJoin.cs" />
+    <Compile Include="Datas\GoalTrack.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Datas\Person.cs" />
+    <Compile Include="Datas\SyncDataBase.cs" />
     <Compile Include="Datas\User.cs" />
     <Compile Include="Datas\UserRecord.cs" />
     <Compile Include="Global.cs" />

@@ -60,7 +60,7 @@
                                    VerticalAlignment="Top"
                                    Width="40"
                                    Margin="0,5,170,0"
-                                   Visibility="{Binding IsFinished, Converter={StaticResource BoolToVisibilityConverter}}"
+                                   Visibility="{Binding IsFinishedToday, Converter={StaticResource BoolToVisibilityConverter}}"
                                    HorizontalAlignment="Right" />
                         </Grid>
                         <TextBlock Grid.Row="1"
@@ -73,7 +73,7 @@
                               Width="{Binding Width, ElementName=path}"
                               Margin="0,100,0,0"
                               local:TiltEffect.IsTiltEnabled="True"
-                              Visibility="{Binding IsFinished, Converter={StaticResource BoolToVisibilityReversalConverter}}"
+                              Visibility="{Binding IsFinishedToday, Converter={StaticResource BoolToVisibilityReversalConverter}}"
                               Tap="DoneGrid_OnTap">
                             <Path x:Name="path"
                                   Width="222"
@@ -89,7 +89,7 @@
 
                         <Grid Grid.Row="3"
                               Margin="0,100,0,0"
-                              Visibility="{Binding IsFinished, Converter={StaticResource BoolToVisibilityConverter}}">
+                              Visibility="{Binding IsFinishedToday, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />

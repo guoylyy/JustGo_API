@@ -8,6 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using Archive.DataBase;
+using Archive.Datas;
 using Archive.ViewModel;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -37,8 +39,18 @@ namespace Archive.Pages
 
         private void DoneGrid_OnTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            Global.SelectedGoal.IsFinished = true;
+            Global.SelectedGoal.IsFinishedToday = true;
             Global.SelectedGoal.PassedDays++;
+
+            var golaTrack = new GoalTrack
+            {
+                GoalJoinId = Global.SelectedGoal.GoalId,
+                GoalTrackId = Guid.NewGuid().ToString(),
+                TrackTime = DateTime.Now,
+                UpDateTime = DateTime.Now
+            };
+            Global.SelectedGoal.GoalTracks.Insert(0, golaTrack);
+            CsvUtil.SaveGoalTrack(Global.SelectedGoal.GoalTracks,Global.SelectedGoal.GoalId);
         }
 
         private void BottomGrid_Tap(object sender, System.Windows.Input.GestureEventArgs e)

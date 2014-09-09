@@ -33,6 +33,8 @@
                          Color="#FF0D5F7F"/>
         <SolidColorBrush x:Key="ContentGrayColorBrush"
                          Color="#FF999999"/>
+        <Color x:Key="AppbarBackgroundColor">#FFB1D4E8</Color>
+        <Color x:Key="AppbarForegroundColor">#FF1C9EF4</Color>
         <uriMapper:UriMapper x:Name="LoginPageMapper">
             <uriMapper:UriMapping Uri="/Pages/LoginPage.xaml"
                                   MappedUri="/MainPage.xaml"/>

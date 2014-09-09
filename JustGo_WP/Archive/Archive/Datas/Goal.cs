@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -10,6 +9,12 @@ namespace Archive.Datas
 {
     public class Goal : INotifyPropertyChanged
     {
+        public string GoalId { get; set; }
+        public string GoalCategory { get; set; }
+        public string Description { get; set; }
+        public string Image { get; set; }
+        public DateTime UpDateTime { get; set; }
+
         private string _goalName;
         public string GoalName
         {
@@ -25,57 +30,18 @@ namespace Archive.Datas
             }
         }
 
-        private int _totalDays;
-        public int TotalDays
+        private string _participants;
+        public string Participants
         {
-            get { return _totalDays; }
+            get { return _participants; }
 
             set
             {
-                if (value != _totalDays)
+                if (value != _participants)
                 {
-                    _totalDays = value;
-                    NotifyPropertyChanged("TotalDays");
+                    _participants = value;
+                    NotifyPropertyChanged("Participants");
                 }
-            }
-        }
-
-        private int _passedDays;
-        public int PassedDays
-        {
-            get { return _passedDays; }
-
-            set
-            {
-                if (value != _passedDays)
-                {
-                    _passedDays = value;
-                    NotifyPropertyChanged("PassedDays");
-                    NotifyPropertyChanged("LeftDays");
-                }
-            }
-        }
-
-        private bool _isFinished;
-        public bool IsFinished
-        {
-            get { return _isFinished; }
-
-            set
-            {
-                if (value != _isFinished)
-                {
-                    _isFinished = value;
-                    NotifyPropertyChanged("IsFinished");
-                }
-            }
-        }
-
-        public int LeftDays
-        {
-            get
-            {
-                return _totalDays - _passedDays;
             }
         }
 

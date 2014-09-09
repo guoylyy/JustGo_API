@@ -8,22 +8,9 @@ using System.Windows.Media.Imaging;
 
 namespace Archive.Datas
 {
-    public class User:INotifyPropertyChanged
+    public class User : SyncDataBase, INotifyPropertyChanged
     {
-        private string _userId;
-        public string UserId
-        {
-            get { return _userId; }
-
-            set
-            {
-                if (value != _userId)
-                {
-                    _userId = value;
-                    NotifyPropertyChanged("UserId");
-                }
-            }
-        }
+        public string UserId { get; set; }
 
         private string _userName;
         public string UserName
@@ -41,7 +28,6 @@ namespace Archive.Datas
         }
 
         private BitmapImage _imageSource;
-
         public BitmapImage ImageSource
         {
             get { return _imageSource; }
@@ -55,8 +41,22 @@ namespace Archive.Datas
             }
         }
 
-        private int _goalCount;
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
 
+            set
+            {
+                if (value != _description)
+                {
+                    _description = value;
+                    NotifyPropertyChanged("Description");
+                }
+            }
+        }
+
+        private int _goalCount;
         public int GoalCount
         {
             get { return _goalCount; }
@@ -69,6 +69,16 @@ namespace Archive.Datas
                 }
             }
         }
+
+        /// <summary>
+        /// 访问服务器的token
+        /// </summary>
+        public string Token { get; set; }
+
+        /// <summary>
+        /// 访问facebook的token
+        /// </summary>
+        public string FacebookToken { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)

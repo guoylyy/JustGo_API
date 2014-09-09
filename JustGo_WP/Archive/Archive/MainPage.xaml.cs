@@ -68,8 +68,8 @@ namespace Archive
         private void BuildLocalizedApplicationBar()
         {
             _goalApplicationBar = new ApplicationBar();
-            _goalApplicationBar.BackgroundColor = new Color { R = 177, G = 212, B = 232, A = 255 };
-            _goalApplicationBar.ForegroundColor = new Color { R = 28, G = 158, B = 244, A = 255 };
+            _goalApplicationBar.BackgroundColor = (Color)Application.Current.Resources["AppbarBackgroundColor"];
+            _goalApplicationBar.ForegroundColor = (Color)Application.Current.Resources["AppbarForegroundColor"];
             _goalApplicationBar.Opacity = 0.99;
             // 创建新按钮并将文本值设置为 AppResources 中的本地化字符串。
             ApplicationBarIconButton addBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/add.png", UriKind.Relative));
@@ -85,8 +85,8 @@ namespace Archive
 
 
             _profileApplicationBar = new ApplicationBar();
-            _profileApplicationBar.BackgroundColor = new Color { R = 177, G = 212, B = 232, A = 255 };
-            _profileApplicationBar.ForegroundColor = new Color { R = 28, G = 158, B = 244, A = 255 };
+            _profileApplicationBar.BackgroundColor = (Color)Application.Current.Resources["AppbarBackgroundColor"];
+            _profileApplicationBar.ForegroundColor = (Color)Application.Current.Resources["AppbarForegroundColor"];
             _profileApplicationBar.Opacity = 0.99;
 
             ApplicationBarIconButton settingButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/feature.settings.png",UriKind.Relative));
@@ -195,7 +195,7 @@ namespace Archive
         private void GoalList_OnTap(object sender, GestureEventArgs e)
         {
             var list = sender as LongListSelector;
-            if (list != null) Global.SelectedGoal = list.SelectedItem as Goal;
+            if (list != null) Global.SelectedGoal = list.SelectedItem as GoalJoin;
 
             NavigationService.Navigate(new Uri("/Pages/MyRecordPage.xaml", UriKind.Relative));
         }

@@ -7,6 +7,7 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using Archive.Datas;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
@@ -16,13 +17,13 @@ namespace Archive.Pages
     {
         //private string _goalName;
         //private string _participants;
-        public ObservableCollection<SimpleGoal> SimpleGoals;
+        public ObservableCollection<Goal> Goals;
 
         public ChooseDirectGoalPage()
         {
             InitializeComponent();
-            SimpleGoals = new ObservableCollection<SimpleGoal>();
-            DirectGoalListBox.ItemsSource = SimpleGoals;
+            Goals = new ObservableCollection<Goal>();
+            DirectGoalListBox.ItemsSource = Goals;
 
             LoadData();
         }
@@ -34,64 +35,24 @@ namespace Archive.Pages
 
         private void LoadData()
         {
-            SimpleGoals.Add(new SimpleGoal { GoalName = "Drink more water", Participants = string.Format("{0} participants", 12345) });
-            SimpleGoals.Add(new SimpleGoal { GoalName = "Eat a vegan diet", Participants = string.Format("{0} participants", 5432) });
-            SimpleGoals.Add(new SimpleGoal { GoalName = "Eat fruit", Participants = string.Format("{0} participants", 145) });
-            SimpleGoals.Add(new SimpleGoal { GoalName = "Floss", Participants = string.Format("{0} participants", 5643) });
+            Goals.Add(new Goal { GoalId = "1", GoalName = "Drink more water", Participants = string.Format("{0} participants", 12345) });
+            Goals.Add(new Goal { GoalId = "2", GoalName = "Eat a vegan diet", Participants = string.Format("{0} participants", 5432) });
+            Goals.Add(new Goal { GoalId = "3", GoalName = "Eat fruit", Participants = string.Format("{0} participants", 145) });
+            Goals.Add(new Goal { GoalId = "4", GoalName = "Floss", Participants = string.Format("{0} participants", 5643) });
         }
 
         private void DirectGoalListBox_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            var simpleGoal = DirectGoalListBox.SelectedItem as SimpleGoal;
+            var simpleGoal = DirectGoalListBox.SelectedItem as Goal;
             if (simpleGoal != null)
             {
-                Global.AddGoalName = simpleGoal.GoalName;
-                Global.GoalParticipantString = simpleGoal.Participants;
+                Global.AddGoal = new GoalJoin
+                {
+                    GoalId = simpleGoal.GoalId,
+                    GoalName = simpleGoal.GoalName,
+                    Participants = simpleGoal.Participants
+                };
                 NavigationService.Navigate(new Uri("/Pages/GoalDetailPage.xaml", UriKind.Relative));
-            }
-        }
-
-
-        public class SimpleGoal : INotifyPropertyChanged
-        {
-            private string _goalName;
-            public string GoalName
-            {
-                get { return _goalName; }
-
-                set
-                {
-                    if (value != _goalName)
-                    {
-                        _goalName = value;
-                        NotifyPropertyChanged("GoalName");
-                    }
-                }
-            }
-
-            private string _participants;
-            public string Participants
-            {
-                get { return _participants; }
-
-                set
-                {
-                    if (value != _participants)
-                    {
-                        _participants = value;
-                        NotifyPropertyChanged("Participants");
-                    }
-                }
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-            private void NotifyPropertyChanged(String propertyName)
-            {
-                PropertyChangedEventHandler handler = PropertyChanged;
-                if (null != handler)
-                {
-                    handler(this, new PropertyChangedEventArgs(propertyName));
-                }
             }
         }
     }

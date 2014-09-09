@@ -28,8 +28,8 @@ namespace Archive.Pages
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
-            GoalNameBlock.Text = Global.AddGoalName;
-            ParticipantsBlock.Text = Global.GoalParticipantString;
+            GoalNameBlock.Text = Global.AddGoal.GoalName;
+            ParticipantsBlock.Text = Global.AddGoal.Participants;
             DescriptionBlock.Text = _description;
         }
 

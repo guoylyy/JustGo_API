@@ -106,16 +106,6 @@
         </Style>
     </phone:PhoneApplicationPage.Resources>
 
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar BackgroundColor="#FFB1D4E8"
-                              Mode="Default"
-                              ForegroundColor="#FF1C9EF4">
-            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/add.png"
-                                            IsEnabled="True"
-                                            Text="add" />
-
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
     <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
           Background="Transparent">
@@ -209,7 +199,7 @@
                                         <TextBlock Text="/"
                                                    Margin="10,30,0,0"
                                                    Foreground="{StaticResource MainPageGoalTextBrush}" />
-                                        <TextBlock Text="{Binding TotalDays}"
+                                        <TextBlock Text="{Binding TimeSpan}"
                                                    Margin="1,30,0,0"
                                                    Foreground="{StaticResource MainPageGoalTextBrush}" />
                                         <TextBlock Text="{Binding GoalName}"
@@ -234,7 +224,7 @@
                                     </StackPanel>
                                 </StackPanel>
                                 <Path x:Name="CheckPath"
-                                      Visibility="{Binding IsFinished, Converter={StaticResource BoolToVisibilityConverter}}"
+                                      Visibility="{Binding IsFinishedToday, Converter={StaticResource BoolToVisibilityConverter}}"
                                       Grid.Column="1"
                                       Data="F1M2.475,17.108C1.53,18.127 1.561,20.136 2.537,21.126 2.537,21.126 14.216,32.977 14.216,32.977 15.192,33.968 17.175,33.997 18.181,33.036 18.181,33.036 20.042,31.258 20.042,31.258 21.049,30.297 23.061,28.375 24.068,27.413 24.068,27.413 43.59,8.769 43.59,8.769 44.596,7.808 44.626,5.856 43.65,4.866 43.65,4.866 41.371,2.553 41.371,2.553 40.395,1.562 38.434,1.554 37.449,2.536 37.449,2.536 18.336,21.599 18.336,21.599 17.351,22.581 15.39,22.572 14.414,21.582 14.414,21.582 8.078,15.153 8.078,15.153 7.102,14.162 5.181,14.191 4.236,15.21 4.236,15.21 2.475,17.108 2.475,17.108z"
                                       Fill="#FF099DFB"

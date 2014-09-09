@@ -22,7 +22,7 @@
             <TextBlock Foreground="{StaticResource ContentGrayColorBrush}"
                        Text="{Binding}" />
         </DataTemplate>
-        
+
     </phone:PhoneApplicationPage.Resources>
 
     <phone:PhoneApplicationPage.ApplicationBar>
@@ -33,7 +33,7 @@
                                             Click="SettingDoneButton_OnClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
-    
+
     <!--LayoutRoot 是包含所有页面内容的根网格-->
     <ScrollViewer Background="White">
         <Grid x:Name="LayoutRoot"
@@ -62,7 +62,8 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <toolkit:ListPicker Background="{StaticResource MainPageContentBackBrush}"
-                                    Foreground="Black"
+                                    Foreground="Black" 
+                                    x:Name="ReminderPicker"
                                     Header="Reminders"
                                     HeaderTemplate="{StaticResource HeaderTemplate}">
                     <sys:String>On</sys:String>
@@ -70,6 +71,7 @@
                 </toolkit:ListPicker>
 
                 <toolkit:TimePicker Grid.Row="1"
+                                    x:Name="ReminderTimePicker"
                                     Header="Reminder time"
                                     HeaderTemplate="{StaticResource HeaderTemplate}"
                                     Background="{StaticResource MainPageContentBackBrush}"
@@ -92,11 +94,13 @@
                     </Grid.ColumnDefinitions>
 
                     <CheckBox IsChecked="True"
+                              x:Name="MondayCheckBox"
                               Content="Monday"
                               Foreground="Black"
                               Background="{StaticResource MainPageContentBackBrush}"
                               Style="{StaticResource CheckBoxStyle1}" />
                     <CheckBox IsChecked="True"
+                              x:Name="TuesdayCheckBox"
                               Content="Tuesday"
                               Foreground="Black"
                               Background="{StaticResource MainPageContentBackBrush}"
@@ -104,6 +108,7 @@
                               Grid.Row="0"
                               Grid.Column="1" />
                     <CheckBox IsChecked="True"
+                              x:Name="WednesdayCheckBox"
                               Content="Wednesday"
                               Foreground="Black"
                               Background="{StaticResource MainPageContentBackBrush}"
@@ -111,6 +116,7 @@
                               Grid.Row="1"
                               Grid.Column="0" />
                     <CheckBox IsChecked="True"
+                              x:Name="ThursdayCheckBox"
                               Content="Thursday"
                               Foreground="Black"
                               Background="{StaticResource MainPageContentBackBrush}"
@@ -118,6 +124,7 @@
                               Grid.Row="1"
                               Grid.Column="1" />
                     <CheckBox IsChecked="True"
+                              x:Name="FridayCheckBox"
                               Content="Friday"
                               Foreground="Black"
                               Background="{StaticResource MainPageContentBackBrush}"
@@ -125,6 +132,7 @@
                               Grid.Row="2"
                               Grid.Column="0" />
                     <CheckBox IsChecked="True"
+                              x:Name="SaturdayCheckBox"
                               Content="Saturday"
                               Foreground="Black"
                               Background="{StaticResource MainPageContentBackBrush}"
@@ -132,6 +140,7 @@
                               Grid.Row="2"
                               Grid.Column="1" />
                     <CheckBox IsChecked="True"
+                              x:Name="SundayCheckBox"
                               Content="Sunday"
                               Foreground="Black"
                               Background="{StaticResource MainPageContentBackBrush}"
@@ -141,9 +150,10 @@
                 </Grid>
 
                 <toolkit:ListPicker Grid.Row="4"
+                                    x:Name="InsistPicker"
                                     Background="{StaticResource MainPageContentBackBrush}"
                                     Foreground="Black"
-                                    Header="Reminders"
+                                    Header="Insist period"
                                     HeaderTemplate="{StaticResource HeaderTemplate}">
                     <sys:String>7 days</sys:String>
                     <sys:String>14 days</sys:String>
@@ -152,6 +162,6 @@
             </Grid>
         </Grid>
     </ScrollViewer>
-    
+
 
 </phone:PhoneApplicationPage>
