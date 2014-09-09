@@ -21,7 +21,7 @@ namespace Archive.ViewModel
             foreach (var goalJoin in MyGoals)
             {
                 goalJoin.GoalTracks = new ObservableCollection<GoalTrack>();
-                CsvUtil.ReadGoalTrack(goalJoin.GoalTracks,goalJoin.GoalId);
+                CsvUtil.ReadGoalTrack(goalJoin.GoalTracks,goalJoin.GoalTracksId);
                 goalJoin.IsFinishedToday = goalJoin.GoalTracks.Count != 0
                                            && goalJoin.GoalTracks[0].TrackTime.Date == DateTime.Now.Date;
                 goalJoin.PassedDays = goalJoin.GoalTracks.Count;

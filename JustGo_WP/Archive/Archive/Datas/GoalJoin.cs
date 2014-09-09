@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Archive.Datas
 {
-    public class GoalJoin : SyncDataBase,INotifyPropertyChanged
+    public class GoalJoin : SyncDataBase, INotifyPropertyChanged
     {
         /// <summary>
         /// [DB] 用户加入的目标ID
@@ -143,6 +143,14 @@ namespace Archive.Datas
         public DateTime? ReminderTime { get; set; }
 
         /// <summary>
+        /// 每个Goal对应的记录文件名
+        /// </summary>
+        public string GoalTracksId
+        {
+            get { return GoalId + "&" + StartDate.ToString("s").Replace(':',' '); }
+        }
+
+        /// <summary>
         /// 每个Goal对应的记录
         /// </summary>
         public ObservableCollection<GoalTrack> GoalTracks { get; set; }
@@ -155,6 +163,6 @@ namespace Archive.Datas
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
-        } 
+        }
     }
 }

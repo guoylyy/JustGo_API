@@ -50,7 +50,7 @@ namespace Archive.Pages
                 UpDateTime = DateTime.Now
             };
             Global.SelectedGoal.GoalTracks.Insert(0, golaTrack);
-            CsvUtil.SaveGoalTrack(Global.SelectedGoal.GoalTracks,Global.SelectedGoal.GoalId);
+            CsvUtil.SaveGoalTrack(Global.SelectedGoal.GoalTracks,Global.SelectedGoal.GoalTracksId);
         }
 
         private void BottomGrid_Tap(object sender, System.Windows.Input.GestureEventArgs e)

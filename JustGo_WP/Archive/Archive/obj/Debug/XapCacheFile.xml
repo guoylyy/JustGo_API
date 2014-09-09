@@ -1,18 +1,18 @@
-﻿<xapCache source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Archive_Debug_AnyCPU.xap" wasSigned="False" wasTritonized="False" certificateThumbprint="" TimeStampUrl="" signKeyFile="" signKeyPassword="" lastWriteTime="2014/9/9 21:56:20">
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Archive.dll" archivePath="Archive.dll" lastWriteTime="2014/9/9 21:56:17" />
+﻿<xapCache source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Archive_Debug_AnyCPU.xap" wasSigned="False" wasTritonized="False" certificateThumbprint="" TimeStampUrl="" signKeyFile="" signKeyPassword="" lastWriteTime="2014/9/9 22:28:03">
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Archive.dll" archivePath="Archive.dll" lastWriteTime="2014/9/9 22:28:00" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AlignmentGrid.png" archivePath="Assets\AlignmentGrid.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\add.png" archivePath="Assets\AppBar\add.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\back.png" archivePath="Assets\AppBar\back.png" lastWriteTime="2014/8/30 15:04:46" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\basecircle.png" archivePath="Assets\AppBar\basecircle.png" lastWriteTime="2014/8/30 15:11:09" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\basecircle.png" archivePath="Assets\AppBar\basecircle.png" lastWriteTime="2014/9/9 22:02:22" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\check.png" archivePath="Assets\AppBar\check.png" lastWriteTime="2014/8/30 15:04:46" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\comment.png" archivePath="Assets\AppBar\comment.png" lastWriteTime="2014/8/30 15:11:09" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\comment.png" archivePath="Assets\AppBar\comment.png" lastWriteTime="2014/9/9 22:02:22" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\delete.png" archivePath="Assets\AppBar\delete.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\edit.png" archivePath="Assets\AppBar\edit.png" lastWriteTime="2014/8/30 15:04:46" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\favorite.png" archivePath="Assets\AppBar\favorite.png" lastWriteTime="2014/8/30 15:11:09" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\feature.settings.png" archivePath="Assets\AppBar\feature.settings.png" lastWriteTime="2014/8/30 15:11:09" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\favorite.png" archivePath="Assets\AppBar\favorite.png" lastWriteTime="2014/9/9 22:02:22" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\feature.settings.png" archivePath="Assets\AppBar\feature.settings.png" lastWriteTime="2014/9/9 22:02:22" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\like.png" archivePath="Assets\AppBar\like.png" lastWriteTime="2014/8/30 15:04:46" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\refresh.png" archivePath="Assets\AppBar\refresh.png" lastWriteTime="2014/8/30 15:11:09" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\refresh2.png" archivePath="Assets\AppBar\refresh2.png" lastWriteTime="2014/8/30 15:11:09" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\refresh.png" archivePath="Assets\AppBar\refresh.png" lastWriteTime="2014/9/9 22:02:22" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\refresh2.png" archivePath="Assets\AppBar\refresh2.png" lastWriteTime="2014/9/9 22:02:22" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\save.png" archivePath="Assets\AppBar\save.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\AppBar\share.png" archivePath="Assets\AppBar\share.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\GoalDetail\TopBackground.png" archivePath="Assets\GoalDetail\TopBackground.png" lastWriteTime="2014/8/30 15:04:46" />
@@ -40,16 +40,16 @@
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\Tiles\FlipCycleTileSmall.png" archivePath="Assets\Tiles\FlipCycleTileSmall.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\Tiles\IconicTileMediumLarge.png" archivePath="Assets\Tiles\IconicTileMediumLarge.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\Tiles\IconicTileSmall.png" archivePath="Assets\Tiles\IconicTileSmall.png" lastWriteTime="2014/8/30 15:04:46" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\README_FIRST.txt" archivePath="README_FIRST.txt" lastWriteTime="2014/8/30 15:11:09" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Add.png" archivePath="Toolkit.Content\ApplicationBar.Add.png" lastWriteTime="2014/8/30 15:11:09" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Cancel.png" archivePath="Toolkit.Content\ApplicationBar.Cancel.png" lastWriteTime="2014/8/30 15:11:09" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Check.png" archivePath="Toolkit.Content\ApplicationBar.Check.png" lastWriteTime="2014/8/30 15:11:09" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Delete.png" archivePath="Toolkit.Content\ApplicationBar.Delete.png" lastWriteTime="2014/8/30 15:11:09" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Select.png" archivePath="Toolkit.Content\ApplicationBar.Select.png" lastWriteTime="2014/8/30 15:11:09" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\AppManifest.xaml" archivePath="AppManifest.xaml" lastWriteTime="2014/8/30 15:11:09" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\README_FIRST.txt" archivePath="README_FIRST.txt" lastWriteTime="2014/9/9 22:02:23" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Add.png" archivePath="Toolkit.Content\ApplicationBar.Add.png" lastWriteTime="2014/9/9 22:02:23" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Cancel.png" archivePath="Toolkit.Content\ApplicationBar.Cancel.png" lastWriteTime="2014/9/9 22:02:23" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Check.png" archivePath="Toolkit.Content\ApplicationBar.Check.png" lastWriteTime="2014/9/9 22:02:23" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Delete.png" archivePath="Toolkit.Content\ApplicationBar.Delete.png" lastWriteTime="2014/9/9 22:02:23" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Toolkit.Content\ApplicationBar.Select.png" archivePath="Toolkit.Content\ApplicationBar.Select.png" lastWriteTime="2014/9/9 22:02:23" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\AppManifest.xaml" archivePath="AppManifest.xaml" lastWriteTime="2014/9/9 22:02:22" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Assets\AppBar\add.png" archivePath="Assets\AppBar\add.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Assets\AppBar\back.png" archivePath="Assets\AppBar\back.png" lastWriteTime="2014/8/30 15:04:46" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Assets\AppBar\basecircle.png" archivePath="Assets\AppBar\basecircle.png" lastWriteTime="2014/8/30 15:11:09" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Assets\AppBar\basecircle.png" archivePath="Assets\AppBar\basecircle.png" lastWriteTime="2014/9/9 22:02:22" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Assets\AppBar\check.png" archivePath="Assets\AppBar\check.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Assets\AppBar\delete.png" archivePath="Assets\AppBar\delete.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Assets\AppBar\edit.png" archivePath="Assets\AppBar\edit.png" lastWriteTime="2014/8/30 15:04:46" />
@@ -65,7 +65,7 @@
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\references\CircleImage.dll" archivePath="CircleImage.dll" lastWriteTime="2014/8/30 15:04:47" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\packages\MvvmLightLibs.4.3.31.0\lib\wp8\GalaSoft.MvvmLight.Extras.WP8.dll" archivePath="GalaSoft.MvvmLight.Extras.WP8.dll" lastWriteTime="2014/8/30 15:04:48" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\packages\MvvmLightLibs.4.3.31.0\lib\wp8\GalaSoft.MvvmLight.WP8.dll" archivePath="GalaSoft.MvvmLight.WP8.dll" lastWriteTime="2014/8/30 15:04:48" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll" archivePath="Microsoft.Phone.Controls.Toolkit.dll" lastWriteTime="2014/8/30 15:11:09" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll" archivePath="Microsoft.Phone.Controls.Toolkit.dll" lastWriteTime="2014/9/9 22:02:23" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\packages\MvvmLightLibs.4.3.31.0\lib\wp8\Microsoft.Practices.ServiceLocation.dll" archivePath="Microsoft.Practices.ServiceLocation.dll" lastWriteTime="2014/8/30 15:04:48" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll" archivePath="Newtonsoft.Json.dll" lastWriteTime="2014/8/30 15:04:49" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\packages\MvvmLightLibs.4.3.31.0\lib\wp8\System.Windows.Interactivity.dll" archivePath="System.Windows.Interactivity.dll" lastWriteTime="2014/8/30 15:04:48" />
@@ -75,5 +75,5 @@
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.xml" archivePath="Newtonsoft.Json.xml" lastWriteTime="2014/8/30 15:04:49" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\ApplicationIcon.png" archivePath="Assets\ApplicationIcon.png" lastWriteTime="2014/8/30 15:04:46" />
   <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Assets\Tiles\FlipCycleTileMedium.png" archivePath="Assets\Tiles\FlipCycleTileMedium.png" lastWriteTime="2014/8/30 15:04:46" />
-  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Properties\WMAppManifest.xml" archivePath="WMAppManifest.xml" lastWriteTime="2014/8/30 15:11:09" />
+  <file source="C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Properties\WMAppManifest.xml" archivePath="WMAppManifest.xml" lastWriteTime="2014/9/9 22:02:22" />
 </xapCache>
