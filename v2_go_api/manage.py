@@ -14,7 +14,7 @@ import sys
 from flask import current_app
 from flask.ext.script import Manager,prompt,prompt_pass,\
         prompt_bool,prompt_choices, Server, Shell, Command, prompt_bool
-from app.models import Category, Goal, GoalJoin, GoalTrack
+from app.models import Category, Goal, GoalJoin, GoalTrack, Admin
 from datetime import datetime, time, date
 
 from sqlalchemy_imageattach.entity import Image, image_attachment, store_context
@@ -44,6 +44,18 @@ def drop_all():
 	db.drop_all()
 
 @manager.command
+def refresh():
+	db.drop_all()
+	db.create_all()
+	make_test_data()
+	goal_join_test_data()
+	make_admin()
+
+def make_admin():
+	admin = Admin('test','test','fsaf')
+	db.session.add(admin)
+	db.session.commit()
+
 def make_test_data():
 	categories = ['Popular', 'Health Diet', 'Train plans', 'Habits', 'Learning']
 	for cat in categories:
@@ -70,7 +82,6 @@ def make_test_data():
 		db.session.add(c)
 		db.session.commit()
 
-@manager.command
 def goal_join_test_data():
 	gj = GoalJoin('fs332ab',1,1,7,'1,2,3,4,5',True,time(12,2), date(2014,8,8),date(2014,8,20), False)
 	gt1 = GoalTrack('fs332ab',1, date(2014,8,9))

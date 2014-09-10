@@ -5,11 +5,11 @@ import os
 import logging
 from flask import Flask, g
 from app import configs
-from app.views import test_view as test
+from app.views import account 
 
 from flask.ext import restful
 
-from extensions import db
+from extensions import db, login_manager
 from apis import create_api
 
 from apis.user_api import * 
@@ -19,12 +19,11 @@ from sqlalchemy_imageattach.stores.fs import FileSystemStore
 
 
 __all__ = ['create_app']
-
 DEFAULT_APP_NAME = 'app'
 
+# Add blueprint instnace here
 REGISTER_BLUE_PRINTS = (
-        (test.instance,''),
-        # add your blue print here
+        (account.instance,''),
         )
 
 def create_app(config=None,app_name=None,is_test=False):
@@ -50,6 +49,7 @@ def configure_app(app,config):
 
 def configure_extensions(app):
     db.init_app(app)
+    login_manager.init_app(app)
 
 def confgiure_api(app):
     BASE_URL = '/' + app.config['VERSION']
@@ -57,7 +57,6 @@ def confgiure_api(app):
 
 def configure_blueprints(app):
     for blue,url_prefix in REGISTER_BLUE_PRINTS:
-        #app.register_blueprint(blue)
         app.register_blueprint(blue,url_prefix=url_prefix)
 
     

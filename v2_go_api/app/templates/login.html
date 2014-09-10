@@ -1,0 +1,85 @@
+{% extends "_layout.html" %}
+{% from "macros/_forms.html" import render_errors %}
+
+{%-block content %}
+<div class="logo">
+
+	<!-- <img src="static/lib/metronic/image/logo-big.png" alt="" />
+	-->
+</div>
+
+<!-- END LOGO -->
+
+<!-- BEGIN LOGIN -->
+
+<div class="content">
+	<!-- BEGIN LOGIN FORM -->
+	<form class="form-vertical login-form" action="/login" method="post">
+		
+		<h3 class="form-title">Login to Backend</h3>
+
+		{% if form.message!=None %}
+		<div class="alert alert-error">
+			<button class="close" data-dismiss="alert"></button>
+			<span>{{ form.message }}</span>
+		</div>
+		{% endif %}
+		<div class="control-group">
+			<label class="control-label visible-ie8 visible-ie9">Username</label>
+
+			<div class="controls">
+
+				<div class="input-icon left"> <i class="icon-user"></i>
+					{{ form.username(size=20,class_='m-wrap placeholder-no-fix',placeholder='UserName') }}
+					{{ render_errors(form.username) }}
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="control-group">
+
+			<label class="control-label visible-ie8 visible-ie9">Password</label>
+
+			<div class="controls">
+
+				<div class="input-icon left"> <i class="icon-lock"></i>
+					{{ form.password(class_='m-wrap placeholder-no-fix',placeholder='Password') }}
+					{{ render_errors(form.password) }}
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="form-actions">
+
+			<!-- <label class="checkbox">
+
+				<input type="checkbox" name="remember" value="1"/>
+				Remember me
+			</label> -->
+
+			<!-- <button type="submit" class="btn green pull-right">
+				Login
+				<i class="m-icon-swapright m-icon-white"></i>
+
+			</button>  -->
+			{{ form.submit(class="btn green pull-right") }}
+		</div>
+
+	</form>
+
+	<!-- END LOGIN FORM -->
+
+</div>
+
+<!-- END LOGIN -->
+
+<!-- BEGIN COPYRIGHT -->
+
+<div class="copyright">2014 &copy; 404 Design</div>
+
+<!-- END COPYRIGHT -->
+{%-endblock %}

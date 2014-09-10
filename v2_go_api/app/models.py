@@ -11,6 +11,28 @@ from sqlalchemy_imageattach.stores.fs import HttpExposedFileSystemStore, FileSys
 from app.helpers import _str2date, _find_or_create_thumbnail, _mk_timestamp, _str2time
 
 
+#================= Admin =======================#
+
+class Admin(db.Model):
+	__tablename__ = 'admin'
+	ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	username = db.Column(db.String, unique=True)
+	password = db.Column(db.String)
+	nickname = db.Column(db.String)
+	description = db.Column(db.String)
+	create_time = db.Column(db.DateTime)
+	update_time = db.Column(db.DateTime)
+
+	def get_id(self):
+		return self.ID
+		
+	def __init__(self, username, password, nickname):
+		self.username = username
+		self.password = password
+		self.nickname = nickname
+		self.create_time = self.update_time = datetime.now()
+		
+
 #================== Models =====================#
 user_follow = db.Table('user_follow',
 	db.Column('follow_id', db.Integer, db.ForeignKey('user.user_id')),
