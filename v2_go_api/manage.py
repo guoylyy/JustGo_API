@@ -26,7 +26,7 @@ from app import create_app
 
 app = create_app()
 manager = Manager(app)
-manager.add_command('runserver', Server())
+manager.add_command('runserver', Server(host='0.0.0.0',port=5000))
 
 def _make_context():
     return dict(db=db)
