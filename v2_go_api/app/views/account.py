@@ -31,22 +31,25 @@ from app.extensions import login_manager
 
 instance = Blueprint('account',__name__)
 
+
+@login_manager.user_loader
+def load_user(id):
+    return Admin.query.get(int(id))
+
 class LoginView(MethodView):
     def get(self):
     	form = LoginForm()
-    	print current_user
     	if not current_user.is_anonymous():
     		form.message = 'redirect to index'
         return render_template('login.html', form=form)
 
     def post(self):
     	form = LoginForm(request.form)
-
     	if form.validate_on_submit():
     		admin = Admin.query.filter(Admin.username==form.username.data,\
     			Admin.password==form.password.data).first()
     		if admin:
-    			login_user(admin, force=True)
+    			login_user(admin, remember=True)
     			return redirect('/login')
     		else:
 				form.message = "Sorry, invalid login!"
@@ -57,5 +60,11 @@ class LogoutView(MethodView):
 		logout_user()
 		return redirect('/login')
 
+class IndexView(MethodView):
+    @login_required
+    def get(self):
+        return redirect('/login')
+
+instance.add_url_rule('/',view_func=IndexView.as_view('index'),methods=['GET'])
 instance.add_url_rule('/login',view_func=LoginView.as_view('login'),methods=['GET','POST'])
 instance.add_url_rule('/logout',view_func=LogoutView.as_view('logout'),methods=['GET','POST'])

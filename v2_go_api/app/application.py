@@ -37,7 +37,6 @@ def create_app(config=None,app_name=None,is_test=False):
     configure_extensions(app)
     confgiure_api(app)
     configure_blueprints(app)
-
     #configure_cache(app)
     return app
 
@@ -50,6 +49,7 @@ def configure_app(app,config):
 def configure_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = '/login'
 
 def confgiure_api(app):
     BASE_URL = '/' + app.config['VERSION']
@@ -58,5 +58,3 @@ def confgiure_api(app):
 def configure_blueprints(app):
     for blue,url_prefix in REGISTER_BLUE_PRINTS:
         app.register_blueprint(blue,url_prefix=url_prefix)
-
-    

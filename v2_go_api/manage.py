@@ -24,7 +24,8 @@ from app import create_app
 #from tests.test_site import TestSite
 #from test import run_test
 
-manager = Manager(create_app)
+app = create_app()
+manager = Manager(app)
 manager.add_command('runserver', Server())
 
 def _make_context():

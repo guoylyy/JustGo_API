@@ -11,3 +11,4 @@ IMAGE_URL = 'file:///Users/globit/git/JustGo_Project/v2_go_api/userimages/'
 db = SQLAlchemy()
 fs_store = FileSystemStore(IMAGE_UPLOAD_URL, IMAGE_URL)
 login_manager = LoginManager()
+

@@ -81,6 +81,7 @@ class B_GoalTest(BaseTest):
     def test_02_get_goal_from_category(self):
         print '=== 2-2. Test get goal ==='
         rep = self.client.get(self.base_url+'/goal/Popular')
+        print rep.data
         assert b'goal_name' in rep.data
 
     def test_03_add_and_get_goal_record(self):

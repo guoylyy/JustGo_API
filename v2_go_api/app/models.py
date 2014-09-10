@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time as stime
+import random
 
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import or_
@@ -25,6 +26,15 @@ class Admin(db.Model):
 
 	def get_id(self):
 		return self.ID
+
+	def is_active(self):
+		return True
+
+	def is_authenticated(self):
+		return True
+
+	def is_anonymous(self):
+		return False
 		
 	def __init__(self, username, password, nickname):
 		self.username = username
@@ -99,21 +109,21 @@ class Category(db.Model):
 	"""
 	__tablename__ = "category"
 	category_name = db.Column(db.String, primary_key=True)
-	desciprtion = db.Column(db.String)
+	description = db.Column(db.String)
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	goals = db.relationship('Goal', secondary=goal_category, backref=db.backref('categorys', lazy='dynamic'))
 
-	def __init__(self, category_name, update_time, desciprtion):
+	def __init__(self, category_name, update_time, description):
 		self.category_name = category_name
-		self.desciprtion = desciprtion
+		self.description = description
 		self.update_time = update_time
 		self.create_time = datetime.now()
 
 	def to_json(self):
 		return {
 			'category_name' : self.category_name,
-			'desciprtion' : self.desciprtion
+			'description' : self.description + ''
 		}
 
 class Goal(db.Model):
@@ -122,7 +132,7 @@ class Goal(db.Model):
 	goal_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	goal_name = db.Column(db.String, unique=True)
 	image = image_attachment('GoalImage')
-	desciprtion = db.Column(db.String)
+	description = db.Column(db.String)
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	goal_joins = db.relationship('GoalJoin', backref='goal', lazy='dynamic')
@@ -138,11 +148,10 @@ class Goal(db.Model):
 			return {
 				'goal_id' : self.goal_id,
 				'goal_name' : self.goal_name,
-				'desciprtion' : self.desciprtion,
+				'description' : self.description + '',
 				'joins' : self.goal_joins.count(),
 				'image' : self.image.locate(),
-				'joins' : self.goal_joins.count()
-
+				'joins' : self.goal_joins.count() + random.randint(1000,2000)
 			}
 
 class GoalImage(db.Model, Image):
