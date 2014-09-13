@@ -41,7 +41,7 @@ def refresh():
 def make_test_data():
     categories = ['Popular', 'Health Diet', 'Train plans', 'Habits', 'Learning']
     for cat in categories:
-        db.session.add(Category(cat, datetime.now(), ''))
+        db.session.add(Category(cat, ''))
     goals = [
             ['Drink water','description','Popular'],
             ['Make love Every Day','description','Popular'],

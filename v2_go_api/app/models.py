@@ -13,7 +13,6 @@ from app.helpers import _str2date, _find_or_create_thumbnail, _mk_timestamp, _st
 
 
 #================= Admin =======================#
-
 class Admin(db.Model):
 	__tablename__ = 'admin'
 	ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -114,11 +113,10 @@ class Category(db.Model):
 	update_time = db.Column(db.DateTime)
 	goals = db.relationship('Goal', secondary=goal_category, backref=db.backref('categorys', lazy='dynamic'))
 
-	def __init__(self, category_name, update_time, description):
+	def __init__(self, category_name, description):
 		self.category_name = category_name
 		self.description = description
-		self.update_time = update_time
-		self.create_time = datetime.now()
+		self.update_time =self.create_time = datetime.now()
 
 	def to_json(self):
 		return {
@@ -135,6 +133,7 @@ class Goal(db.Model):
 	description = db.Column(db.String)
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
+	categories = db.relationship('Category', secondary=goal_category, backref=db.backref('goal_categorys', lazy='dynamic'))
 	goal_joins = db.relationship('GoalJoin', backref='goal', lazy='dynamic')
 
 	def __init__(self, goal_name, description):
@@ -153,6 +152,9 @@ class Goal(db.Model):
 				'image' : self.image.locate(),
 				'joins' : self.goal_joins.count() + random.randint(1000,2000)
 			}
+	def get_url(self):
+		with store_context(fs_store):
+			return self.image.locate()
 
 class GoalImage(db.Model, Image):
 	__tablename__ = 'goal_image'
@@ -392,6 +394,8 @@ class Notification(db.Model):
 			'user_id' : self.sender_id,
 			'content' : self.content
 		}
+
+
 
 
 #============== End of Models ============================#

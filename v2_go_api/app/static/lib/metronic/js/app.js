@@ -741,8 +741,8 @@ var App = function () {
             handleDropdowns(); // handle dropdowns
             handleTabs(); // handle tabs
             handleTooltips(); // handle bootstrap tooltips
-            handlePopovers(); // handles bootstrap popovers
-            handleAccordions(); //handles accordions
+            //handlePopovers(); // handles bootstrap popovers
+            //handleAccordions(); //handles accordions
             handleChoosenSelect(); // handles bootstrap chosen dropdowns     
 
             App.addResponsiveHandler(handleChoosenSelect); // reinitiate chosen dropdown on main content resize. disable this line if you don't really use chosen dropdowns.

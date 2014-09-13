@@ -9,6 +9,7 @@ import flask
 from flask import Blueprint
 from flask import request
 from flask import g
+from flask import Module
 from flask import redirect
 from flask import Response
 from flask import current_app
@@ -29,7 +30,7 @@ from app.models import Admin
 from app.extensions import login_manager
 
 
-instance = Blueprint('account',__name__)
+instance = Blueprint('account',__name__, static_folder='static')
 
 
 @login_manager.user_loader
@@ -40,8 +41,8 @@ class LoginView(MethodView):
     def get(self):
     	form = LoginForm()
     	if not current_user.is_anonymous():
-    		form.message = 'redirect to index'
-        return render_template('login.html', form=form)
+    		return render_template('backend/dashboard.html', form=form)
+        return render_template('account/login.html', form=form)
 
     def post(self):
     	form = LoginForm(request.form)
@@ -53,7 +54,7 @@ class LoginView(MethodView):
     			return redirect('/login')
     		else:
 				form.message = "Sorry, invalid login!"
-    	return render_template('login.html', form=form)
+    	return render_template('account/login.html', form=form)
 
 class LogoutView(MethodView):
 	def get(self):
