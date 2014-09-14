@@ -64,9 +64,19 @@ class A_UserTest(BaseTest):
             headers={'Authorization':self.token})
         assert b'success' in rep.data
 
+        print '==== Test fans'
+        rep = self.client.get(self.base_url +'/user/fans', headers={'Authorization': self.stranger_token})
+        assert b'header' in rep.data
+        print rep.data
+
+        print '==== Test followings'
+        rep = self.client.get(self.base_url + '/user/followings',  headers={'Authorization': self.token})
+        assert b'header' in rep.data
+
         rep = self.client.post(self.base_url + '/user/unfollow/' + str(self.stranger['user_id']),
             headers={'Authorization':self.token})
         assert b'success' in rep.data 
+
 
 
 class B_GoalTest(BaseTest):
@@ -81,7 +91,7 @@ class B_GoalTest(BaseTest):
     def test_02_get_goal_from_category(self):
         print '=== 2-2. Test get goal ==='
         rep = self.client.get(self.base_url+'/goal/Popular')
-        print rep.data
+        #print rep.data
         assert b'goal_name' in rep.data
 
     def test_03_add_and_get_goal_record(self):
@@ -119,6 +129,7 @@ class B_GoalTest(BaseTest):
         print '=== 2-7. Test get awesome ===='
         rep = self.client.get(self.base_url+'/goal_record_awesome/'+str(goal_record_id),
             headers={'Authorization': self.token})
+        #print rep.data
         assert b'awesome_id' in rep.data
 
 
@@ -134,6 +145,18 @@ class B_GoalTest(BaseTest):
         print '=== 2-9. Test get comments of a record ==='
         rep = self.client.get(self.base_url+'/goal_record_comment/'+str(goal_record_id))
         assert b'comment_id' in rep.data
+
+
+        print '=== 2-10. Test List all Goal Record ==='
+        rep = self.client.get(self.base_url+'/goal_record_list/'+str(goal_id),
+             headers={'Authorization': self.token})
+        #print rep.data
+
+        print '=== 2-11. Test fighting center ==='
+        rep = self.client.get(self.base_url+'/goal_record/fighting_center',
+             headers={'Authorization': self.token})
+        #print rep.data
+
 
 
     def test_sync(self):
@@ -192,12 +215,12 @@ class C_NotificationTest(BaseTest):
         rep = self.client.post(self.base_url + '/encourage/goal_' + user_name,
             headers={'Authorization' : self.stranger_token})
         assert b'content' in rep.data
-        print rep.data
+        #print rep.data
 
         rep = self.client.get(self.base_url + '/notification',
             headers={'Authorization' : self.token})
         assert b'content' in rep.data
-        print rep.data
+        #print rep.data
 
     def test_02_mark_all_as_readed(self):
         

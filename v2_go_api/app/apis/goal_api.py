@@ -9,8 +9,6 @@ from app.models import *
 from api_helpers import abort_if_category_doesnt_exist
 from api_helpers import check_authorization
  
-
-
 class GoalCategoryRest(Resource):
 	def get(self):
 		l = Category.query.all()
@@ -39,15 +37,28 @@ class GoalJoinTrackRest(Resource):
 		return [gjt.to_json() for gjt in gjts]
 
 class GoalJoinRecordRest(Resource):
-	""" API for Goal Join Record
-	"""
 	def get(self, goal_id):
+		""" 
+			Get records for a user in specific goal
+		"""
 		user = check_authorization()
 		records = GoalRecord.query.filter(GoalRecord.goal_id==goal_id, GoalRecord.user_id == user.user_id)
-		return [gr.to_json(user) for gr in records], 200
+		return [gr.to_preview_json(user) for gr in records], 200
+
+class UserGoalRecordRest(Resource):
+	def get(self):
+		"""
+			Get all goal_record made by user
+		"""
+		user = check_authorization()
+		records = GoalRecord.query.filter(GoalRecord.user_id == user.user_id)
+		return [gr.to_preview_json(user) for gr in records], 200
 
 class GoalRecordRest(Resource):
 	def get(self, record_id):
+		"""
+			Get one record by specific record_id
+		"""
 		u = check_authorization()
 		g = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
 		if g:
@@ -76,6 +87,17 @@ class GoalRecordRest(Resource):
 		up.add_argument('goal_id', type=int, location='form')
 		return up.parse_args()
 
+class GoalRecordListRest(Resource):
+	def get(self, goal_id):
+		"""
+			Get all goal records by specific goal_id
+		"""
+		user = check_authorization()
+		grs = GoalRecord.query.filter(GoalRecord.goal_id==goal_id).all()
+		if grs:
+			return [gr.to_preview_json(user) for gr in grs], 200
+		else:
+			return [],200
 
 class GoalRecordCommentRest(Resource):
 	def get(self, record_id):
@@ -118,7 +140,6 @@ class GoalRecordAwesomeRest(Resource):
 			db.session.add(gra)
 			db.session.commit()
 			return gra.to_json(), 200
-
 
 class SyncGoalJoinRest(Resource):
 	""" Sync GoalJoin and GoalJoinTrack
@@ -185,8 +206,6 @@ class NotificationRest(Resource):
 		notifications = Notification.query.filter(Notification.receiver_id==user.user_id,\
 			 Notification.is_readed==False)
 		return [n.to_json() for n in notifications]
-
-
 
 class EncourageRest(Resource):
 	""" Send Encourage to someone's goal

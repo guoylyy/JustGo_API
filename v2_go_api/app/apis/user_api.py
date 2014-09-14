@@ -4,6 +4,7 @@ from flask.ext.restful import Resource, reqparse
 from app.helpers import * 
 from app.extensions import db, fs_store
 from api_helpers import *
+from requests import get
 
 class UserRest(Resource):
 	def get(self, user_id):
@@ -34,8 +35,19 @@ class ProfileRest(Resource):
 		user = check_authorization()
 		return user.to_json(), 200
 
+class FansRest(Resource):
+	def get(self):
+		u = check_authorization()
+		return [f.header_json() for f in u.fans], 200
+
+class FollowingsRest(Resource):
+	def get(self):
+		u = check_authorization()
+		return [f.header_json() for f in u.followings], 200
+
 class FollowRest(Resource):
 	"""
+		One user follow another
 	"""
 	def post(self, user_id):
 		user = check_authorization()
@@ -47,6 +59,7 @@ class FollowRest(Resource):
 
 class UnFollowRest(Resource):
 	"""
+		One user unfollow another user
 	"""
 	def post(self, user_id):
 		user = check_authorization()
@@ -63,14 +76,14 @@ class LoginRest(Resource):
 		up = self.__user_parser()
 		user = User.query.filter(User.facebook_token==up['facebook_token']).first()
 		if user is None:
-			#register
-			token = "fdsafsafas"
-			u = User(up['name'],up['description'],token,up['facebook_token'],'header')
+			u = User(up['name'],up['description'],up['facebook_token'],'header')
+			header = get('http://image.tjcsdc.com/goal-image/2/0/2.301x328.jpe').content
 			with store_context(fs_store):	
-				with open('pic1.jpg','rb') as f:
-					u.header_icon.from_blob(f.read())
+				#with open('pic1.jpg','rb') as f:
+				u.header_icon.from_blob(header)
 				db.session.add(u)
 				flag = db.session.commit()
+
 			u.token = make_token(u.user_id)
 			db.session.add(u)
 			db.session.commit()
@@ -84,4 +97,5 @@ class LoginRest(Resource):
 		up.add_argument('facebook_token', type=str, location='form')
 		up.add_argument('name', type=str, location='form')
 		up.add_argument('description', type=str, location='form')
+		up.add_argument('header_url', type=str, location='form')
 		return up.parse_args()

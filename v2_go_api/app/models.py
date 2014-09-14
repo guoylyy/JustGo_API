@@ -12,6 +12,10 @@ from sqlalchemy_imageattach.stores.fs import HttpExposedFileSystemStore, FileSys
 from app.helpers import _str2date, _find_or_create_thumbnail, _mk_timestamp, _str2time
 
 
+HEADER_SIZE_LARGE = 480
+HEADER_SIZE_MEDIUM = 150
+HEADER_SIZE_SMALL = 48
+
 #================= Admin =======================#
 class Admin(db.Model):
 	__tablename__ = 'admin'
@@ -41,7 +45,6 @@ class Admin(db.Model):
 		self.nickname = nickname
 		self.create_time = self.update_time = datetime.now()
 		
-
 #================== Models =====================#
 user_follow = db.Table('user_follow',
 	db.Column('follow_id', db.Integer, db.ForeignKey('user.user_id')),
@@ -65,20 +68,21 @@ class User(db.Model):
 	fans = db.relationship('User', secondary=user_follow, primaryjoin=user_id==user_follow.c.followed_id, \
 		secondaryjoin=user_id==user_follow.c.follow_id,backref=db.backref('u_followings', lazy='dynamic'))
 
-	def __init__(self, name, description, token, facebook_token, header_icon):
+	def __init__(self, name, description, facebook_token, header_icon):
 		self.name = name
 		self.description = description
-		self.token = token
+		#self.token = token
 		self.facebook_token = facebook_token
 		self.update_time = datetime.now()
 		self.create_time = datetime.now()
 
 	def header_json(self):
-		return {
-			'user_id' : self.user_id,
-			'header' : _find_or_create_thumbnail(self, self.header_icon,48).locate(),
-			'user_name' : self.name
-		}
+		with store_context(fs_store):
+			return {
+				'user_id' : self.user_id,
+				'header' : _find_or_create_thumbnail(self, self.header_icon,48).locate(),
+				'user_name' : self.name
+			}
 
 	def to_json(self):
 		with store_context(fs_store):
@@ -86,10 +90,12 @@ class User(db.Model):
 				'user_id' : self.user_id,
 				'name' : self.name,
 				'description': self.description,
-				'fans' : [f.header_json() for f in self.fans],
-				'followings' : [fo.header_json() for fo in self.followings],
+				'fans' :  len(self.fans),#[f.header_json() for f in self.fans],
+				'followings' :  len(self.followings),#[fo.header_json() for fo in self.followings],
 				'can_follow' : True,
-				'header_icon' : _find_or_create_thumbnail(self, self.header_icon,48).locate()
+				'header_icon' : _find_or_create_thumbnail(self, self.header_icon,HEADER_SIZE_LARGE).locate(),
+				'header_icon_medium' : _find_or_create_thumbnail(self, self.header_icon, HEADER_SIZE_MEDIUM).locate(),
+				'header_icon_small' : _find_or_create_thumbnail(self, self.header_icon, HEADER_SIZE_SMALL).locate()
 			}
 
 class UserHeader(db.Model, Image):
@@ -295,6 +301,18 @@ class GoalRecord(db.Model):
 		else:
 			return True
 
+	def to_preview_json(self, user):
+		with store_context(fs_store):
+			return {
+				'goal_record_id': self.goal_record_id,
+				'goal_id' : self.goal_id,
+				'content' : self.content,
+				'image' : self.image.locate(),
+				'comments' : [c.to_json() for c in self.comments.limit(5)],
+				'awesomes' : [a.to_json() for a in self.awesomes.limit(5)],
+				'can_awesome' : self.__can_awesome(user)
+			}
+
 	def to_json(self, user):
 		with store_context(fs_store):
 			return {
@@ -327,6 +345,8 @@ class GoalRecordComment(db.Model):
 	update_time = db.Column(db.DateTime)
 	create_time = db.Column(db.DateTime)
 
+	user = db.relationship('User')
+
 	def __init__(self, goal_record_id, user_id, content):
 		self.goal_record_id = goal_record_id
 		self.user_id = user_id
@@ -340,7 +360,8 @@ class GoalRecordComment(db.Model):
 			'goal_record_id' : self.goal_record_id,
 			'user_id' : self.user_id,
 			'content' : self.content,
-			'create_time' : stime.mktime(self.create_time.timetuple())
+			'create_time' : stime.mktime(self.create_time.timetuple()),
+			'user': self.user.header_json()
 		}
 
 
@@ -352,6 +373,8 @@ class GoalRecordAwesome(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	update_time = db.Column(db.DateTime)
 	create_time = db.Column(db.DateTime)
+
+	user = db.relationship('User')
 	
 	def __init__(self, goal_record_id, user_id):
 		self.goal_record_id = goal_record_id
@@ -363,8 +386,10 @@ class GoalRecordAwesome(db.Model):
 		return {
 			'awesome_id' : self.awesome_id,
 			'goal_record_id' : self.goal_record_id,
-			'user_id' : self.user_id
+			'user_id' : self.user_id,
+			'user': self.user.header_json()
 		}
+
 
 class Notification(db.Model):
 	"""docstring for Notification
@@ -394,8 +419,6 @@ class Notification(db.Model):
 			'user_id' : self.sender_id,
 			'content' : self.content
 		}
-
-
 
 
 #============== End of Models ============================#

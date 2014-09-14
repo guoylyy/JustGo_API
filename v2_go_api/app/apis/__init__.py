@@ -7,6 +7,9 @@ def create_api(api, base_url):
 	api.add_resource(FollowRest, base_url + '/user/follow/<int:user_id>')
 	api.add_resource(UnFollowRest, base_url + '/user/unfollow/<int:user_id>')
 	api.add_resource(ProfileRest, base_url + '/user/profile')
+
+	api.add_resource(FansRest, base_url + '/user/fans')
+	api.add_resource(FollowingsRest, base_url + '/user/followings')
 	
 	api.add_resource(GoalJoinTrackRest, base_url + '/goal_join_track')
 	api.add_resource(GoalJoinRest, base_url + '/goal_join')
@@ -16,9 +19,13 @@ def create_api(api, base_url):
 	api.add_resource(GoalCategoryRest,  base_url + '/goal_category')
 	api.add_resource(GoalRest,  base_url + '/goal/<string:category_id>')
 	api.add_resource(GoalRecordRest,  base_url + '/goal_record/<int:record_id>', base_url + '/goal_record')
+	api.add_resource(GoalRecordListRest, base_url + '/goal_record_list/<int:goal_id>')
+	api.add_resource(UserGoalRecordRest, base_url + '/goal_record/fighting_center')
+
 	api.add_resource(GoalRecordCommentRest,  base_url + '/goal_record_comment/<int:record_id>')
 	api.add_resource(GoalRecordAwesomeRest,  base_url + '/goal_record_awesome/<int:record_id>')
 	api.add_resource(GoalJoinRecordRest,  base_url + '/goal_join_record/<int:goal_id>')
+
 
 	api.add_resource(NotificationRest,  base_url + '/notification')
 	api.add_resource(EncourageRest,  base_url + '/encourage/<string:goal_join_id>')

@@ -6,6 +6,10 @@ The api requirement of WP.
 ```
 基地址：http://tjcsdc.com/V1/
 数据库信息：
+
+图片信息： Big 480*480
+		  Mediumn 150*150
+		  Small 46*46 
 ```
 
 ###0.2 系统错误消息代码
@@ -57,20 +61,8 @@ method: get | post
 返回数据：
 {
     "description": "I am a BOY",
-    "fans": [
-        {
-            "header": "fdsafasf",
-            "user_id": 2,
-            "user_name": "yilianggggg"
-        }
-    ],
-    "followings": [
-        {
-            "header": "fdsafasf",
-            "user_id": 2,
-            "user_name": "yilianggggg"
-        }
-    ],
+    "fans": 1,
+    "followings": 0,
     "name": "yiliangg",
     "user_id": 1,
     "header_icon": "http:///Users/globit/git/JustGo_Project/go_api/userimages/user-header/1/0/1.48x52.jpe?_ts=20140906050939000000"
@@ -93,20 +85,8 @@ method: get | post
 返回数据：
 {
     "description": "I am a",
-    "fans": [
-        {
-            "header": "fdsafasf",
-            "user_id": 2,
-            "user_name": "yilianggggg"
-        }
-    ],
-    "followings": [
-        {
-            "header": "fdsafasf",
-            "user_id": 2,
-            "user_name": "yilianggggg"
-        }
-    ],
+    "fans": 1,
+    "followings": 0,
     "name": "yiliangg",
     "user_id": 1,
     "header_icon": "file:///Users/globit/git/JustGo_Project/go_api/userimages/user-header/1/0/1.48x52.jpe?_ts=20140906050939000000"
@@ -161,6 +141,57 @@ method:post
     "result": "success"
 }
 	
+```
+
+###1.6 获取粉丝接口
+获取用户关注的用户列表
+
+```
+url: /usr/fans
+method: get
+```
+####数据说明
+
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'		//当前用户的authorisation
+		
+返回数据：
+[
+    {
+        "header": "file:///Users/globit/git/JustGo_Project/v2_go_api/userimages/user-header/31/0/31.48x52.jpe?_ts=20140914085301000000",
+        "user_id": 31,
+        "user_name": "tu_1410684779.0558_t"
+    }
+]
+
+```
+
+
+###1.7 获取关注列表接口
+获取用户关注的用户列表
+
+```
+url: /usr/followings
+method: get
+```
+####数据说明
+
+```
+发送数据
+	headers:
+		-Authorization : 'dfasfsa'		//当前用户的authorisation
+		
+返回数据：
+[
+    {
+        "header": "file:///Users/globit/git/JustGo_Project/v2_go_api/userimages/user-header/31/0/31.48x52.jpe?_ts=20140914085301000000",
+        "user_id": 31,
+        "user_name": "tu_1410684779.0558_t"
+    }
+]
+
 ```
 
 
@@ -377,7 +408,8 @@ method: post | get
 
 ####数据说明 POST
 
-使用 goal_record 作为url
+用户添加一个record
+
 ```
 发送数据
 	headers:
@@ -390,6 +422,7 @@ method: post | get
 {
     "result": "success"
 }
+
 ```
 
 
