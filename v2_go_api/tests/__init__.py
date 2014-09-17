@@ -25,17 +25,17 @@ class BaseTest(unittest.TestCase):
         self.stranger = self.mk_user()
 
     def login(self):
-        rep = self.client.post(self.base_url+'/login',data=dict(
+        rep = self.client.post(self.base_url+'/login',headers=dict(
             name= user_name,
-            facebook_token= facebook_token,
+            facebooktoken= str(facebook_token),
             description='I am a test_user'
             ))
         return json.loads(rep.data)['token']
 
     def mk_user(self):
-        rep = self.client.post(self.base_url+'/login',data=dict(
+        rep = self.client.post(self.base_url+'/login',headers=dict(
             name= user_name + '_t',
-            facebook_token= facebook_token + '_t',
+            facebooktoken= facebook_token + '_t',
             description='I am a test user num 2'
             ))
         self.stranger_token = json.loads(rep.data)['token']
@@ -96,13 +96,14 @@ class B_GoalTest(BaseTest):
 
     def test_03_add_and_get_goal_record(self):
         print '=== 2-3. Add goal record ==='
-        rep = self.client.post(self.base_url+'/goal_record',data=dict(
-            goal_id=1,
+        rep = self.client.post(self.base_url+'/goal_record',headers=dict(
+            goalid=1,
             content='I like this goal',
-            description='Really good'
-            ),
-            headers={'Authorization': self.token})
+            description='Really good',
+            Authorization=self.token
+            ))
         assert b'goal_id' in rep.data
+
 
         goal_obj =json.loads(rep.data) 
         goal_id = goal_obj['goal_id']
@@ -136,10 +137,10 @@ class B_GoalTest(BaseTest):
 
         print '=== 2-8. Test comment a record ===='
         rep = self.client.post(self.base_url+'/goal_record_comment/'+str(goal_record_id),
-            data=dict(
-                content='A test comment'
-                ),
-            headers={'Authorization': self.token})
+            headers=dict(
+                content='A test comment',
+                Authorization=self.token
+                ))
         assert b'comment_id' in rep.data
 
 

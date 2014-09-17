@@ -26,8 +26,8 @@ class UserRest(Resource):
 
 	def __user_update_parser(self):
 		up = reqparse.RequestParser()
-		up.add_argument('name', type=str, location='form')
-		up.add_argument('description', type=str, location='form')
+		up.add_argument('name', type=str, location='headers')
+		up.add_argument('description', type=str, location='headers')
 		return up.parse_args()
 
 class ProfileRest(Resource):
@@ -74,9 +74,9 @@ class LoginRest(Resource):
 		""" Login restful api
 		"""
 		up = self.__user_parser()
-		user = User.query.filter(User.facebook_token==up['facebook_token']).first()
+		user = User.query.filter(User.facebook_token==up['facebooktoken']).first()
 		if user is None:
-			u = User(up['name'],up['description'],up['facebook_token'],'header')
+			u = User(up['name'],up['description'],up['facebooktoken'],'header')
 			#header = get('http://image.tjcsdc.com/goal-image/2/0/2.301x328.jpe').content
 			with store_context(fs_store):	
 				with open('pic1.jpg','rb') as f:
@@ -95,8 +95,8 @@ class LoginRest(Resource):
 
 	def __user_parser(self):
 		up = reqparse.RequestParser()
-		up.add_argument('facebook_token', type=str, location='form')
-		up.add_argument('name', type=str, location='form')
-		up.add_argument('description', type=str, location='form')
-		up.add_argument('header_url', type=str, location='form')
+		up.add_argument('facebooktoken', type=str, location='headers')
+		up.add_argument('name', type=str, location='headers')
+		up.add_argument('description', type=str, location='headers')
+		up.add_argument('headerurl', type=str, location='headers')
 		return up.parse_args()

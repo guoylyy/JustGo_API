@@ -73,7 +73,7 @@ class GoalRecordRest(Resource):
 		"""
 		user = check_authorization()
 		up = self.__record_parser()
-		g = GoalRecord(up['goal_id'], user.user_id, up['content'])
+		g = GoalRecord(up['goalid'], user.user_id, up['content'])
 		#with store_context(fs_store):	
 		#	with open('pic1.jpg','rb') as f:
 		#		g.image.from_blob(f.read())
@@ -83,8 +83,8 @@ class GoalRecordRest(Resource):
 
 	def __record_parser(self):
 		up = reqparse.RequestParser()
-		up.add_argument('content', type=str, location='form')
-		up.add_argument('goal_id', type=int, location='form')
+		up.add_argument('content', type=str, location='headers')
+		up.add_argument('goalid', type=int, location='headers')
 		return up.parse_args()
 
 class GoalRecordListRest(Resource):
@@ -118,7 +118,7 @@ class GoalRecordCommentRest(Resource):
 
 	def __comment_parser(self):
 		up = reqparse.RequestParser()
-		up.add_argument('content', type=str, location='form')
+		up.add_argument('content', type=str, location='headers')
 		return up.parse_args()		
 
 

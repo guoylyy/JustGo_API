@@ -27,7 +27,6 @@ def check_authorization():
 	if not token:
 		abort(500, message="Authorization Failed")
 	else:
-		# Check expired
 		check_expire(token)
 		u = User.query.filter(User.token==token).first()
 		if u:
