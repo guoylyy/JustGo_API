@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import hashlib
+import urllib
 import time as stime
 from datetime import datetime, timedelta, time , date
 from flask import current_app
@@ -23,7 +24,7 @@ def abort_if_user_doesnt_exit(user_id):
 def check_authorization():
 	parser = reqparse.RequestParser()
 	parser.add_argument('Authorization', type=str, location='headers')
-	token = parser.parse_args()['Authorization']
+	token = urllib.unquote(parser.parse_args()['Authorization']).decode('utf8') 
 	if not token:
 		abort(500, message="Authorization Failed")
 	else:

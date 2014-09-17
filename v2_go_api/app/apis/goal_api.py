@@ -123,13 +123,17 @@ class GoalRecordCommentRest(Resource):
 
 
 class GoalRecordAwesomeRest(Resource):
-	""" 
-	"""
 	def get(self, record_id):
+		""" 
+			Get all record awesomes for one record
+		"""
 		gr = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
 		return [gra.to_json() for gra in gr.awesomes.all()], 200
 
 	def post(self, record_id):
+		"""
+			Awesome a record
+		"""
 		user = check_authorization()
 		tg = GoalRecordAwesome.query.filter(GoalRecordAwesome.goal_record_id==record_id,
 			GoalRecordAwesome.user_id == user.user_id).first()
@@ -142,9 +146,10 @@ class GoalRecordAwesomeRest(Resource):
 			return gra.to_json(), 200
 
 class SyncGoalJoinRest(Resource):
-	""" Sync GoalJoin and GoalJoinTrack
-	"""
 	def post(self):
+		""" 
+			Sync GoalJoin and GoalJoinTrack
+		"""
 		user = check_authorization()
 		objs =  request.get_json(force=True)
 		for gj in objs:
@@ -160,6 +165,7 @@ class SyncGoalJoinRest(Resource):
 
 	def get(self):
 		""" 
+			Get lastest update time
 		"""
 		user = check_authorization()
 		gj = GoalJoin.query.filter(GoalJoin.user_id==user.user_id).order_by(GoalJoin.update_time).first()
@@ -169,9 +175,10 @@ class SyncGoalJoinRest(Resource):
 			return {'update_time' : None}, 200
 
 class SyncGoalJoinTrackRest(Resource):
-	""" Sync GoalJoin and GoalJoinTrack
-	"""
 	def post(self):
+		""" 
+			Sync GoalJoin and GoalJoinTrack
+		"""
 		user = check_authorization()
 		objs =  request.get_json(force=True)
 		for gjt in objs:
@@ -187,7 +194,8 @@ class SyncGoalJoinTrackRest(Resource):
 		return {'result':'success'} ,200
 
 	def get(self):
-		""" Get 
+		""" 
+			Get lastest update time
 		"""
 		user = check_authorization()
 		gjt = GoalTrack.query.filter(GoalTrack.user_id==user.user_id).order_by(GoalTrack.update_time).first()
@@ -197,8 +205,6 @@ class SyncGoalJoinTrackRest(Resource):
 			return {'update_time' : None}, 200
 
 class NotificationRest(Resource):
-	""" Methods to visit user's notification
-	"""
 	def get(self):
 		""" Get user notifications
 		"""
@@ -208,9 +214,10 @@ class NotificationRest(Resource):
 		return [n.to_json() for n in notifications]
 
 class MarkNotficationReadRest(Resource):
-	"""
-	"""
 	def get(self):
+		"""
+			Mark all notification as readed
+		"""
 		user = check_authorization()
 		#Notification.query.filter(Notification.receiver_id==user.user_id).update({'is_readed':True})
 		db.session.query(Notification).filter(Notification.receiver_id==user.user_id).update({'is_readed':True})
@@ -219,9 +226,10 @@ class MarkNotficationReadRest(Resource):
 
 
 class EncourageRest(Resource):
-	""" Send Encourage to someone's goal
-	"""
 	def post(self, goal_join_id):
+		""" 
+			Send Encourage to someone's goal
+		"""
 		user = check_authorization()
 		gj = GoalJoin.query.filter(GoalJoin.goal_join_id==goal_join_id).first()
 		if gj:
