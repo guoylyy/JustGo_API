@@ -76,6 +76,12 @@ class User(db.Model):
 		self.update_time = datetime.now()
 		self.create_time = datetime.now()
 
+	def validate(self):
+		if self.name is not None and self.facebook_token is not None:
+			return True
+		else:
+			return False
+
 	def header_json(self):
 		with store_context(fs_store):
 			return {
@@ -301,6 +307,12 @@ class GoalRecord(db.Model):
 		else:
 			return True
 
+	def validate(self):
+		if self.content is not None and self.goal_id is not None:
+			return True
+		else:
+			return False
+
 	def to_preview_json(self, user):
 		with store_context(fs_store):
 			return {
@@ -310,7 +322,8 @@ class GoalRecord(db.Model):
 				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.limit(5)],
 				'awesomes' : [a.to_json() for a in self.awesomes.limit(5)],
-				'can_awesome' : self.__can_awesome(user)
+				'can_awesome' : self.__can_awesome(user),
+				'create_time': stime.mktime(self.create_time.timetuple())
 			}
 
 	def to_json(self, user):
@@ -322,7 +335,8 @@ class GoalRecord(db.Model):
 				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.all()],
 				'awesomes' : [a.to_json() for a in self.awesomes.all()],
-				'can_awesome' : self.__can_awesome(user)
+				'can_awesome' : self.__can_awesome(user),
+				'create_time': stime.mktime(self.create_time.timetuple())
 			}
 
 

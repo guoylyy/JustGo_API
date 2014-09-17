@@ -69,7 +69,8 @@ class GoalRecordRest(Resource):
 			abort(404, message='Goal Record with ID {} does exist.'.format(record_id))
 
 	def post(self):
-		""" Add a record for specific goal
+		""" 
+			Add a record for specific goal
 		"""
 		user = check_authorization()
 		up = self.__record_parser()
@@ -101,13 +102,15 @@ class GoalRecordListRest(Resource):
 
 class GoalRecordCommentRest(Resource):
 	def get(self, record_id):
-		""" Get all comments of a goal_record
+		""" 
+			Get all comments of a goal_record
 		"""
 		gr = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
 		return [grc.to_json() for grc in gr.comments.all()], 200
 
 	def post(self, record_id):
-		""" Add a comment to specific goal_record
+		""" 
+			Add a comment to specific goal_record
 		"""
 		user = check_authorization()
 		up = self.__comment_parser()
