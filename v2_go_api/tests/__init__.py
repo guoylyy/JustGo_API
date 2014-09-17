@@ -67,7 +67,7 @@ class A_UserTest(BaseTest):
         print '==== Test fans'
         rep = self.client.get(self.base_url +'/user/fans', headers={'Authorization': self.stranger_token})
         assert b'header' in rep.data
-        print rep.data
+        #print rep.data
 
         print '==== Test followings'
         rep = self.client.get(self.base_url + '/user/followings',  headers={'Authorization': self.token})
@@ -109,15 +109,16 @@ class B_GoalTest(BaseTest):
         goal_record_id = goal_obj['goal_record_id']
 
         print '=== 2-4. Test get goal record by goal_record_id ==='
-        rep = self.client.get(self.base_url+'/goal_record/'+str(goal_id),
+        rep = self.client.get(self.base_url+'/goal_record/'+str(goal_record_id),
             headers={'Authorization': self.token})
         assert b'goal_id' in rep.data
-
+        #print rep.data
 
         print '=== 2-5. Test get all record for a user in a goal ===='
         rep = self.client.get(self.base_url+'/goal_join_record/'+str(goal_id),
             headers={'Authorization': self.token})
         assert b'goal_id' in rep.data
+        #print rep.data
 
 
         print '=== 2-6. Awesome a record ===='
@@ -156,8 +157,6 @@ class B_GoalTest(BaseTest):
         rep = self.client.get(self.base_url+'/goal_record/fighting_center',
              headers={'Authorization': self.token})
         #print rep.data
-
-
 
     def test_sync(self):
         print '=== 2-10. Test Sync Goal Join ==='
@@ -221,6 +220,17 @@ class C_NotificationTest(BaseTest):
             headers={'Authorization' : self.token})
         assert b'content' in rep.data
         #print rep.data
+
+        rep = self.client.get(self.base_url + '/notification/mark_readed',
+            headers={'Authorization' : self.token})
+        assert b'success' in rep.data
+
+        rep = self.client.get(self.base_url + '/notification',
+            headers={'Authorization' : self.token})
+        assert b'content' not in rep.data
+
+
+
 
     def test_02_mark_all_as_readed(self):
         

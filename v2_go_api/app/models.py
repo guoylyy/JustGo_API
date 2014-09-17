@@ -307,7 +307,7 @@ class GoalRecord(db.Model):
 				'goal_record_id': self.goal_record_id,
 				'goal_id' : self.goal_id,
 				'content' : self.content,
-				'image' : self.image.locate(),
+				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.limit(5)],
 				'awesomes' : [a.to_json() for a in self.awesomes.limit(5)],
 				'can_awesome' : self.__can_awesome(user)
@@ -319,7 +319,7 @@ class GoalRecord(db.Model):
 				'goal_record_id': self.goal_record_id,
 				'goal_id' : self.goal_id,
 				'content' : self.content,
-				'image' : self.image.locate(),
+				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.all()],
 				'awesomes' : [a.to_json() for a in self.awesomes.all()],
 				'can_awesome' : self.__can_awesome(user)

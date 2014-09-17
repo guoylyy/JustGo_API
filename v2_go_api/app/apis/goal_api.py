@@ -74,12 +74,12 @@ class GoalRecordRest(Resource):
 		user = check_authorization()
 		up = self.__record_parser()
 		g = GoalRecord(up['goal_id'], user.user_id, up['content'])
-		with store_context(fs_store):	
-			with open('pic1.jpg','rb') as f:
-				g.image.from_blob(f.read())
-			db.session.add(g)
-			flag = db.session.commit()
-			return g.to_json(user), 200
+		#with store_context(fs_store):	
+		#	with open('pic1.jpg','rb') as f:
+		#		g.image.from_blob(f.read())
+		db.session.add(g)
+		flag = db.session.commit()
+		return g.to_json(user), 200
 
 	def __record_parser(self):
 		up = reqparse.RequestParser()
@@ -206,6 +206,17 @@ class NotificationRest(Resource):
 		notifications = Notification.query.filter(Notification.receiver_id==user.user_id,\
 			 Notification.is_readed==False)
 		return [n.to_json() for n in notifications]
+
+class MarkNotficationReadRest(Resource):
+	"""
+	"""
+	def get(self):
+		user = check_authorization()
+		#Notification.query.filter(Notification.receiver_id==user.user_id).update({'is_readed':True})
+		db.session.query(Notification).filter(Notification.receiver_id==user.user_id).update({'is_readed':True})
+		db.session.commit()
+		return {'result' : 'success'}, 200
+
 
 class EncourageRest(Resource):
 	""" Send Encourage to someone's goal

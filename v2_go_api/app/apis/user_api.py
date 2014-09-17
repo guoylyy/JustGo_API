@@ -77,10 +77,11 @@ class LoginRest(Resource):
 		user = User.query.filter(User.facebook_token==up['facebook_token']).first()
 		if user is None:
 			u = User(up['name'],up['description'],up['facebook_token'],'header')
-			header = get('http://image.tjcsdc.com/goal-image/2/0/2.301x328.jpe').content
+			#header = get('http://image.tjcsdc.com/goal-image/2/0/2.301x328.jpe').content
 			with store_context(fs_store):	
-				#with open('pic1.jpg','rb') as f:
-				u.header_icon.from_blob(header)
+				with open('pic1.jpg','rb') as f:
+					u.header_icon.from_blob(f.read())
+					#u.header_icon.from_blob(header)
 				db.session.add(u)
 				flag = db.session.commit()
 

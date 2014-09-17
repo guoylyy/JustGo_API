@@ -31,6 +31,7 @@ method: post
 发送数据
 	name: "xxx"
 	description: "xxxx"
+	header_url: "http://fsdafasd.gsd.jpeg"
 	facebook_token : "fdsfsa" //唯一标示一个facebook用户，传facebook id过来
 
 返回数据

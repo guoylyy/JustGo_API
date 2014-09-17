@@ -28,5 +28,6 @@ def create_api(api, base_url):
 
 
 	api.add_resource(NotificationRest,  base_url + '/notification')
+	api.add_resource(MarkNotficationReadRest,  base_url + '/notification/mark_readed')
 	api.add_resource(EncourageRest,  base_url + '/encourage/<string:goal_join_id>')
 	return api

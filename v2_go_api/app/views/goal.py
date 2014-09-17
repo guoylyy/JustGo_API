@@ -35,15 +35,26 @@ def delete(goal_id):
 			db.session.commit()
 	return redirect('/backend/goal')
 
-@goal.route('/<int:goal_id>/edit/')
+@goal.route('/<int:goal_id>/edit/', methods=("GET","POST"))
 def edit(goal_id):
 	if request.method == 'POST':
 		gf = GoalForm()
+		names = gf.category_name.data.split(",")
+		g = Goal.query.filter(Goal.goal_id==goal_id).first()
+		g = gf.to_goal(g)
+		for c in g.categories:
+			g.categories.remove(c)
+		categorys = Category.query.filter(Category.category_name.in_(names)).all()
+		if len(categorys) > 0:
+			for c in categorys:
+				g.categories.append(c)
+		db.session.add(g)
+		db.session.commit()
 		return redirect(url_for('goal.edit', goal_id=goal_id))
 	elif request.method == 'GET':
 		form = GoalForm()
 		categorys = Category.query.all()
-		names = [c.category_name for c in categorys]
+		names = ",".join([c.category_name for c in categorys])
 		goal = Goal.query.filter(Goal.goal_id==goal_id).first()
 		form.set_by_goal(goal)
 		return render_template('backend/goal-edit.html', goal=goal, category_names=names, form=form)

@@ -44,7 +44,7 @@
 							<div class="tab-content">
 								<div class="tab-pane active" id="portlet_tab1">
 									<!-- BEGIN FORM-->
-									<form action="{{ url_for('goal.add') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+									<form action="{{ url_for('goal.edit', goal_id=form.goal_id.data) }}" class="form-horizontal" method="post" enctype="multipart/form-data">
 										<div class="control-group">
 											<label class="control-label">Goal Name</label>
 											<div class="controls">
@@ -135,23 +135,13 @@
 
 											<div class="controls">
 
-												<input id="tags_2" type="text" class="m-wra tags medium" value="tag1,tag2" style="display: none;">
-												<div id="tags_2_tagsinput" class="tagsinput" style="width: 240px; height: 100px;">
-													<span class="tag">
-														<span>tag1&nbsp;&nbsp;</span>
-														<a href="#" title="Removing tag">x</a>
-														{{form.category_name(style='display:none;',value='tag1')}}
-													</span>
-													<span class="tag">
-														<span>tag2&nbsp;&nbsp;</span>
-														<a href="#" title="Removing tag">x</a>
-														{{form.category_name(style='display:none;',value='tag2')}}
-													</span>
-													<div id="tags_2_addTag">
-														<input id="tags_2_tag" value="" data-default="add a tag" style="color: rgb(102, 102, 102); width: 80px;"></div>
-													<div class="tags_clear"></div>
-												</div>
+												<input type="hidden" id="select2_sample5" name="category_name" class="span6 select2 select2-offscreen" value="{{form.categories}}" tabindex="-1">
+												
 
+											</div>
+											<div style="display:none;">
+												<input type="text" id="category_names" value="{{category_names}}">
+												<input type="text" name="goal_id" value="{{form.goal_id}}">
 											</div>
 
 										</div>
@@ -183,10 +173,12 @@
 <script>
 	jQuery(document).ready(function() {       
 
-		 FormComponents.init();
-
-
-
+		FormComponents.init();
+		var category_names = $("#category_names").val()
+		category_names = category_names.split(",")
+		$("#select2_sample5").select2({
+            tags: category_names
+        });
 
 	});
 
