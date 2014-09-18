@@ -50,7 +50,7 @@ def refresh():
 	db.drop_all()
 	db.create_all()
 	make_test_data()
-	goal_join_test_data()
+	#goal_join_test_data()
 	make_admin()
 
 def make_admin():

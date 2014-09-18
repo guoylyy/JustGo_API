@@ -20,10 +20,10 @@ HEADER_SIZE_SMALL = 48
 class Admin(db.Model):
 	__tablename__ = 'admin'
 	ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	username = db.Column(db.String, unique=True)
-	password = db.Column(db.String)
-	nickname = db.Column(db.String)
-	description = db.Column(db.String)
+	username = db.Column(db.String(100), unique=True)
+	password = db.Column(db.String(100))
+	nickname = db.Column(db.String(50))
+	description = db.Column(db.String(500))
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 
@@ -54,10 +54,10 @@ user_follow = db.Table('user_follow',
 class User(db.Model):
 	__tablename__ = "user"
 	user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	name = db.Column(db.String)
-	description = db.Column(db.String)
-	token = db.Column(db.String)
-	facebook_token = db.Column(db.String)
+	name = db.Column(db.String(100))
+	description = db.Column(db.String(500))
+	token = db.Column(db.String(200))
+	facebook_token = db.Column(db.String(200))
 	header_icon = image_attachment('UserHeader')
 	update_time = db.Column(db.DateTime)
 	create_time = db.Column(db.DateTime)
@@ -117,15 +117,15 @@ class UserHeader(db.Model, Image):
 
 goal_category = db.Table('goal_category',
 	db.Column('goal_id', db.Integer, db.ForeignKey('goal.goal_id')),
-	db.Column('category_name', db.String , db.ForeignKey('category.category_name'))
+	db.Column('category_name', db.String(100) , db.ForeignKey('category.category_name'))
 )
 
 class Category(db.Model):
 	""" GoalCategory
 	"""
 	__tablename__ = "category"
-	category_name = db.Column(db.String, primary_key=True)
-	description = db.Column(db.String)
+	category_name = db.Column(db.String(100), primary_key=True)
+	description = db.Column(db.String(100))
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	goals = db.relationship('Goal', secondary=goal_category, backref=db.backref('categorys', lazy='dynamic'))
@@ -145,9 +145,9 @@ class Goal(db.Model):
 	""" Goal table is only write in server """
 	__tablename__ = "goal"
 	goal_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	goal_name = db.Column(db.String, unique=True)
+	goal_name = db.Column(db.String(100), unique=True)
 	image = image_attachment('GoalImage')
-	description = db.Column(db.String)
+	description = db.Column(db.String(500))
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	categories = db.relationship('Category', secondary=goal_category, backref=db.backref('goal_categorys', lazy='dynamic'))
@@ -180,11 +180,11 @@ class GoalImage(db.Model, Image):
 
 class GoalJoin(db.Model):
 	__tablename__ = "goal_join"
-	goal_join_id = db.Column(db.String, primary_key=True)
+	goal_join_id = db.Column(db.String(100), primary_key=True)
 	goal_id = db.Column(db.Integer, db.ForeignKey('goal.goal_id'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	time_span = db.Column(db.Integer)
-	frequency = db.Column(db.String)
+	frequency = db.Column(db.String(200))
 	is_reminder = db.Column(db.Boolean)
 	reminder_time = db.Column(db.Time)
 	start_date = db.Column(db.Date)
@@ -252,7 +252,7 @@ class GoalTrack(db.Model):
 	""" Track everydays' status of a goal for one user """
 	__tablename__ = "goal_track"
 	goal_track_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	goal_join_id = db.Column(db.Integer, db.ForeignKey('goal_join.goal_join_id'))
+	goal_join_id = db.Column(db.String(100), db.ForeignKey('goal_join.goal_join_id'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	track_date = db.Column(db.Date)
 	update_time = db.Column(db.DateTime)
@@ -275,6 +275,7 @@ class GoalTrack(db.Model):
 		self.user_id = kwargs['user_id']
 		self.track_date = _str2date(kwargs['track_date'])
 		self.update_time = datetime.now()
+		self.create_time = datetime.fromtimestamp(kwargs['create_time'])
 
 	def to_json(self):
 		return {
@@ -292,7 +293,7 @@ class GoalRecord(db.Model):
 	goal_record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	goal_id = db.Column(db.Integer, db.ForeignKey('goal.goal_id'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-	content = db.Column(db.String)
+	content = db.Column(db.String(500))
 	image = image_attachment('GoalRecordImage')
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
@@ -363,7 +364,7 @@ class GoalRecordComment(db.Model):
 	comment_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	goal_record_id = db.Column(db.Integer, db.ForeignKey('goal_record.goal_record_id'))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-	content = db.Column(db.String)
+	content = db.Column(db.String(500))
 	update_time = db.Column(db.DateTime)
 	create_time = db.Column(db.DateTime)
 
@@ -421,11 +422,11 @@ class Notification(db.Model):
 	"""
 	__tablename__ = 'notification'
 	notificaion_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	notificaion_type = db.Column(db.String)
+	notificaion_type = db.Column(db.String(100))
 	sender_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 	receiver_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-	content = db.Column(db.String)
-	attach_key = db.Column(db.String)
+	content = db.Column(db.String(1000))
+	attach_key = db.Column(db.String(100))
 	update_time = db.Column(db.DateTime)
 	create_time = db.Column(db.DateTime)
 	is_readed = db.Column(db.Boolean, default=False)

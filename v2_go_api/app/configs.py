@@ -14,7 +14,8 @@ class DefaultConfig(object):
     SECRET_KEY ='\xf1N\xf6\x94a\x0ez\x82\x08\x9aB\xebkh\xc0\x97\xe9\x90\xb3hy\xdb\xed%'
     MD5_RANDOM = 'FSDAFSDSAdasfsadfddDD'
     
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/globit/git/JustGo_Project/v2_go_api/app.db'
+    #SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/globit/git/JustGo_Project/v2_go_api/app.db'
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:a842637@127.0.0.1/archieve'
     SQLALCHEMY_ECHO = False
     
     UPLOAD_FOLDER = 'uploads'
@@ -53,7 +54,8 @@ class TestConfig(object):
     SECRET_KEY ='\xf1N\xf6\x94a\x0ez\x82\x08\x9aB\xebkh\xc0\x97\xe9\x90\xb3hy\xdb\xed%'
     MD5_RANDOM = 'FSDAFSDSAdasfsadfddDD'
     
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/globit/git/JustGo_Project/v2_go_api/app_test.db'
+    #SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/globit/git/JustGo_Project/v2_go_api/app_test.db'
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:a842637@127.0.0.1/archieve-test'
     SQLALCHEMY_ECHO = False
     
     UPLOAD_FOLDER = 'uploads'

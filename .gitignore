@@ -2,3 +2,4 @@
 *.jpe
 *.cfg
 *.db
+/v2_go_api/app/configs.py

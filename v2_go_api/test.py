@@ -24,7 +24,7 @@ manager = Manager(create_app(configs.TestConfig,'test_app',True))
 def create_all():
     db.create_all()
     make_test_data()
-    goal_join_test_data()
+    #goal_join_test_data()
 
 @manager.command
 def drop_all():
@@ -35,7 +35,7 @@ def refresh():
     db.drop_all()
     db.create_all()
     make_test_data()
-    goal_join_test_data()
+    #goal_join_test_data()
 
 
 def make_test_data():
