@@ -97,7 +97,26 @@ method: get | post
 
 ###1.3 查询用户API
 输入用户名，进行模糊匹配查询
-//未开发 待开发
+
+```
+url: /user/search/<string:user_name>
+method: get
+```
+
+####数据说明
+
+```
+返回数据：
+[
+    {
+        "header": "file:///Users/globit/git/JustGo_Project/v2_go_api/userimages/user-header/31/0/31.48x52.jpe?_ts=20140914085301000000",
+        "user_id": 31,
+        "user_name": "tu_1410684779.0558_t"
+    }
+]
+
+
+```
 
 
 ###1.4 关注API
@@ -604,9 +623,6 @@ method: get
     }
 ]
 ```
-
-
-
 
 ##3. Notification API
 

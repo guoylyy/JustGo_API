@@ -1,5 +1,6 @@
 #python compile#
 ###############
 *.pyc
-go_api/cofig.cfg
-#*.db
+*.jpe
+*.cfg
+*.db

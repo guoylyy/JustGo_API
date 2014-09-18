@@ -148,6 +148,10 @@ class GoalRecordAwesomeRest(Resource):
 			db.session.commit()
 			return gra.to_json(), 200
 
+
+
+
+
 class SyncGoalJoinRest(Resource):
 	def post(self):
 		""" 
@@ -206,6 +210,8 @@ class SyncGoalJoinTrackRest(Resource):
 			return {'update_time' : _mk_timestamp(gjt.update_time)}, 200
 		else:
 			return {'update_time' : None}, 200
+
+
 
 class NotificationRest(Resource):
 	def get(self):

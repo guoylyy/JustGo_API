@@ -90,15 +90,20 @@ class User(db.Model):
 				'user_name' : self.name
 			}
 
-	def to_json(self):
+	def to_json(self, user=None):
+		if user is None or (user.user_id == self.user_id):
+			can_follow = False
+		else:
+			can_follow = not (user in self.followings)
+
 		with store_context(fs_store):
 			return {
 				'user_id' : self.user_id,
 				'name' : self.name,
 				'description': self.description,
-				'fans' :  len(self.fans),#[f.header_json() for f in self.fans],
-				'followings' :  len(self.followings),#[fo.header_json() for fo in self.followings],
-				'can_follow' : True,
+				'fans' :  len(self.fans),
+				'followings' :  len(self.followings),
+				'can_follow' : can_follow, # TO-DO update can follow
 				'header_icon' : _find_or_create_thumbnail(self, self.header_icon,HEADER_SIZE_LARGE).locate(),
 				'header_icon_medium' : _find_or_create_thumbnail(self, self.header_icon, HEADER_SIZE_MEDIUM).locate(),
 				'header_icon_small' : _find_or_create_thumbnail(self, self.header_icon, HEADER_SIZE_SMALL).locate()
@@ -341,7 +346,8 @@ class GoalRecord(db.Model):
 
 
 class GoalRecordImage(db.Model, Image):
-	""" Image with sqlalchemy_imageattach
+	""" 
+		Image with sqlalchemy_imageattach
 	"""
 	__tablename__ = 'goal_record_image'
 	goal_record_id = db.Column(db.Integer, db.ForeignKey('goal_record.goal_record_id'),\
@@ -350,7 +356,9 @@ class GoalRecordImage(db.Model, Image):
 
 
 class GoalRecordComment(db.Model):
-	"""docstring for GoalRecordComment"""
+	"""
+		docstring for GoalRecordComment
+	"""
 	__tablename__ = 'goal_record_comment'
 	comment_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	goal_record_id = db.Column(db.Integer, db.ForeignKey('goal_record.goal_record_id'))
@@ -380,7 +388,9 @@ class GoalRecordComment(db.Model):
 
 
 class GoalRecordAwesome(db.Model):
-	"""docstring for GoalRecordAwesome"""
+	"""
+		docstring for GoalRecordAwesome
+	"""
 	__tablename__ = 'goal_record_awesome'
 	awesome_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	goal_record_id = db.Column(db.Integer, db.ForeignKey('goal_record.goal_record_id'))
@@ -406,7 +416,8 @@ class GoalRecordAwesome(db.Model):
 
 
 class Notification(db.Model):
-	"""docstring for Notification
+	"""
+		docstring for Notification
 	"""
 	__tablename__ = 'notification'
 	notificaion_id = db.Column(db.Integer, primary_key=True, autoincrement=True)

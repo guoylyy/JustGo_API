@@ -7,6 +7,7 @@ def create_api(api, base_url):
 	api.add_resource(FollowRest, base_url + '/user/follow/<int:user_id>')
 	api.add_resource(UnFollowRest, base_url + '/user/unfollow/<int:user_id>')
 	api.add_resource(ProfileRest, base_url + '/user/profile')
+	api.add_resource(UserSearchRest, base_url +'/user/search/<string:user_name>')
 
 	api.add_resource(FansRest, base_url + '/user/fans')
 	api.add_resource(FollowingsRest, base_url + '/user/followings')

@@ -8,13 +8,16 @@ from requests import get
 
 class UserRest(Resource):
 	def get(self, user_id):
-		""" Get the basic information of one user
+		""" 
+			Get the basic information of one user
 		"""
+		u = check_authorization()
 		user = abort_if_user_doesnt_exit(user_id)
-		return user.to_json(), 200
+		return user.to_json(u), 200
 
 	def post(self):
-		""" Update information of one user
+		""" 
+			Update information of one user
 		"""
 		user = check_authorization()
 		up = self.__user_update_parser()
@@ -71,7 +74,8 @@ class UnFollowRest(Resource):
 
 class LoginRest(Resource):
 	def post(self):
-		""" Login restful api
+		""" 
+			Login restful api
 		"""
 		up = self.__user_parser()
 		user = User.query.filter(User.facebook_token==up['facebooktoken']).first()
@@ -102,3 +106,13 @@ class LoginRest(Resource):
 		up.add_argument('description', type=str, location='headers')
 		up.add_argument('headerurl', type=str, location='headers')
 		return up.parse_args()
+
+
+class UserSearchRest(Resource):
+	def get(self, user_name):
+		if user_name is not None and user_name is not '':
+			users = User.query.filter(User.name.like('%'+user_name+'%')).all()
+			return [user.header_json() for user in users], 200
+		else:
+			return [],200
+

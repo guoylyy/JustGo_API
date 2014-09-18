@@ -18,7 +18,7 @@ class BaseTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app(configs.TestConfig,'test_app',True)
         self.app.config['TESTING'] = True
-        self.client = self.app.test_client()       
+        self.client = self.app.test_client()
         self.base_url = '/' + self.app.config['VERSION']
         self.token = self.login()
         self.user = self.get_user_profile(self.token)
@@ -55,8 +55,9 @@ class A_UserTest(BaseTest):
         print '\nStart to test User'
 
         print '===1-1 Test User Profile ==='
-        rep = self.client.get(self.base_url+'/user/1')
+        rep = self.client.get(self.base_url+'/user/1', headers={'Authorization': self.stranger_token})
         assert b'user_id' in rep.data
+        #print rep.data
     
     def test_02_follow_and_unfollow(self):
         print '===1-2 Test Follow and Unfollow==='
@@ -77,7 +78,10 @@ class A_UserTest(BaseTest):
             headers={'Authorization':self.token})
         assert b'success' in rep.data 
 
-
+        print '==== Test search user === '
+        rep = self.client.get(self.base_url + '/user/search/' + user_name)
+        assert user_name in rep.data
+        #print rep.data
 
 class B_GoalTest(BaseTest):
 
@@ -119,7 +123,6 @@ class B_GoalTest(BaseTest):
         rep = self.client.get(self.base_url+'/goal_join_record/'+str(goal_id),
             headers={'Authorization': self.token})
         assert b'goal_id' in rep.data
-        #print rep.data
 
 
         print '=== 2-6. Awesome a record ===='
@@ -152,12 +155,12 @@ class B_GoalTest(BaseTest):
         print '=== 2-10. Test List all Goal Record ==='
         rep = self.client.get(self.base_url+'/goal_record_list/'+str(goal_id),
              headers={'Authorization': self.token})
-        #print rep.data
+        
 
         print '=== 2-11. Test fighting center ==='
         rep = self.client.get(self.base_url+'/goal_record/fighting_center',
              headers={'Authorization': self.token})
-        #print rep.data
+        
 
     def test_sync(self):
         print '=== 2-10. Test Sync Goal Join ==='
@@ -206,6 +209,8 @@ class B_GoalTest(BaseTest):
             headers=headers, data=json.dumps(data))
         assert b'success' in rep.data
 
+        
+
 
 class C_NotificationTest(BaseTest):
     def test_01_encourage(self):
@@ -215,12 +220,12 @@ class C_NotificationTest(BaseTest):
         rep = self.client.post(self.base_url + '/encourage/goal_' + user_name,
             headers={'Authorization' : self.stranger_token})
         assert b'content' in rep.data
-        #print rep.data
+        
 
         rep = self.client.get(self.base_url + '/notification',
             headers={'Authorization' : self.token})
         assert b'content' in rep.data
-        #print rep.data
+        
 
         rep = self.client.get(self.base_url + '/notification/mark_readed',
             headers={'Authorization' : self.token})
@@ -229,9 +234,6 @@ class C_NotificationTest(BaseTest):
         rep = self.client.get(self.base_url + '/notification',
             headers={'Authorization' : self.token})
         assert b'content' not in rep.data
-
-
-
 
     def test_02_mark_all_as_readed(self):
         
