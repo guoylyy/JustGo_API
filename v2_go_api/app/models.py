@@ -326,7 +326,7 @@ class GoalRecord(db.Model):
 				'content' : self.content,
 				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.limit(5)],
-				'awesomes' : [a.to_json() for a in self.awesomes.limit(5)],
+				'awesomes' : [a.to_preview_json() for a in self.awesomes.limit(5)],
 				'can_awesome' : self.__can_awesome(user),
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}
@@ -339,7 +339,7 @@ class GoalRecord(db.Model):
 				'content' : self.content,
 				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.all()],
-				'awesomes' : [a.to_preview_json() for a in self.awesomes.all()],
+				'awesomes' : [a.to_json() for a in self.awesomes.all()],
 				'can_awesome' : self.__can_awesome(user),
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}
