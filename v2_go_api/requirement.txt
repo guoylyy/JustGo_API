@@ -9,6 +9,11 @@ Flask-Script
 Flask-Babel
 Flask-Themes
 Flask-Uploads
+Flask-Login
+Flask-Restful
+sqlalchemy_imageattach
+simplejson
+requests
 pygments
 markdown
 blinker

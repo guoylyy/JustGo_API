@@ -30,10 +30,11 @@ def parameter_error():
 def check_authorization():
 	parser = reqparse.RequestParser()
 	parser.add_argument('Authorization', type=str, location='headers')
-	token = urllib.unquote(parser.parse_args()['Authorization']).decode('utf8') 
+	token = parser.parse_args()['Authorization']
 	if not token:
 		abort(500, message="Authorization Failed")
 	else:
+		token = urllib.unquote(parser.parse_args()['Authorization']).decode('utf8') 
 		check_expire(token)
 		u = User.query.filter(User.token==token).first()
 		if u:

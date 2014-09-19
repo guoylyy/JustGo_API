@@ -433,6 +433,8 @@ class Notification(db.Model):
 	update_time = db.Column(db.DateTime)
 	create_time = db.Column(db.DateTime)
 	is_readed = db.Column(db.Boolean, default=False)
+
+	sender = db.relationship('User', foreign_keys=sender_id)
 	
 	def __init__(self, notificaion_type, sender_id, receiver_id, content, attach_key):
 		self.notificaion_type = notificaion_type
@@ -445,7 +447,7 @@ class Notification(db.Model):
 	def to_json(self):
 		return {
 			'notificaion_id' : self.notificaion_id,
-			'user_id' : self.sender_id,
+			'sender' : self.sender.header_json(),
 			'content' : self.content
 		}
 #============== End of Models ============================#

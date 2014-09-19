@@ -223,24 +223,21 @@ class MarkNotficationReadRest(Resource):
 
 
 class EncourageRest(Resource):
-	def post(self, goal_join_id):
+	def post(self, user_id):
 		""" 
 			Send Encourage to someone's goal
 		"""
 		user = check_authorization()
-		gj = GoalJoin.query.filter(GoalJoin.goal_join_id==goal_join_id).first()
-		if gj:
-			b_now = datetime.fromtimestamp(stime.mktime(date.today().timetuple()))
-			n = Notification.query.filter(Notification.sender_id==user.user_id, \
-				Notification.attach_key==goal_join_id,Notification.create_time>=b_now).first()
-			if n:
-				abort(500, message="You have encouraged this user today")
-			else:
-				content = "%s encourage you to finish %s" % (user.name, gj.goal.goal_name)
-				ntf = Notification('encourage', user.user_id, gj.user_id, content, goal_join_id)
-				db.session.add(ntf)
-				db.session.commit()
-				return ntf.to_json(), 200
+		receiver = User.query.filter(User.user_id==user_id).first()
+		b_now = datetime.fromtimestamp(stime.mktime(date.today().timetuple()))
+		n = Notification.query.filter(Notification.sender_id==user.user_id, \
+			Notification.create_time>=b_now).first()
+		if n or receiver is None:
+			abort(500, message="You have encouraged this user today")
 		else:
-			abort(404, 'User %s didn\'t join this goal' % user.name)
+			content = "%s encourage you to finish goal." % (user.name)
+			ntf = Notification('encourage', user.user_id, receiver.user_id, content, user.user_id)
+			db.session.add(ntf)
+			db.session.commit()
+			return ntf.to_json(), 200
 #============== End of APIs =============#

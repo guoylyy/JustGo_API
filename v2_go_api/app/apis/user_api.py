@@ -118,8 +118,12 @@ class LoginRest(Resource):
 
 class UserSearchRest(Resource):
 	def get(self, user_name):
+		u = check_authorization()
 		if user_name is not None and user_name is not '':
-			users = User.query.filter(User.name.like('%'+user_name+'%')).all()
+			user_name = '%'+user_name+'%'
+			users = User.query.filter(User.name.like(user_name)).all()
+			if u in users:
+				users.remove(u)
 			return [user.header_json() for user in users], 200
 		else:
 			return [],200

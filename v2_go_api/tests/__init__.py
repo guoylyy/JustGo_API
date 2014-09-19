@@ -79,9 +79,10 @@ class A_UserTest(BaseTest):
         assert b'success' in rep.data 
 
         print '==== Test search user === '
-        rep = self.client.get(self.base_url + '/user/search/' + user_name)
-        assert user_name in rep.data
-        #print rep.data
+        rep = self.client.get(self.base_url + '/user/search/' + user_name,
+            headers={'Authorization': self.stranger_token})
+        assert self.stranger['name'] not in rep.data
+        
 
 class B_GoalTest(BaseTest):
 
@@ -217,7 +218,7 @@ class C_NotificationTest(BaseTest):
         print '\nStart notification test ==>>'
 
         print '=== 3-1. Test encourage ==='
-        rep = self.client.post(self.base_url + '/encourage/goal_' + user_name,
+        rep = self.client.post(self.base_url + '/encourage/' +str(self.user['user_id']),
             headers={'Authorization' : self.stranger_token})
         assert b'content' in rep.data
         
