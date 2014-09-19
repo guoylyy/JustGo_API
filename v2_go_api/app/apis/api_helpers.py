@@ -21,6 +21,12 @@ def abort_if_user_doesnt_exit(user_id):
 	else:
 		return 	User.query.filter(User.user_id==user_id).first()
 
+def internal_error():
+	abort(500, message="Internal Error Happen")
+
+def parameter_error():
+	abort(500, message="Parameter Error")	
+
 def check_authorization():
 	parser = reqparse.RequestParser()
 	parser.add_argument('Authorization', type=str, location='headers')

@@ -68,10 +68,9 @@ class User(db.Model):
 	fans = db.relationship('User', secondary=user_follow, primaryjoin=user_id==user_follow.c.followed_id, \
 		secondaryjoin=user_id==user_follow.c.follow_id,backref=db.backref('u_followings', lazy='dynamic'))
 
-	def __init__(self, name, description, facebook_token, header_icon):
+	def __init__(self, name, description, facebook_token):
 		self.name = name
 		self.description = description
-		#self.token = token
 		self.facebook_token = facebook_token
 		self.update_time = datetime.now()
 		self.create_time = datetime.now()
@@ -340,7 +339,7 @@ class GoalRecord(db.Model):
 				'content' : self.content,
 				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.all()],
-				'awesomes' : [a.to_json() for a in self.awesomes.all()],
+				'awesomes' : [a.to_preview_json() for a in self.awesomes.all()],
 				'can_awesome' : self.__can_awesome(user),
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}
@@ -377,6 +376,7 @@ class GoalRecordComment(db.Model):
 		self.update_time = datetime.now()
 		self.create_time = datetime.now()
 
+
 	def to_json(self):
 		return {
 			'comment_id' : self.comment_id,
@@ -406,6 +406,9 @@ class GoalRecordAwesome(db.Model):
 		self.user_id = user_id
 		self.create_time = datetime.now()
 		self.update_time = datetime.now()
+
+	def to_preview_json(self):
+		return self.user.header_json()
 
 	def to_json(self):
 		return {
@@ -445,6 +448,4 @@ class Notification(db.Model):
 			'user_id' : self.sender_id,
 			'content' : self.content
 		}
-
-
 #============== End of Models ============================#

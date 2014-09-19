@@ -23,9 +23,12 @@ class UserRest(Resource):
 		up = self.__user_update_parser()
 		user.user_name = up['name']
 		user.description = up['description']
-		db.session.add(user)
-		db.session.commit()
-		return user.to_json(), 200
+		if user.validate():
+			db.session.add(user)
+			db.session.commit()
+			return user.to_json(), 200
+		else:
+			return {'result':'fail'}, 404
 
 	def __user_update_parser(self):
 		up = reqparse.RequestParser()
@@ -54,11 +57,15 @@ class FollowRest(Resource):
 	"""
 	def post(self, user_id):
 		user = check_authorization()
-		target_user = User.query.filter(User.user_id==user_id).first()
-		target_user.fans.append(user)
-		db.session.add(user)
-		db.session.commit()
-		return {'result':'success'}, 200
+		try:
+			target_user = User.query.filter(User.user_id==user_id).first()
+			target_user.fans.append(user)
+			db.session.add(user)
+			db.session.commit()
+			return {'result':'success'}, 200
+		except Exception, e:
+			return {'result':'fail'}, 404
+		
 
 class UnFollowRest(Resource):
 	"""
@@ -80,21 +87,22 @@ class LoginRest(Resource):
 		up = self.__user_parser()
 		user = User.query.filter(User.facebook_token==up['facebooktoken']).first()
 		if user is None:
-			u = User(up['name'],up['description'],up['facebooktoken'],'header')
-			#header = get('http://image.tjcsdc.com/goal-image/2/0/2.301x328.jpe').content
+			u = User(up['name'],up['description'],up['facebooktoken'])
 			if u.validate():
-				with store_context(fs_store):	
-					with open('pic1.jpg','rb') as f:
-						u.header_icon.from_blob(f.read())
-						#u.header_icon.from_blob(header)
+				try:
+					header = get('http://ww3.sinaimg.cn/mw690/63ea4d33gw1ejhpwui71sj20u00k045s.jpg').content #Test for get headers
+					with store_context(fs_store):	
+						u.header_icon.from_blob(header)
+						db.session.add(u)
+						flag = db.session.commit()
+					u.token = make_token(u.user_id)
 					db.session.add(u)
-					flag = db.session.commit()
-				u.token = make_token(u.user_id)
-				db.session.add(u)
-				db.session.commit()
-				return {'token': u.token}, 200
+					db.session.commit()
+					return {'token': u.token}, 200
+				except Exception, e:
+					return {'result':'fail'}, 500
 			else:
-				return {'result':'fail'}, 500
+				return {'result':'fail'}, 404
 		else:
 			check_expire(user.token)
 			return {'token': user.token}, 200

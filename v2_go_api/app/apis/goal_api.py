@@ -7,7 +7,7 @@ from app.helpers import _mk_timestamp
 from app.extensions import db, fs_store
 from app.models import *
 from api_helpers import abort_if_category_doesnt_exist
-from api_helpers import check_authorization
+from api_helpers import check_authorization , internal_error, parameter_error
  
 class GoalCategoryRest(Resource):
 	def get(self):
@@ -19,22 +19,19 @@ class GoalRest(Resource):
 		abort_if_category_doesnt_exist(category_id)
 		c = Category.query.filter(Category.category_name==category_id).first()
 		goals = c.goals
-		return [g.to_json() for g in goals] ,200
-
-	def __goal_details(self, goal_id):
-		return ""
+		return [g.to_json() for g in goals], 200
 
 class GoalJoinRest(Resource):
 	def get(self):
 		user = check_authorization()
 		gjs = GoalJoin.query.filter(GoalJoin.user_id==user.user_id)
-		return [gj.to_json() for gj in gjs]
+		return [gj.to_json() for gj in gjs], 200
 
 class GoalJoinTrackRest(Resource):
 	def get(self):
 		user = check_authorization()
 		gjts = GoalTrack.query.filter(GoalTrack.user_id==user.user_id)
-		return [gjt.to_json() for gjt in gjts]
+		return [gjt.to_json() for gjt in gjts], 200
 
 class GoalJoinRecordRest(Resource):
 	def get(self, goal_id):
@@ -75,9 +72,6 @@ class GoalRecordRest(Resource):
 		user = check_authorization()
 		up = self.__record_parser()
 		g = GoalRecord(up['goalid'], user.user_id, up['content'])
-		#with store_context(fs_store):	
-		#	with open('pic1.jpg','rb') as f:
-		#		g.image.from_blob(f.read())
 		db.session.add(g)
 		flag = db.session.commit()
 		return g.to_json(user), 200
@@ -148,10 +142,6 @@ class GoalRecordAwesomeRest(Resource):
 			db.session.commit()
 			return gra.to_json(), 200
 
-
-
-
-
 class SyncGoalJoinRest(Resource):
 	def post(self):
 		""" 
@@ -211,16 +201,15 @@ class SyncGoalJoinTrackRest(Resource):
 		else:
 			return {'update_time' : None}, 200
 
-
-
 class NotificationRest(Resource):
 	def get(self):
-		""" Get user notifications
+		""" 
+			Get user notifications
 		"""
 		user = check_authorization()
 		notifications = Notification.query.filter(Notification.receiver_id==user.user_id,\
 			 Notification.is_readed==False)
-		return [n.to_json() for n in notifications]
+		return [n.to_json() for n in notifications], 200
 
 class MarkNotficationReadRest(Resource):
 	def get(self):
@@ -228,7 +217,6 @@ class MarkNotficationReadRest(Resource):
 			Mark all notification as readed
 		"""
 		user = check_authorization()
-		#Notification.query.filter(Notification.receiver_id==user.user_id).update({'is_readed':True})
 		db.session.query(Notification).filter(Notification.receiver_id==user.user_id).update({'is_readed':True})
 		db.session.commit()
 		return {'result' : 'success'}, 200
