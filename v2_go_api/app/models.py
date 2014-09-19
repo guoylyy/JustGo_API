@@ -296,8 +296,8 @@ class GoalRecord(db.Model):
 	image = image_attachment('GoalRecordImage')
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
-	comments = db.relationship('GoalRecordComment', backref='goal_record', lazy='dynamic')
-	awesomes = db.relationship('GoalRecordAwesome', backref='goal_record', lazy='dynamic')
+	comments = db.relationship('GoalRecordComment', backref='goal_record', lazy='dynamic', order_by="desc(GoalRecordComment.comment_id)")
+	awesomes = db.relationship('GoalRecordAwesome', backref='goal_record', lazy='dynamic', order_by="desc(GoalRecordAwesome.awesome_id)")
 
 	def __init__(self, goal_id, user_id, content):
 		self.goal_id = goal_id
