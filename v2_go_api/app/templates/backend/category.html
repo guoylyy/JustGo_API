@@ -111,16 +111,18 @@
 								</thead>
 								<tbody>
 									{%- for category in categorys%}
-									<tr class="odd gradeX">
+									<tr class="odd gradeX" id="{{category.category_name}}">
 										<td>{{category.category_name}}</td>
+										
 										<td class="hidden-480">
 											{{category.goal_count}}
 										</td>
 										<td>
-											<a href="{{url_for('category.edit', category_id=category.category_name)}}">
+											<a class="edit" id="{{category.category_name}}" >
+												<p class="{{category.category_name}}" style="display:none;">{{category.description}}</p>
 												<span class="label label-success">Edit</span>
 											</a>
-											<a href="{{url_for('category.delete', category_id=category.category_name)}}" onclick="#" class="goal_delete">
+											<a href="{{url_for('category.delete', category_id=category.category_name)}}" onclick="return confirm('Are you sure delete this item?')" class="goal_delete">
 												<span class="label label">Delete</span>
 											</a>
 										</td>
@@ -187,7 +189,66 @@
 
 					</div>
 
+
+					<!-- BEGIN EXAMPLE TABLE PORTLET-->
+					<div class="portlet box light-grey">
+
+						<div class="portlet-title">
+
+							<div class="caption">
+								<i class="icon-globe"></i>
+								Edit Category
+							</div>
+
+						</div>
+
+						<div class="portlet-body">
+
+							<div class="clearfix"></div>
+							<div class="tab-pane tab-content">
+								<form  class="form-horizontal" method="post" id="update_form">
+									
+									<div class="control-group">
+										<label class="control-label" style="width:90px;">Name</label>
+										<div class="controls" style="margin-left:110px;">
+											<input type="text"  class="m-wrap small" name="name" id="oldname" readonly="True">
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" style="width:90px;">Name</label>
+										<div class="controls" style="margin-left:110px;">
+											{{ form.category_name(class='m-wrap small', id="newname")}}
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" style="width:90px;">Description</label>
+										<div class="controls" style="margin-left:110px;">
+											{{ form.description(class='medium m-wrap', id="newdescription")}}
+										</div>
+									</div>
+									<div class="form-actions" style="padding-left:110px;">
+										<button type="submit" class="btn blue">
+											<i class="icon-ok"></i>
+											Save
+										</button>
+
+									</div>
+								</form>
+
+							</div>
+
+						</div>
+
+					</div>	
+
 				</div>
+			</div>
+
+			<div class="row-fluid">
+				<div class="span8"></div>
+				<div class="span4"></div>
 			</div>
 
 		</div>
@@ -208,7 +269,23 @@
 <script src="static/lib/metronic/js/table-managed.js" type="text/javascript"></script>
 <script>
 		jQuery(document).ready(function() {       
+		   
+
+		   $(".edit").click(function(){
+		   		var name = $(this).attr("id");
+		   		var description = $("p[class='"+name+"']").html();
+		   		//fill edit
+		   		$("#oldname").val(name);
+		   		$("#newdescription").val(description);
+		   		$("#newname").focus();
+
+		   		var url = "/backend/category/"+name+"/edit/";
+		   		$("#update_form").attr("action", url);
+
+		   });
+
 		   TableManaged.init();
+
 		});
 	</script>
 {%-endblock %}

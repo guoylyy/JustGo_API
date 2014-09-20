@@ -116,14 +116,15 @@ class UserHeader(db.Model, Image):
 
 goal_category = db.Table('goal_category',
 	db.Column('goal_id', db.Integer, db.ForeignKey('goal.goal_id')),
-	db.Column('category_name', db.String(100) , db.ForeignKey('category.category_name'))
+	db.Column('category_id', db.Integer, db.ForeignKey('category.category_id'))
 )
 
 class Category(db.Model):
 	""" GoalCategory
 	"""
 	__tablename__ = "category"
-	category_name = db.Column(db.String(100), primary_key=True)
+	category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	category_name = db.Column(db.String(100), primary_key=True, unique=True)
 	description = db.Column(db.String(100))
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)

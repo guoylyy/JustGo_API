@@ -38,8 +38,19 @@ def add():
 
 @category.route('/<string:category_id>/edit/', methods=('POST','GET'))
 def edit(category_id):
-	c = Category.query.filter(Category.category_name==category_id).first()
+	form = CategoryForm()
+	if form.validate():
+		c = Category.query.filter(Category.category_name==category_id).first()
+
+		sc = Category.query.filter(Category.category_name==form.category_name.data).count()
+		if sc > 0:
+			return redirect(url_for('category.index'))
+		c.category_name = form.category_name.data
+		c.description = form.description.data
+		db.session.add(c)
+		db.session.commit()
 	return redirect(url_for('category.index'))
+		
 
 @category.route('/<string:category_id>/delete/', methods=('POST','GET'))
 def delete(category_id):
