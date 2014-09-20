@@ -70,7 +70,13 @@ class A_UserTest(BaseTest):
         assert b'header' in rep.data
         #print rep.data
 
+        rep = self.client.get(self.base_url + '/user/'+str(self.stranger['user_id'])+'/fans')
+        assert b'header' in rep.data
+
         print '==== Test followings'
+        rep = self.client.get(self.base_url + '/user/'+str(self.user['user_id'])+'/followings')
+        assert b'header' in rep.data
+
         rep = self.client.get(self.base_url + '/user/followings',  headers={'Authorization': self.token})
         assert b'header' in rep.data
 

@@ -51,6 +51,22 @@ class FollowingsRest(Resource):
 		u = check_authorization()
 		return [f.header_json() for f in u.followings], 200
 
+class UserFansRest(Resource):
+	def get(self, user_id):
+		u = User.query.filter(User.user_id==user_id).first()
+		if u:
+			return [f.header_json() for f in u.fans], 200
+		else:
+			return [],200
+
+class UserFollowingsRest(Resource):
+	def get(self, user_id):
+		u = User.query.filter(User.user_id==user_id).first()
+		if u:
+			return [f.header_json() for f in u.followings], 200
+		else:
+			return [],200
+
 class FollowRest(Resource):
 	"""
 		One user follow another
@@ -66,7 +82,6 @@ class FollowRest(Resource):
 		except Exception, e:
 			return {'result':'fail'}, 404
 		
-
 class UnFollowRest(Resource):
 	"""
 		One user unfollow another user

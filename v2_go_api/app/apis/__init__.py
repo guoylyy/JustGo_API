@@ -11,7 +11,9 @@ def create_api(api, base_url):
 
 	api.add_resource(FansRest, base_url + '/user/fans')
 	api.add_resource(FollowingsRest, base_url + '/user/followings')
-	
+	api.add_resource(UserFansRest, base_url + '/user/<int:user_id>/fans')
+	api.add_resource(UserFollowingsRest, base_url + '/user/<int:user_id>/followings')
+
 	api.add_resource(GoalJoinTrackRest, base_url + '/goal_join_track')
 	api.add_resource(GoalJoinRest, base_url + '/goal_join')
 	api.add_resource(SyncGoalJoinRest, base_url + '/sync_goal_join', base_url + '/goal_join/update_time')
@@ -26,7 +28,6 @@ def create_api(api, base_url):
 	api.add_resource(GoalRecordCommentRest,  base_url + '/goal_record_comment/<int:record_id>')
 	api.add_resource(GoalRecordAwesomeRest,  base_url + '/goal_record_awesome/<int:record_id>')
 	api.add_resource(GoalJoinRecordRest,  base_url + '/goal_join_record/<int:goal_id>')
-
 
 	api.add_resource(NotificationRest,  base_url + '/notification')
 	api.add_resource(MarkNotficationReadRest,  base_url + '/notification/mark_readed')
