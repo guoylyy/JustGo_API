@@ -68,7 +68,6 @@ class A_UserTest(BaseTest):
         print '==== Test fans'
         rep = self.client.get(self.base_url +'/user/fans', headers={'Authorization': self.stranger_token})
         assert b'header' in rep.data
-        #print rep.data
 
         rep = self.client.get(self.base_url + '/user/'+str(self.stranger['user_id'])+'/fans')
         assert b'header' in rep.data
@@ -102,7 +101,6 @@ class B_GoalTest(BaseTest):
     def test_02_get_goal_from_category(self):
         print '=== 2-2. Test get goal ==='
         rep = self.client.get(self.base_url+'/goal/Popular')
-        #print rep.data
         assert b'goal_name' in rep.data
 
     def test_03_add_and_get_goal_record(self):
@@ -124,7 +122,7 @@ class B_GoalTest(BaseTest):
         rep = self.client.get(self.base_url+'/goal_record/'+str(goal_record_id),
             headers={'Authorization': self.token})
         assert b'goal_id' in rep.data
-        #print rep.data
+        
 
         print '=== 2-5. Test get all record for a user in a goal ===='
         rep = self.client.get(self.base_url+'/goal_join_record/'+str(goal_id),
@@ -158,15 +156,18 @@ class B_GoalTest(BaseTest):
         rep = self.client.get(self.base_url+'/goal_record_comment/'+str(goal_record_id))
         assert b'comment_id' in rep.data
 
-
         print '=== 2-10. Test List all Goal Record ==='
         rep = self.client.get(self.base_url+'/goal_record_list/'+str(goal_id),
              headers={'Authorization': self.token})
-        
+        assert b'goal_record_id' in rep.data
 
         print '=== 2-11. Test fighting center ==='
         rep = self.client.get(self.base_url+'/goal_record/fighting_center',
              headers={'Authorization': self.token})
+        assert b'goal_record_id' in rep.data
+
+        rep = self.client.get(self.base_url+'/goal_record/'+str(self.user['user_id'])+'/fighting_center')
+        assert b'goal_record_id' in rep.data
         
 
     def test_sync(self):

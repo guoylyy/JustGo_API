@@ -24,6 +24,8 @@ def create_api(api, base_url):
 	api.add_resource(GoalRecordRest,  base_url + '/goal_record/<int:record_id>', base_url + '/goal_record')
 	api.add_resource(GoalRecordListRest, base_url + '/goal_record_list/<int:goal_id>')
 	api.add_resource(UserGoalRecordRest, base_url + '/goal_record/fighting_center')
+	api.add_resource(OtherUserGoalRecordRest, base_url + '/goal_record/<int:user_id>/fighting_center')
+
 
 	api.add_resource(GoalRecordCommentRest,  base_url + '/goal_record_comment/<int:record_id>')
 	api.add_resource(GoalRecordAwesomeRest,  base_url + '/goal_record_awesome/<int:record_id>')

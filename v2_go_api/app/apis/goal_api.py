@@ -51,6 +51,12 @@ class UserGoalRecordRest(Resource):
 		records = GoalRecord.query.filter(GoalRecord.user_id == user.user_id)
 		return [gr.to_preview_json(user) for gr in records], 200
 
+class OtherUserGoalRecordRest(Resource):
+	def get(self, user_id):
+		user = User.query.filter(User.user_id==user_id).first()
+		records = GoalRecord.query.filter(GoalRecord.user_id == user.user_id)
+		return [gr.to_preview_json(user) for gr in records], 200
+
 class GoalRecordRest(Resource):
 	def get(self, record_id):
 		"""
