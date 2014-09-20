@@ -239,5 +239,5 @@ class EncourageRest(Resource):
 			ntf = Notification('encourage', user.user_id, receiver.user_id, content, user.user_id)
 			db.session.add(ntf)
 			db.session.commit()
-			return ntf.to_json(), 200
+			return {'result' : 'success'}, 200
 #============== End of APIs =============#

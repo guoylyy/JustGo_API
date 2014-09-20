@@ -448,6 +448,7 @@ class Notification(db.Model):
 		return {
 			'notificaion_id' : self.notificaion_id,
 			'sender' : self.sender.header_json(),
-			'content' : self.content
+			'content' : self.content,
+			'create_time': stime.mktime(self.create_time.timetuple())
 		}
 #============== End of Models ============================#

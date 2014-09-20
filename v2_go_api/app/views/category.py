@@ -39,7 +39,6 @@ def add():
 @category.route('/<string:category_id>/edit/', methods=('POST','GET'))
 def edit(category_id):
 	c = Category.query.filter(Category.category_name==category_id).first()
-	
 	return redirect(url_for('category.index'))
 
 @category.route('/<string:category_id>/delete/', methods=('POST','GET'))

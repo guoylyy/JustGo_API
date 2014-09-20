@@ -220,13 +220,11 @@ class C_NotificationTest(BaseTest):
         print '=== 3-1. Test encourage ==='
         rep = self.client.post(self.base_url + '/encourage/' +str(self.user['user_id']),
             headers={'Authorization' : self.stranger_token})
-        assert b'content' in rep.data
-        
+        assert b'success' in rep.data
 
         rep = self.client.get(self.base_url + '/notification',
             headers={'Authorization' : self.token})
         assert b'content' in rep.data
-        
 
         rep = self.client.get(self.base_url + '/notification/mark_readed',
             headers={'Authorization' : self.token})
@@ -237,6 +235,5 @@ class C_NotificationTest(BaseTest):
         assert b'content' not in rep.data
 
     def test_02_mark_all_as_readed(self):
-        
         pass
 
