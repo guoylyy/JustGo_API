@@ -179,7 +179,7 @@ class Goal(db.Model):
 				'goal_name' : self.goal_name,
 				'description' : self.description + '',
 				'joins' : self.goal_joins.count(),
-				'goal_records': [gr.to_preview_json() for gr in self.goal_records],
+				'goal_records': [gr.to_preview_json() for gr in self.goal_records.limit(5)],
 				'image' : self.image.locate(),
 				'joins' : self.goal_joins.count() + random.randint(1000,2000)
 			}
