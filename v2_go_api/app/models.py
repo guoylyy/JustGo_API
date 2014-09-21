@@ -314,6 +314,8 @@ class GoalRecord(db.Model):
 	comments = db.relationship('GoalRecordComment', backref='goal_record', lazy='dynamic', order_by="desc(GoalRecordComment.comment_id)")
 	awesomes = db.relationship('GoalRecordAwesome', backref='goal_record', lazy='dynamic', order_by="desc(GoalRecordAwesome.awesome_id)")
 
+	parent_goal = db.relationship('Goal')
+
 	def __init__(self, goal_id, user_id, content):
 		self.goal_id = goal_id
 		self.user_id = user_id
@@ -342,6 +344,7 @@ class GoalRecord(db.Model):
 				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.limit(5)],
 				'awesomes' : [a.to_preview_json() for a in self.awesomes.limit(5)],
+				'goal_name' : self.parent_goal.goal_name,
 				#'can_awesome' : self.__can_awesome(user),
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}

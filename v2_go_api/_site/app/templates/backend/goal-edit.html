@@ -1,0 +1,188 @@
+{% extends "components/_layout.html" %}
+{% from "macros/_forms.html" import render_errors %}
+{%-block content %}
+<div class="page-container row-fluid">
+	{% include "backend/_slider.html" %}
+	<div class="page-content">
+		<div class="container-fluid">
+			<!-- BEGIN PAGE HEADER-->
+			<div class="row-fluid">
+				<div class="span12">
+					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+					<h3 class="page-title">
+						Goal Management
+						<small>managed goals</small>
+					</h3>
+					<ul class="breadcrumb">
+						<li> <i class="icon-home"></i>
+							<a href="index.html">Home</a> <i class="icon-angle-right"></i>
+						</li>
+						<!-- <li>
+						<a href="#">Data Tables</a>
+						<i class="icon-angle-right"></i>
+					</li>
+					<li>
+						<a href="#">Managed Tables</a>
+					</li>
+					-->
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="portlet box blue tabbable">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>
+							<span class="hidden-480">Goal Add</span>
+						</div>
+					</div>
+					<div class="portlet-body form" style="padding-top:50px;">
+						<div class="tabbable portlet-tabs">
+							<ul class="nav nav-tabs"></ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="portlet_tab1">
+									<!-- BEGIN FORM-->
+									<form action="{{ url_for('goal.edit', goal_id=form.goal_id.data) }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+										<div class="control-group">
+											<label class="control-label">Goal Name</label>
+											<div class="controls">
+												{{ form.goal_name(class='m-wrap medium')}}
+												<span class="help-inline">{{ render_errors(form.goal_name) }}</span>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label">Description</label>
+											<div class="controls">
+												{{ form.description(class='large m-wrap', rows='3')}}
+												<span class="help-inline">{{ render_errors(form.description) }}</span>
+											</div>
+										</div>
+
+										<div class="control-group">
+
+											<label class="control-label">Image Upload</label>
+
+
+											<div class="controls">
+
+												<div class="fileupload fileupload-new" data-provides="fileupload">
+
+													<div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+														
+														<img src="{{goal.get_url()}}" alt=""></div>
+
+													<div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;">
+														
+
+													</div>
+
+													<div>
+
+														<span class="btn btn-file">
+															<span class="fileupload-new">Select image</span>
+
+															<span class="fileupload-exists">Change</span>
+
+															<!-- <input type="file" class="default">
+															-->
+
+															{{form.image(class='default', src=goal.get_url())}}
+														</span>
+
+														<a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+
+													</div>
+
+												</div>
+
+												<span class="label label-important">NOTE!</span>
+
+												<span>
+													Attached image thumbnail is
+
+											supported in Latest Firefox, Chrome, Opera, 
+
+											Safari and Internet Explorer 10 only
+												</span>
+
+											</div>
+
+										</div>
+
+										<div class="control-group">
+
+											<label class="control-label">Add Category</label>
+
+											<div class="controls">
+
+												<select class="span6 m-wrap" data-placeholder="Choose a Category" tabindex="1">
+
+													<option value="">Select...</option>
+													{%- for c in category_names%}
+													<option value="{{c}}">{{c}}</option>
+													{%- endfor %}
+												</select>
+
+											</div>
+
+										</div>
+
+										<div class="control-group">
+
+											<label class="control-label">Category</label>
+
+											<div class="controls">
+
+												<input type="hidden" id="select2_sample5" name="category_name" class="span6 select2 select2-offscreen" value="{{form.categories}}" tabindex="-1">
+												
+
+											</div>
+											<div style="display:none;">
+												<input type="text" id="category_names" value="{{category_names}}">
+												<input type="text" name="goal_id" value="{{form.goal_id}}">
+											</div>
+
+										</div>
+
+										<div class="form-actions">
+											<button type="submit" class="btn blue">
+												<i class="icon-ok"></i>
+												Save
+											</button>
+											<a href="{{url_for('goal.index')}}">
+												<button type="button" class="btn">Cancel</button>
+											</a>
+										</div>
+									</form>
+									<!-- END FORM-->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+{%-endblock %}
+
+
+{%-block javascript %}
+<script src="{{url_for('.static',filename='lib/metronic/js/form-components.js')}}"></script>
+<script>
+	jQuery(document).ready(function() {       
+
+		FormComponents.init();
+		var category_names = $("#category_names").val()
+		category_names = category_names.split(",")
+		$("#select2_sample5").select2({
+            tags: category_names
+        });
+
+	});
+
+</script>
+{%-endblock %}
