@@ -48,8 +48,10 @@ def edit(goal_id):
 		if len(categorys) > 0:
 			for c in categorys:
 				g.categories.append(c)
-		db.session.add(g)
-		db.session.commit()
+		with store_context(fs_store):
+			g.image.from_file(request.files['image'])
+			db.session.add(g)
+			db.session.commit()
 		return redirect(url_for('goal.edit', goal_id=goal_id))
 	elif request.method == 'GET':
 		form = GoalForm()
