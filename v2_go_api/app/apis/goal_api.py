@@ -21,6 +21,14 @@ class GoalRest(Resource):
 		goals = c.goals
 		return [g.to_json() for g in goals], 200
 
+class GoalDetails(Resource):
+	def get(self, goal_id):
+		g = Goal.query.filter(Goal.goal_id==goal_id).first()
+		if g:
+			return g.to_details_json(),200
+		else:
+			abort(404, message='Goal not found')
+
 class GoalJoinRest(Resource):
 	def get(self):
 		user = check_authorization()
@@ -206,6 +214,15 @@ class SyncGoalJoinTrackRest(Resource):
 			return {'update_time' : _mk_timestamp(gjt.update_time)}, 200
 		else:
 			return {'update_time' : None}, 200
+
+class ExploreRest(Resource):
+	def get(self):
+		key_category = 'Popular'
+		c = Category.query.filter(Category.category_name==key_category).first()
+		if c:
+			return [g.to_json() for g in c.goals]
+		else:
+			abort(404, message='Explore not found')
 
 class NotificationRest(Resource):
 	def get(self):

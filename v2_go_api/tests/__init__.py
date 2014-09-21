@@ -139,7 +139,6 @@ class B_GoalTest(BaseTest):
         print '=== 2-7. Test get awesome ===='
         rep = self.client.get(self.base_url+'/goal_record_awesome/'+str(goal_record_id),
             headers={'Authorization': self.token})
-        #print rep.data
         assert b'awesome_id' in rep.data
 
 
@@ -168,6 +167,14 @@ class B_GoalTest(BaseTest):
 
         rep = self.client.get(self.base_url+'/goal_record/'+str(self.user['user_id'])+'/fighting_center')
         assert b'goal_record_id' in rep.data
+
+        print '=== 2-12. Test Explore ==='
+        rep = self.client.get(self.base_url + '/explore')
+        assert b'description' in rep.data
+
+        print '=== 2-13 Test Goal Details ==='
+        rep = self.client.get(self.base_url + '/goal_details/'+str(goal_id))
+        assert b'goal_records' in rep.data
         
 
     def test_sync(self):

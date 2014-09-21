@@ -128,7 +128,8 @@ class Category(db.Model):
 	description = db.Column(db.String(100))
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
-	goals = db.relationship('Goal', secondary=goal_category, backref=db.backref('categorys', lazy='dynamic'))
+	goals = db.relationship('Goal', secondary=goal_category, backref=db.backref('categorys', lazy='dynamic'),\
+		order_by="desc(Goal.goal_id)")
 
 	def __init__(self, category_name, description):
 		self.category_name = category_name
@@ -152,6 +153,7 @@ class Goal(db.Model):
 	update_time = db.Column(db.DateTime)
 	categories = db.relationship('Category', secondary=goal_category, backref=db.backref('goal_categorys', lazy='dynamic'))
 	goal_joins = db.relationship('GoalJoin', backref='goal', lazy='dynamic')
+	goal_records = db.relationship('GoalRecord', backref='goal', lazy='dynamic',order_by="desc(GoalRecord.goal_record_id)")
 
 	def __init__(self, goal_name, description):
 		self.goal_name = goal_name
@@ -169,6 +171,18 @@ class Goal(db.Model):
 				'image' : self.image.locate(),
 				'joins' : self.goal_joins.count() + random.randint(1000,2000)
 			}
+	def to_details_json(self):
+		with store_context(fs_store):
+			return {
+				'goal_id' : self.goal_id,
+				'goal_name' : self.goal_name,
+				'description' : self.description + '',
+				'joins' : self.goal_joins.count(),
+				'goal_records': [gr.to_preview_json() for gr in self.goal_records],
+				'image' : self.image.locate(),
+				'joins' : self.goal_joins.count() + random.randint(1000,2000)
+			}
+
 	def get_url(self):
 		with store_context(fs_store):
 			return self.image.locate()
@@ -319,7 +333,7 @@ class GoalRecord(db.Model):
 		else:
 			return False
 
-	def to_preview_json(self, user):
+	def to_preview_json(self, user=None):
 		with store_context(fs_store):
 			return {
 				'goal_record_id': self.goal_record_id,
@@ -328,7 +342,7 @@ class GoalRecord(db.Model):
 				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.limit(5)],
 				'awesomes' : [a.to_preview_json() for a in self.awesomes.limit(5)],
-				'can_awesome' : self.__can_awesome(user),
+				#'can_awesome' : self.__can_awesome(user),
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}
 
