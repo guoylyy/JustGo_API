@@ -9,7 +9,7 @@ class GoalForm(BaseForm):
 	goal_name = TextField("goal_name", validators=[DataRequired()])
 	description = TextAreaField("description")
 	category_name = TextField("category_name")
-	image = FileField("image")
+	image = FileField("image",validators=[DataRequired()])
 
 	def set_by_goal(self, goal):
 		self.goal_id.data = goal.goal_id

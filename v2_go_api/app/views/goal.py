@@ -48,8 +48,10 @@ def edit(goal_id):
 		if len(categorys) > 0:
 			for c in categorys:
 				g.categories.append(c)
+
 		with store_context(fs_store):
-			g.image.from_file(request.files['image'])
+			if gf.validate():
+				g.image.from_file(request.files['image'])
 			db.session.add(g)
 			db.session.commit()
 		return redirect(url_for('goal.edit', goal_id=goal_id))
@@ -65,17 +67,20 @@ def edit(goal_id):
 def add():
 	if request.method == 'POST':
 		gf = GoalForm()
-		g = Goal(gf.goal_name.data, gf.description.data)
-		names = gf.category_name.data.split(",")
-		categorys = Category.query.filter(Category.category_name.in_(names)).all()
-		if len(categorys) > 0:
-			for c in categorys:
-				g.categories.append(c)
-		with store_context(fs_store):
-			g.image.from_file(request.files['image'])
-			db.session.add(g)
-			db.session.commit()
-		return redirect(url_for('goal.index'))
+		if gf.validate():
+			g = Goal(gf.goal_name.data, gf.description.data)
+			names = gf.category_name.data.split(",")
+			categorys = Category.query.filter(Category.category_name.in_(names)).all()
+			if len(categorys) > 0:
+				for c in categorys:
+					g.categories.append(c)
+			with store_context(fs_store):
+				g.image.from_file(request.files['image'])
+				db.session.add(g)
+				db.session.commit()
+			return redirect(url_for('goal.index'))
+		else:
+			return redirect(url_for('goal.add'))
 	elif request.method == 'GET':
 		form = GoalForm()
 		categorys = Category.query.all()
