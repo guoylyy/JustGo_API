@@ -93,7 +93,7 @@ class User(db.Model):
 		if user is None or (user.user_id == self.user_id):
 			can_follow = False
 		else:
-			can_follow = not (user in self.followings)
+			can_follow = not (user in self.fans)
 
 		with store_context(fs_store):
 			return {
