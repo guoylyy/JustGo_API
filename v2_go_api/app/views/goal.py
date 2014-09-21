@@ -23,16 +23,17 @@ goal =  Module(__name__)
 
 @goal.route('/', methods=("GET","POST"))
 def index():
-	goals = Goal.query.all()
+	goals = Goal.query.filter(Goal.is_active==True).all()
 	return render_template('backend/goal.html', goals=goals)
 
 @goal.route('/<int:goal_id>/delete/')
 def delete(goal_id):
 	goal = Goal.query.filter(Goal.goal_id==goal_id).first()
-	if goal:
-		with store_context(fs_store):
-			db.session.delete(goal)
-			db.session.commit()
+	#if goal:
+	#	with store_context(fs_store):
+	goal.is_active = False
+	db.session.add(goal)
+	db.session.commit()
 	return redirect('/backend/goal')
 
 @goal.route('/<int:goal_id>/edit/', methods=("GET","POST"))

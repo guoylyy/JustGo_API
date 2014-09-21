@@ -17,7 +17,7 @@ class GoalCategoryRest(Resource):
 class GoalRest(Resource):
 	def get(self, category_id):
 		abort_if_category_doesnt_exist(category_id)
-		c = Category.query.filter(Category.category_name==category_id).first()
+		c = Category.query.filter(Category.category_name==category_id, Goal.is_active==True).first()
 		goals = c.goals
 		return [g.to_json() for g in goals], 200
 

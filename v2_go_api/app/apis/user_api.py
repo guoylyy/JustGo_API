@@ -21,12 +21,12 @@ class UserRest(Resource):
 		"""
 		user = check_authorization()
 		up = self.__user_update_parser()
-		user.user_name = up['name']
+		user.name = up['name']
 		user.description = up['description']
 		if user.validate():
 			db.session.add(user)
 			db.session.commit()
-			return user.to_json(), 200
+			return {'result':'success'}, 200
 		else:
 			return {'result':'fail'}, 404
 

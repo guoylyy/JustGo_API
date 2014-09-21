@@ -154,6 +154,7 @@ class Goal(db.Model):
 	categories = db.relationship('Category', secondary=goal_category, backref=db.backref('goal_categorys', lazy='dynamic'))
 	goal_joins = db.relationship('GoalJoin', backref='goal', lazy='dynamic')
 	goal_records = db.relationship('GoalRecord', backref='goal', lazy='dynamic',order_by="desc(GoalRecord.goal_record_id)")
+	is_active = db.Column(db.Boolean, default=True)
 
 	def __init__(self, goal_name, description):
 		self.goal_name = goal_name
