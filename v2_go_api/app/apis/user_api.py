@@ -89,8 +89,8 @@ class UnFollowRest(Resource):
 	def post(self, user_id):
 		user = check_authorization()
 		target_user = User.query.filter(User.user_id==user_id).first()
-		target_user.fans.remove(user)
-		db.session.add(target_user)
+		user.followings.remove(target_user)
+		db.session.add(user)
 		db.session.commit()
 		return {'result':'success'}, 200
 
