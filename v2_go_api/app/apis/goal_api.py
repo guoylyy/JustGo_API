@@ -7,7 +7,7 @@ from app.helpers import _mk_timestamp
 from app.extensions import db, fs_store
 from app.models import *
 from api_helpers import abort_if_category_doesnt_exist
-from api_helpers import check_authorization , internal_error, parameter_error
+from api_helpers import check_authorization , internal_error, parameter_error, get_user
  
 class GoalCategoryRest(Resource):
 	def get(self):
@@ -70,7 +70,7 @@ class GoalRecordRest(Resource):
 		"""
 			Get one record by specific record_id
 		"""
-		u = check_authorization()
+		u = get_user()
 		g = GoalRecord.query.filter(GoalRecord.goal_record_id==record_id).first()
 		if g:
 			g.comments = g.comments.all()

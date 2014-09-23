@@ -350,7 +350,7 @@ class GoalRecord(db.Model):
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}
 
-	def to_json(self, user):
+	def to_json(self, user=None):
 		with store_context(fs_store):
 			return {
 				'goal_record_id': self.goal_record_id,

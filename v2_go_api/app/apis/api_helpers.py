@@ -27,6 +27,20 @@ def internal_error():
 def parameter_error():
 	abort(500, message="Parameter Error")	
 
+def get_user():
+	parser = reqparse.RequestParser()
+	parser.add_argument('Authorization', type=str, location='headers')
+	token = parser.parse_args()['Authorization']
+	if not token:
+		return None
+	else:
+		token = urllib.unquote(parser.parse_args()['Authorization']).decode('utf8') 
+		u = User.query.filter(User.token==token).first()
+		if u:
+			return u
+		else:
+			return None
+
 def check_authorization():
 	parser = reqparse.RequestParser()
 	parser.add_argument('Authorization', type=str, location='headers')
