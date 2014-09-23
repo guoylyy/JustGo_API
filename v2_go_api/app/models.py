@@ -343,11 +343,9 @@ class GoalRecord(db.Model):
 				'goal_record_id': self.goal_record_id,
 				'goal_id' : self.goal_id,
 				'content' : self.content,
-				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.limit(5)],
 				'awesomes' : [a.to_preview_json() for a in self.awesomes.limit(5)],
 				'goal_name' : self.parent_goal.goal_name,
-				#'can_awesome' : self.__can_awesome(user),
 				"publisher" : self.publisher.header_json(),
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}
