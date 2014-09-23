@@ -351,6 +351,10 @@ class GoalRecord(db.Model):
 			}
 
 	def to_json(self, user=None):
+		if user == None:
+			can_awesome = False
+		else:
+			can_awesome = self.__can_awesome(user)
 		with store_context(fs_store):
 			return {
 				'goal_record_id': self.goal_record_id,
@@ -359,7 +363,7 @@ class GoalRecord(db.Model):
 				#'image' : self.image.locate(),
 				'comments' : [c.to_json() for c in self.comments.all()],
 				'awesomes' : [a.to_json() for a in self.awesomes.all()],
-				'can_awesome' : self.__can_awesome(user),
+				'can_awesome' : can_awesome,
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}
 
