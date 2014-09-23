@@ -1,3 +1,4 @@
+import urllib2
 from datetime import datetime
 from sqlalchemy_imageattach.entity import Image, image_attachment, store_context
 from flask.ext.restful import Resource, reqparse
@@ -106,7 +107,8 @@ class LoginRest(Resource):
 			if u.validate():
 				try:
 					#header = get('http://ww3.sinaimg.cn/mw690/63ea4d33gw1ejhpwui71sj20u00k045s.jpg').content #Test for get headers
-					header = get(up['headerurl']).content
+					headerurl = urllib2.unquote(up['headerurl'])
+					header = get(headerurl).content
 					with store_context(fs_store):
 						u.header_icon.from_blob(header)
 						db.session.add(u)
