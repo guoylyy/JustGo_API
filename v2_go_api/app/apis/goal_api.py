@@ -101,10 +101,10 @@ class GoalRecordListRest(Resource):
 		"""
 			Get all goal records by specific goal_id
 		"""
-		user = check_authorization()
+		#user = check_authorization()
 		grs = GoalRecord.query.filter(GoalRecord.goal_id==goal_id).all()
 		if grs:
-			return [gr.to_preview_json(user) for gr in grs], 200
+			return [gr.to_preview_json() for gr in grs], 200
 		else:
 			return [],200
 

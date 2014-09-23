@@ -316,6 +316,7 @@ class GoalRecord(db.Model):
 	awesomes = db.relationship('GoalRecordAwesome', backref='goal_record', lazy='dynamic', order_by="desc(GoalRecordAwesome.awesome_id)")
 
 	parent_goal = db.relationship('Goal')
+	publisher = db.relationship('User')
 
 	def __init__(self, goal_id, user_id, content):
 		self.goal_id = goal_id
@@ -347,6 +348,7 @@ class GoalRecord(db.Model):
 				'awesomes' : [a.to_preview_json() for a in self.awesomes.limit(5)],
 				'goal_name' : self.parent_goal.goal_name,
 				#'can_awesome' : self.__can_awesome(user),
+				"publisher" : self.publisher.header_json(),
 				'create_time': stime.mktime(self.create_time.timetuple())
 			}
 

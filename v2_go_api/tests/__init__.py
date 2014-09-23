@@ -159,6 +159,7 @@ class B_GoalTest(BaseTest):
         rep = self.client.get(self.base_url+'/goal_record_list/'+str(goal_id),
              headers={'Authorization': self.token})
         assert b'goal_record_id' in rep.data
+        #print rep.data
 
         print '=== 2-11. Test fighting center ==='
         rep = self.client.get(self.base_url+'/goal_record/fighting_center',
