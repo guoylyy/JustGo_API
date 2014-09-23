@@ -105,8 +105,9 @@ class LoginRest(Resource):
 			u = User(up['name'],up['description'],up['facebooktoken'])
 			if u.validate():
 				try:
-					header = get('http://ww3.sinaimg.cn/mw690/63ea4d33gw1ejhpwui71sj20u00k045s.jpg').content #Test for get headers
-					with store_context(fs_store):	
+					#header = get('http://ww3.sinaimg.cn/mw690/63ea4d33gw1ejhpwui71sj20u00k045s.jpg').content #Test for get headers
+					header = get(up['headerurl']).content
+					with store_context(fs_store):
 						u.header_icon.from_blob(header)
 						db.session.add(u)
 						flag = db.session.commit()
