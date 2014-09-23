@@ -149,7 +149,7 @@ class GoalRecordAwesomeRest(Resource):
 		tg = GoalRecordAwesome.query.filter(GoalRecordAwesome.goal_record_id==record_id,
 			GoalRecordAwesome.user_id == user.user_id).first()
 		if tg:
-			return tg.to_json(), 200
+			abort(500, message='You have awesomed this record')
 		else:
 			gra = GoalRecordAwesome(record_id, user.user_id)
 			db.session.add(gra)
