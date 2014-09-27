@@ -35,6 +35,26 @@ class GoalJoinRest(Resource):
 		gjs = GoalJoin.query.filter(GoalJoin.user_id==user.user_id)
 		return [gj.to_json() for gj in gjs], 200
 
+	def post(self):
+		user = get_user()
+		up = self.__record_parser()
+		goal = Goal.query.filter(Goal.goal_id==up['goalid']).first()
+		if goal and user:
+			ghj = GoalHistoryJoin.query.filter(GoalHistoryJoin.goal_id==goal.goal_id, \
+				GoalHistoryJoin.user_id==user.user_id).first()
+			if not ghj:
+				nghj = GoalHistoryJoin(goal.goal_id, user.user_id)
+				db.session.add(nghj)
+				db.session.commit()
+			return {'result':'success'}
+		else:
+			return {'result':'fail'}
+
+	def __record_parser(self):
+		up = reqparse.RequestParser()
+		up.add_argument('goalid', type=int, location='headers')
+		return up.parse_args()
+
 class GoalJoinTrackRest(Resource):
 	def get(self):
 		user = check_authorization()

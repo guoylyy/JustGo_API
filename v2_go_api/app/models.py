@@ -155,6 +155,8 @@ class Goal(db.Model):
 	goal_joins = db.relationship('GoalJoin', backref='goal', lazy='dynamic')
 	goal_records = db.relationship('GoalRecord', backref='goal', lazy='dynamic',order_by="desc(GoalRecord.goal_record_id)")
 	is_active = db.Column(db.Boolean, default=True)
+	
+	goal_history_joins = db.relationship('GoalHistoryJoin', backref='goal', lazy='dynamic')
 
 	def __init__(self, goal_name, description):
 		self.goal_name = goal_name
@@ -170,7 +172,8 @@ class Goal(db.Model):
 				'description' : self.description + '',
 				'joins' : self.goal_joins.count(),
 				'image' : self.image.locate(),
-				'joins' : self.goal_records.count() 
+				'joins' : self.goal_history_joins.count(),
+				'joined_users' : [ghj.user.header_json() for ghj in self.goal_history_joins.limit(5)]
 			}
 	def to_details_json(self):
 		with store_context(fs_store):
@@ -181,12 +184,29 @@ class Goal(db.Model):
 				'joins' : self.goal_joins.count(),
 				'goal_records': [gr.to_preview_json() for gr in self.goal_records.limit(5)],
 				'image' : self.image.locate(),
-				'joins' : self.goal_records.count() 
+				'joins' : self.goal_history_joins.count() 
 			}
 
 	def get_url(self):
 		with store_context(fs_store):
 			return self.image.locate()
+
+
+class GoalHistoryJoin(db.Model):
+	__tablename__ = 'goal_history_join'
+	goal_his_join_id = db.Column(db.Integer,primary_key=True, autoincrement=True)
+	goal_id = db.Column(db.Integer, db.ForeignKey('goal.goal_id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+	update_time = db.Column(db.DateTime)
+	create_time = db.Column(db.DateTime)
+
+	user = db.relationship('User')
+
+	def __init__(self, goal_id, user_id):
+		self.goal_id = goal_id
+		self.user_id = user_id
+		self.update_time = self.create_time = datetime.now()
+
 
 class GoalImage(db.Model, Image):
 	__tablename__ = 'goal_image'
