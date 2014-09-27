@@ -240,7 +240,7 @@ class ExploreRest(Resource):
 		key_category = 'Popular'
 		c = Category.query.filter(Category.category_name==key_category).first()
 		if c:
-			return [g.to_json() for g in c.goals]
+			return [g.to_json_with_header() for g in c.goals]
 		else:
 			abort(404, message='Explore not found')
 

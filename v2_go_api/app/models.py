@@ -173,9 +173,21 @@ class Goal(db.Model):
 				'description' : self.description + '',
 				'joins' : self.goal_joins.count(),
 				'image' : self.image.locate(),
+				'joins' : self.goal_history_joins.count()
+			}
+
+	def to_json_with_header(self):
+		with store_context(fs_store):
+			return {
+				'goal_id' : self.goal_id,
+				'goal_name' : self.goal_name,
+				'description' : self.description + '',
+				'joins' : self.goal_joins.count(),
+				'image' : self.image.locate(),
 				'joins' : self.goal_history_joins.count(),
 				'joined_users' : [ghj.user.header_json() for ghj in self.goal_history_joins.limit(5)]
 			}
+
 	def to_details_json(self):
 		with store_context(fs_store):
 			return {
