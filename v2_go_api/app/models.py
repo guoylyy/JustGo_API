@@ -170,7 +170,7 @@ class Goal(db.Model):
 				'description' : self.description + '',
 				'joins' : self.goal_joins.count(),
 				'image' : self.image.locate(),
-				'joins' : self.goal_joins.count() + random.randint(1000,2000)
+				'joins' : self.goal_records.count() 
 			}
 	def to_details_json(self):
 		with store_context(fs_store):
@@ -181,7 +181,7 @@ class Goal(db.Model):
 				'joins' : self.goal_joins.count(),
 				'goal_records': [gr.to_preview_json() for gr in self.goal_records.limit(5)],
 				'image' : self.image.locate(),
-				'joins' : self.goal_joins.count() + random.randint(1000,2000)
+				'joins' : self.goal_records.count() 
 			}
 
 	def get_url(self):
