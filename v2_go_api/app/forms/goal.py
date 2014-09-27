@@ -25,4 +25,4 @@ class GoalForm(BaseForm):
 
 class CategoryForm(BaseForm):
 	category_name = TextField("category_name", validators=[DataRequired()])
-	description = TextAreaField("description", validators=[DataRequired()])
+	description = TextAreaField("description")
