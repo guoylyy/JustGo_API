@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Archive.Datas;
@@ -26,6 +27,8 @@ namespace Archive
     {
         private ApplicationBar _goalApplicationBar;
         private ApplicationBar _profileApplicationBar;
+        private FacebookAgent _facebookAgent = new FacebookAgent();
+        private bool _hasLoadExplore;
 
         // 构造函数
         public MainPage()
@@ -46,9 +49,10 @@ namespace Archive
             //    Height = 15,
             //    Fill = new SolidColorBrush(new Color { R = 13, G = 95, B = 127 })
             //};
-            
             BuildLocalizedApplicationBar();
+            if (Global.LoginUser != null) ProfilePivotItem.DataContext = Global.LoginUser;
             GoalsPivotItem.DataContext = ViewModelLocator.GoalViewModel;
+            ExplorePivotItem.DataContext = ViewModelLocator.ExploreViewModel;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -72,7 +76,7 @@ namespace Archive
             _goalApplicationBar.ForegroundColor = (Color)Application.Current.Resources["AppbarForegroundColor"];
             _goalApplicationBar.Opacity = 0.99;
             // 创建新按钮并将文本值设置为 AppResources 中的本地化字符串。
-            ApplicationBarIconButton addBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/add.png", UriKind.Relative));
+            var addBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/add.png", UriKind.Relative));
             addBarButton.Text = "add";
             addBarButton.Click += appBarButton_Click;
 
@@ -89,14 +93,10 @@ namespace Archive
             _profileApplicationBar.ForegroundColor = (Color)Application.Current.Resources["AppbarForegroundColor"];
             _profileApplicationBar.Opacity = 0.99;
 
-            ApplicationBarIconButton settingButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/feature.settings.png",UriKind.Relative));
+            var settingButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/feature.settings.png", UriKind.Relative));
             settingButton.Text = "settings";
             settingButton.Click += settingButton_Click;
             _profileApplicationBar.Buttons.Add(settingButton);
-            // 将页面的 ApplicationBar 设置为 ApplicationBar 的新实例。
-            //ApplicationBar = new ApplicationBar();
-            //ApplicationBar.Opacity = 0.99;
-
 
             ApplicationBar = _goalApplicationBar;
             //// 使用 AppResources 中的本地化字符串创建新菜单项。
@@ -107,60 +107,6 @@ namespace Archive
         void settingButton_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/SettingPage.xaml", UriKind.Relative));
-        }
-
-        private void logoutBarButton_Click(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/Pages/SettingPage.xaml", UriKind.Relative));
-            //string postString = string.Format("token={0}", Global.Token);
-            //string url = ServerApi.Logout;
-
-            //HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
-            //request.Method = "POST";
-            //request.ContentType = ServerApi.FormContentType;
-
-            //using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream, request.EndGetRequestStream, null))
-            //{
-            //    //将用户名和密码写入post请求中
-            //    byte[] postBytes = Encoding.UTF8.GetBytes(postString);
-            //    await stream.WriteAsync(postBytes, 0, postBytes.Length);
-            //}
-
-            //request.BeginGetResponse(ResphonseCallBack, request);
-            //App.RootFrame.UriMapper = null;
-            //App.RootFrame.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative));
-        }
-
-        private void ResphonseCallBack(IAsyncResult ar)
-        {
-            string response;
-            try
-            {
-                HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
-
-                WebResponse webResponse = request.EndGetResponse(ar);
-                using (Stream stream = webResponse.GetResponseStream())
-                {
-                    StreamReader sr = new StreamReader(stream);
-                    response = sr.ReadToEnd();
-
-                    Debug.WriteLine(response);
-                    JObject jObject = JObject.Parse(response);
-                    if ((string)jObject["result"] == "success")
-                    {
-                        StaticMethods.DeleteToken();
-                        //Dispatcher.BeginInvoke(
-                        //    () => NavigationService.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative)));
-
-                    }
-
-                    sr.Close();
-                }
-            }
-            catch (WebException we)
-            {
-                Debug.WriteLine(we.Message);
-            }
         }
 
         //添加新任务按钮点击响应函数
@@ -181,7 +127,7 @@ namespace Archive
             {
                 ApplicationBar = _goalApplicationBar;
                 ApplicationBar.IsVisible = true;
-                ApplicationBar.Mode = ApplicationBarMode.Default;    
+                ApplicationBar.Mode = ApplicationBarMode.Default;
             }
             else//profile页面
             {
@@ -192,11 +138,13 @@ namespace Archive
         }
 
         //点击任务列表的响应函数,跳转到选中任务的具体状态页面
+        private void GoalList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Global.SelectedGoalJoin = GoalList.SelectedItem as GoalJoin;
+        }
+
         private void GoalList_OnTap(object sender, GestureEventArgs e)
         {
-            var list = sender as LongListSelector;
-            if (list != null) Global.SelectedGoal = list.SelectedItem as GoalJoin;
-
             NavigationService.Navigate(new Uri("/Pages/MyRecordPage.xaml", UriKind.Relative));
         }
 
@@ -233,6 +181,87 @@ namespace Archive
         private void FriendsGrid_OnTap(object sender, GestureEventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/FindFriendsPage.xaml", UriKind.Relative));
+        }
+
+        //使用facebook登陆
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            //todo:获取facebook的token
+            if (await _facebookAgent.AuthorizeAsync())
+            {
+                var resultStr = await _facebookAgent.GetUserInfoAsync();
+                var strs = resultStr.Split(',');
+                var imageUrl = strs[0];
+                var userName = UserNameTextBlock.Text = strs[1];
+                Global.LoginUser.FacebookId = strs[2];
+
+                var token = await ServerApi.LoginAsync(userName, "Just do it!", Global.LoginUser.FacebookId,imageUrl);
+                Debug.WriteLine("登陆后的token:{0}", token);
+                Global.LoginUser.Token = token;
+
+                await ServerApi.GetUserProfileAsync(Global.LoginUser);
+                //Global.LoginUser = user;
+                StaticMethods.WriteUser(Global.LoginUser);
+
+                ProfileGrid.Visibility = Visibility.Visible;
+                UnLoginGrid.Visibility = Visibility.Collapsed;
+            }
+
+            
+        }
+
+        private async void MainPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (Global.LoginUser == null || Global.LoginUser.Token == null)
+            {
+                ProfileGrid.Visibility = Visibility.Collapsed;
+                UnLoginGrid.Visibility = Visibility.Visible;
+                Global.LoginUser = Global.LoginUser ?? new User();
+                ProfilePivotItem.DataContext = Global.LoginUser;
+            }
+
+            if (!_hasLoadExplore)
+            {
+                Task.Run(() => ViewModelLocator.ExploreViewModel.LoadData());
+                _hasLoadExplore = true;
+            }
+
+
+            if (Global.LoginUser.Token != null)
+            {
+                await ServerApi.GetUserProfileAsync(Global.LoginUser);
+                StaticMethods.WriteUser(Global.LoginUser);
+            }
+        }
+
+        private void ExploreGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/GoalDetailPage.xaml", UriKind.Relative));
+        }
+
+        private void ExploreList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var simpleGoal = ExploreList.SelectedItem as Goal;
+            if (simpleGoal != null)
+            {
+                Global.AddingGoalJoin = new GoalJoin
+                {
+                    GoalId = simpleGoal.GoalId,
+                    GoalName = simpleGoal.GoalName,
+                    Participants = simpleGoal.Participants
+                };
+            }
+        }
+
+        private void TopExploreGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            //Global.AddingGoalJoin = new GoalJoin
+            //{
+            //    GoalId = ViewModelLocator.ExploreViewModel.TopExplore.GoalId,
+            //    GoalName = ViewModelLocator.ExploreViewModel.TopExplore.GoalName,
+            //    Participants = ViewModelLocator.ExploreViewModel.TopExplore.Participants
+            //};
+            NavigationService.Navigate(new Uri("/Pages/GoalDetailPage.xaml", UriKind.Relative));
         }
     }
 }

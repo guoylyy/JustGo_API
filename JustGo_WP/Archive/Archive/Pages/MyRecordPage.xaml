@@ -23,6 +23,9 @@
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converter:BoolToVisibilityReversalConverter x:Key="BoolToVisibilityReversalConverter" />
         <converter:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
+        <converter:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
+        <converter:UrlStringToBitmapConverter x:Key="UrlStringToBitmapConverter"/>
+        <converter:StringToBitmapConverter x:Key="StringToBitmapConverter"/>
     </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
@@ -31,9 +34,11 @@
         <!--ContentPanel - 在此处放置其他内容-->
         <phone:Pivot Title="Goal detail"
                      Foreground="{StaticResource SystemBlueBrush}"
-                     Margin="0,10,0,0">
+                     Margin="0,10,0,0"
+                     SelectionChanged="Pivot_OnSelectionChanged">
             <phone:PivotItem Header="Intro"
-                             Margin="0,28,0,0">
+                             Margin="0,28,0,0"
+                             x:Name="IntroPivotItem">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -185,15 +190,16 @@
                                 Margin="10,0,0,0">
                         <circleImage:CircleImage Width="70"
                                                  Height="70"
-                                                 Source="/Assets/MainPage/DefaulHead.jpg" />
-                        <TextBlock Text="12"
+                                                 x:Name="RecordUserImage"
+                                                 Source="/Assets/DefaultHeader.jpg" />
+                        <TextBlock Text="{Binding Records.Count}"
                                    FontSize="30"
                                    Margin="10,15,0,10" />
                         <TextBlock Text="moments"
                                    FontSize="30"
                                    Margin="10,15,0,10" />
                     </StackPanel>
-                    
+
                     <Rectangle Fill="#FFEDEDED"
                                HorizontalAlignment="Left"
                                Height="565"
@@ -201,15 +207,17 @@
                                Grid.Row="1"
                                VerticalAlignment="Top"
                                Width="7" />
-                    
+
                     <phone:LongListSelector Grid.Row="1"
-                                            ItemsSource="{Binding Records}">
-                        <phone:LongListSelector.DataContext>
+                                            ItemsSource="{Binding Records,Mode=TwoWay}" 
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            x:Name="RecordLongListSelector" SelectionChanged="RecordLongListSelector_SelectionChanged">
+                        <!--<phone:LongListSelector.DataContext>
                             <vm:MyRecordsViewModel/>
-                        </phone:LongListSelector.DataContext>
+                        </phone:LongListSelector.DataContext>-->
                         <phone:LongListSelector.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="0,10,0,0">
+                                <Grid Margin="0,20,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -227,7 +235,7 @@
                                     </Grid>
 
                                     <StackPanel Grid.Column="1"
-                                                Margin="10,0,0,0">
+                                                Margin="10,12,0,0">
                                         <TextBlock Text="{Binding RecordContent}"
                                                    TextWrapping="Wrap"
                                                    Foreground="#FF656565"
@@ -237,7 +245,7 @@
                                         <TextBlock Text="{Binding RecordTime,Converter={StaticResource DateTimeToStringConverter}}"
                                                    Foreground="#FF999999"
                                                    Margin="0,5,0,0" />
-                                        <Grid>
+                                        <Grid Visibility="{Binding AwesomeUsers.Count, Converter={StaticResource CountToVisibilityConverter}}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -257,7 +265,7 @@
                                                                Height="46"
                                                                Margin="10,0,0,0"
                                                                Stretch="UniformToFill"
-                                                               Source="{Binding ImageSource}" />
+                                                               Source="{Binding ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}" />
                                                     </DataTemplate>
                                                 </ListBox.ItemTemplate>
                                                 <ListBox.ItemsPanel>
@@ -266,22 +274,10 @@
                                                     </ItemsPanelTemplate>
                                                 </ListBox.ItemsPanel>
                                             </ListBox>
-                                            <!--<StackPanel Grid.Column="1"
-                                                        Orientation="Horizontal">
-                                                <Image Width="46"
-                                                       Height="46"
-                                                       Margin="10,0,0,0"
-                                                       Stretch="UniformToFill"
-                                                       Source="/Assets/AlignmentGrid.png" />
-                                                <Image Width="46"
-                                                       Height="46"
-                                                       Margin="10,0,0,0"
-                                                       Source="/Assets/AlignmentGrid.png"
-                                                       Stretch="UniformToFill" />
-                                            </StackPanel>-->
                                         </Grid>
 
-                                        <Grid Margin="0,10,0,0">
+                                        <Grid Margin="0,10,0,0"
+                                              Visibility="{Binding Comments.Count, Converter={StaticResource CountToVisibilityConverter}}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -294,7 +290,8 @@
                                                   Height="26"
                                                   Width="28"
                                                   Stroke="#FF226CB9"
-                                                  VerticalAlignment="Top" />
+                                                  VerticalAlignment="Top" 
+                                                  Margin="0,5,0,0"/>
                                             <ListBox Grid.Column="1"
                                                      Grid.Row="0"
                                                      ItemsSource="{Binding Comments}"
@@ -317,8 +314,8 @@
                                                                    VerticalAlignment="Top"
                                                                    Grid.RowSpan="2"
                                                                    Stretch="UniformToFill"
-                                                                   Source="{Binding User.ImageSource}"
-                                                                   Margin="10,0,0,0" />
+                                                                   Source="{Binding User.ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}"
+                                                                   Margin="10,5,10,0" />
                                                             <TextBlock Grid.Row="0"
                                                                        Grid.Column="1"
                                                                        Text="{Binding User.UserName}"
@@ -326,24 +323,28 @@
                                                             <TextBlock Grid.Row="1"
                                                                        Grid.Column="1"
                                                                        Text="{Binding CommentContent}" 
-                                                                       Foreground="Black"/>
+                                                                       Foreground="Black"
+                                                                       TextWrapping="Wrap"/>
                                                         </Grid>
                                                     </DataTemplate>
                                                 </ListBox.ItemTemplate>
                                             </ListBox>
-                                            <HyperlinkButton Grid.Row="1"
-                                                       Grid.Column="1"
-                                                       Content="view all comments(10)"
+                                        </Grid>
+                                        <HyperlinkButton Content="view details"
                                                        Foreground="{StaticResource SystemBlueBrush}"
                                                        HorizontalAlignment="Left" 
                                                        Click="MoreComments_OnClick"/>
-                                        </Grid>
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
                         </phone:LongListSelector.ItemTemplate>
+                        <phone:LongListSelector.ListFooterTemplate>
+                            <DataTemplate>
+                                <Grid Height="72"/>
+                            </DataTemplate>
+                        </phone:LongListSelector.ListFooterTemplate>
                     </phone:LongListSelector>
-                    
+
                 </Grid>
             </phone:PivotItem>
         </phone:Pivot>

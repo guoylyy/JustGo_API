@@ -17,10 +17,11 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="#FFB3D3E8"
-                              ForegroundColor="#FF23A7FC"
-                              Mode="Minimized">
+                              ForegroundColor="#FF23A7FC">
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png"
-                                            Text="refresh" />
+                                            Text="send" 
+                                            IsEnabled="False"
+                                            Click="ApplicationBarIconButton_OnClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
     
@@ -44,10 +45,12 @@
               Grid.Row="1"
               Margin="12,0,12,0">
             <TextBox Height="330"
+                     x:Name="CommentTextBox"
                      VerticalAlignment="Top"
                      BorderBrush="{StaticResource SystemBlueBrush}"
                      TextWrapping="Wrap"
-                     MaxLength="140"/>
+                     MaxLength="140"
+                     TextChanged="CommentTextBox_OnTextChanged"/>
             <TextBlock Text="140"
                        Foreground="{StaticResource ContentBlackColorBrush}"
                        FontSize="28"

@@ -23,25 +23,25 @@ namespace Archive.Pages
             InitializeComponent();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string postString = string.Format("token={0}", Global.Token);
-            string url = ServerApi.Logout;
+            //string postString = string.Format("token={0}", Global.Token);
+            //string url = ServerApi.Logout;
 
-            HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
-            request.Method = "POST";
-            request.ContentType = ServerApi.FormContentType;
+            //HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
+            //request.Method = "POST";
+            //request.ContentType = ServerApi.FormContentType;
 
-            using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream, request.EndGetRequestStream, null))
-            {
-                //将用户名和密码写入post请求中
-                byte[] postBytes = Encoding.UTF8.GetBytes(postString);
-                await stream.WriteAsync(postBytes, 0, postBytes.Length);
-            }
+            //using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream, request.EndGetRequestStream, null))
+            //{
+            //    //将用户名和密码写入post请求中
+            //    byte[] postBytes = Encoding.UTF8.GetBytes(postString);
+            //    await stream.WriteAsync(postBytes, 0, postBytes.Length);
+            //}
 
-            request.BeginGetResponse(ResphonseCallBack, request);
-            App.RootFrame.UriMapper = null;
-            NavigationService.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative));
+            //request.BeginGetResponse(ResphonseCallBack, request);
+            //App.RootFrame.UriMapper = null;
+            //NavigationService.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative));
         }
 
         private void ResphonseCallBack(IAsyncResult ar)

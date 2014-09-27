@@ -5,6 +5,7 @@
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:converter="clr-namespace:Archive.Converter"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
@@ -15,12 +16,17 @@
                             shell:SystemTray.ForegroundColor="#FF23A7FC"
                             shell:SystemTray.Opacity="0.01">
 
+    <phone:PhoneApplicationPage.Resources>
+        <converter:UrlStringToBitmapConverter x:Key="UrlStringToBitmapConverter"/>
+    </phone:PhoneApplicationPage.Resources>
+    
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="#FFB3D3E8"
                               ForegroundColor="#FF23A7FC"
                               Opacity="0.99">
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png"
-                                            Text="done"></shell:ApplicationBarIconButton>
+                                            Text="done"
+                                            Click="ApplicationBarIconButton_OnClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
     
@@ -53,10 +59,11 @@
             </Grid.RowDefinitions>
 
             <Grid Margin="15,20,0,0">
-                <Image Source="/Assets/MainPage/DefaulHead.jpg"
+                <Image Source="{Binding ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}"
                        Height="150"
                        Width="150"
                        HorizontalAlignment="Left"
+                       Stretch="UniformToFill"
                        Margin="0,20,0,0" />
                 <Button Content="upload avatar"
                         Foreground="{StaticResource SystemBlueBrush}"
@@ -64,7 +71,8 @@
                         BorderThickness="2"
                         Margin="155,10,0,0"
                         HorizontalAlignment="Left"
-                        VerticalAlignment="Top" />
+                        VerticalAlignment="Top" 
+                        Visibility="Collapsed"/>
             </Grid>
 
             <TextBlock Grid.Row="1"
@@ -73,19 +81,23 @@
                        Foreground="{StaticResource ContentGrayColorBrush}"
                        HorizontalAlignment="Left" />
             <TextBox Grid.Row="2"
+                     Name="NameTextBox"
                      BorderBrush="{x:Null}"
                      Background="#FFD0D0D0"
-                     Text="John" />
+                     Text="{Binding UserName}"
+                     TextChanged="NameTextBox_OnTextChanged"/>
             <TextBlock Grid.Row="3"
                        Text="Brief introduction"
                        Margin="15,20,0,0"
                        Foreground="{StaticResource ContentGrayColorBrush}"
                        HorizontalAlignment="Left" />
             <TextBox Grid.Row="4"
+                     x:Name="DescriptionTextBox"
                      BorderBrush="{x:Null}"
                      TextWrapping="Wrap"
                      Background="#FFD0D0D0"
-                     Text="I do like my life and want to make it better" />
+                     Text="{Binding Description}"
+                     TextChanged="DescriptionTextBox_OnTextChanged"/>
         </Grid>
     </Grid>
 

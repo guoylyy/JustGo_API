@@ -49,6 +49,11 @@ namespace Archive.ViewModel
             SimpleIoc.Default.Register<FollowViewModel>();
             SimpleIoc.Default.Register<FightingCenterViewModel>();
             SimpleIoc.Default.Register<AwesomeViewModel>();
+            SimpleIoc.Default.Register<NotificationViewModel>();
+            SimpleIoc.Default.Register<SearchUsersViewModel>();
+            SimpleIoc.Default.Register<GoalDetailViewModel>();
+            SimpleIoc.Default.Register<ExploreViewModel>();
+            SimpleIoc.Default.Register<OtherFollowViewModel>();
         }
 
         public static GoalViewModel GoalViewModel
@@ -105,6 +110,31 @@ namespace Archive.ViewModel
             {
                 return ServiceLocator.Current.GetInstance<AwesomeViewModel>();
             }
+        }
+
+        public static NotificationViewModel NotificationViewModel
+        {
+            get { return ServiceLocator.Current.GetInstance<NotificationViewModel>(); }
+        }
+
+        public static SearchUsersViewModel SearchUsersViewModel
+        {
+            get { return ServiceLocator.Current.GetInstance<SearchUsersViewModel>(); }
+        }
+
+        public static GoalDetailViewModel GoalDetailViewModel
+        {
+            get { return ServiceLocator.Current.GetInstance<GoalDetailViewModel>(); }
+        }
+
+        public static ExploreViewModel ExploreViewModel
+        {
+            get { return ServiceLocator.Current.GetInstance<ExploreViewModel>(); }
+        }
+
+        public static OtherFollowViewModel OtherFollowViewModel
+        {
+            get { return ServiceLocator.Current.GetInstance<OtherFollowViewModel>(); }
         }
         
         public static void Cleanup()

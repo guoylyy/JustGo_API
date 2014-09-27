@@ -19,22 +19,18 @@
                             Loaded="PhoneApplicationPage_Loaded">
 
     <phone:PhoneApplicationPage.Resources>
-        
+        <converter:StringToBitmapConverter x:Key="StringToBitmapConverter"/>
         <converter:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+        <converter:NumberToParticipantsConverter x:Key="NumberToParticipantsConverter"/>
+        <converter:UrlStringToBitmapConverter x:Key="UrlStringToBitmapConverter"/>
     </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot 是包含所有页面内容的根网格-->
-    <ScrollViewer Background="White">
+    
         <Grid x:Name="LayoutRoot"
               Background="White">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid Margin="0,27,0,0"
@@ -46,7 +42,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Image Source="/Assets/GoalDetail/TopBackground.png"
+                <Image Source="{Binding ImageUrl, Converter={StaticResource UrlStringToBitmapConverter}}"
                        Stretch="UniformToFill"
                        Grid.RowSpan="4" />
                 <Rectangle Grid.Row="0"
@@ -58,6 +54,7 @@
                            Text="Goal detail"
                            Margin="20,40,0,0" />
                 <TextBlock x:Name="GoalNameBlock"
+                           Text="{Binding GoalName}"
                            Grid.Row="1"
                            FontSize="34"
                            TextAlignment="Center"
@@ -70,39 +67,50 @@
                         Click="JoinButton_OnClick"/>
                 <TextBlock Grid.Row="2"
                            FontSize="22"
-                           Text="joined"
+                           Text="JOINED"
                            TextAlignment="Center"
                            Margin="0,20,0,0" 
                            Visibility="Collapsed"/>
             </Grid>
 
-            <TextBlock Grid.Row="1"
-                       Text="Description"
+            <ScrollViewer Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+            <TextBlock Text="Description"
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontSize="22"
                        Margin="20,10,0,0" />
             <TextBlock x:Name="DescriptionBlock"
-                       Grid.Row="2"
+                       Text="{Binding Description}"
+                       Grid.Row="1"
                        Foreground="{StaticResource ContentBlackColorBrush}"
                        FontSize="24"
                        Margin="20,5,0,0"
                        TextWrapping="Wrap" />
 
-            <TextBlock x:Name="ParticipantsBlock"
-                       Grid.Row="3"
-                       Text="Test"
+            <!--<TextBlock x:Name="ParticipantsBlock"
+                       Grid.Row="2"
+                       Text="{Binding Joins, Converter={StaticResource NumberToParticipantsConverter}}"
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontSize="22"
                        Margin="20,20,0,0" />
             <ListBox x:Name="ParticipantsImageList"
-                     Grid.Row="4"
+                     Grid.Row="3"
                      ItemsSource="{Binding Participants}"
-                     Margin="10,0,0,0">
+                     Margin="10,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Image Width="46"
                                Height="46"
-                               Source="{Binding ImageSource}"
+                               Source="{Binding ImageSource, Converter={StaticResource StringToBitmapConverter}}"
                                Stretch="UniformToFill"
                                Margin="10,0,0,0" />
                     </DataTemplate>
@@ -112,19 +120,19 @@
                         <StackPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
-            </ListBox>
+            </ListBox>-->
 
-            <TextBlock Grid.Row="5"
+            <TextBlock Grid.Row="2"
                        Text="How others doing"
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontSize="22"
                        Margin="20,20,0,0" />
 
             <phone:LongListSelector ItemsSource="{Binding Records}"
-                     Grid.Row="6">
-                <phone:LongListSelector.DataContext>
+                     Grid.Row="3">
+                <!--<phone:LongListSelector.DataContext>
                     <viewModel:RecordsForGoalViewModel />
-                </phone:LongListSelector.DataContext>
+                </phone:LongListSelector.DataContext>-->
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0,10,0,0">
@@ -142,7 +150,7 @@
                                     <Image Width="46"
                                            Height="46"
                                            Grid.RowSpan="2"
-                                           Source="{Binding User.ImageSource}"
+                                           Source="{Binding User.ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}"
                                            Margin="0,0,10,0" />
                                     <TextBlock Grid.Column="1"
                                                Grid.Row="0"
@@ -178,7 +186,7 @@
                                                Foreground="#FFF15126"
                                                FontFamily="Helvetica-Bold"
                                                FontSize="26"
-                                               Text="10"
+                                               Text="{Binding AllAwesomeCount}"
                                                Margin="0,0,40,0" />
                                     <Path Data="F1M20.122,1.8C20.122,1.8 7.772,1.8 7.772,1.8 4.375,1.8 1.597,4.579 1.597,7.975 1.597,7.975 1.597,12.092 1.597,12.092 1.597,15.488 4.375,18.267 7.772,18.267 7.772,18.267 8.801,18.267 8.801,18.267 8.801,18.267 8.801,24.442 8.801,24.442 8.801,24.442 15.858,18.267 15.858,18.267 15.858,18.267 20.122,18.267 20.122,18.267 23.518,18.267 26.297,15.488 26.297,12.092 26.297,12.092 26.297,7.975 26.297,7.975 26.297,4.579 23.518,1.8 20.122,1.8"
                                           Height="26"
@@ -191,22 +199,22 @@
                                                Foreground="#FF226CB9"
                                                FontFamily="Helvetica-Bold"
                                                FontSize="26"
-                                               Text="10" />
+                                               Text="{Binding AllCommentsCount}" />
                                 </Grid>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
                 </phone:LongListSelector.ItemTemplate>
             </phone:LongListSelector>
-            <HyperlinkButton Grid.Row="7"
+            <!--<HyperlinkButton Grid.Row="4"
                              Content="see more"
                              FontSize="22"
                              Foreground="#FF999999"
                              HorizontalAlignment="Left"
                              Margin="10,0,0,0"
-                             FontFamily="Helvetica-Bold" />
+                             FontFamily="Helvetica-Bold" />-->
+                </Grid>
+            </ScrollViewer>
         </Grid>
-    </ScrollViewer>
-    
 
 </phone:PhoneApplicationPage>

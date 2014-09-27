@@ -23,13 +23,9 @@ namespace Archive.Pages
             LoadGoalType();
         }
 
-        private void LoadGoalType()
+        private async void LoadGoalType()
         {
-            GoalTypes.Add("Popular");
-            GoalTypes.Add("Health diet");
-            GoalTypes.Add("Train plans");
-            GoalTypes.Add("Habits");
-            GoalTypes.Add("Learning");
+            await ServerApi.GetCategoriesAsync(GoalTypes);
         }
 
         private void GoalTypeListBox_Tap(object sender, System.Windows.Input.GestureEventArgs e)

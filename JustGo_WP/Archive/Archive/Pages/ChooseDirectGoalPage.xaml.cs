@@ -33,12 +33,9 @@ namespace Archive.Pages
             TypeName.Text = Global.AddGoalType;
         }
 
-        private void LoadData()
+        private async void LoadData()
         {
-            Goals.Add(new Goal { GoalId = "1", GoalName = "Drink more water", Participants = string.Format("{0} participants", 12345) });
-            Goals.Add(new Goal { GoalId = "2", GoalName = "Eat a vegan diet", Participants = string.Format("{0} participants", 5432) });
-            Goals.Add(new Goal { GoalId = "3", GoalName = "Eat fruit", Participants = string.Format("{0} participants", 145) });
-            Goals.Add(new Goal { GoalId = "4", GoalName = "Floss", Participants = string.Format("{0} participants", 5643) });
+            await ServerApi.GetCategoryGoalsAsync(Goals, Global.AddGoalType);
         }
 
         private void DirectGoalListBox_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -46,7 +43,7 @@ namespace Archive.Pages
             var simpleGoal = DirectGoalListBox.SelectedItem as Goal;
             if (simpleGoal != null)
             {
-                Global.AddGoal = new GoalJoin
+                Global.AddingGoalJoin = new GoalJoin
                 {
                     GoalId = simpleGoal.GoalId,
                     GoalName = simpleGoal.GoalName,

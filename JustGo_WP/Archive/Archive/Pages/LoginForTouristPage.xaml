@@ -1,0 +1,58 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="Archive.Pages.LoginForTouristPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.ForegroundColor="#FF23A7FC"
+    shell:SystemTray.Opacity="0.01">
+
+    <!--LayoutRoot 是包含所有页面内容的根网格-->
+    <Grid x:Name="LayoutRoot" Background="#FF099DFB">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="0,100,0,0">
+            <Ellipse Width="180"
+                 Height="180"
+                 Fill="White"/>
+            <Path Data="F1M78.053,76.767C78.053,76.767 173.436,1.662 173.436,1.662 173.436,1.662 77.733,127.132 77.733,127.132 77.733,127.132 1.874,48.713 1.874,48.713 1.874,48.713 78.053,76.767 78.053,76.767z"
+                  Height="100"
+                  Width="135"
+                  Fill="#FF099DFB" 
+                  Stretch="UniformToFill"/>
+        </Grid>
+
+        <Button BorderBrush="White"
+                Grid.Row="1"
+                Height="100"
+                Width="400"
+                Margin="0,170,0,10"
+                Style="{StaticResource FacebookButtonStyle}"
+                Content="Facebook login"
+                Foreground="White" 
+                Click="ButtonBase_OnClick"/>
+        <TextBlock Grid.Row="2"
+        	Foreground="White"
+        	TextWrapping="Wrap"
+        	TextAlignment="Center">
+        	<Run Text="With login, you can follow users,"/>
+        	<LineBreak/>
+            <Run Text="give comments and sync your goals"/>
+        	<LineBreak/>
+        	<Run Text="on the cloud."/>
+        </TextBlock>
+    </Grid>
+
+</phone:PhoneApplicationPage>

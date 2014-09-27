@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Net.NetworkInformation;
 using Microsoft.Phone.Shell;
 using Archive.Resources;
 
@@ -59,15 +60,21 @@ namespace Archive
             //RootFrame.UriMapper = Resources["LoginPageMapper"] as UriMapper;
         }
 
+        void ChangeDetected(object sender, NetworkNotificationEventArgs e)
+        {
+            ShowMessageIfNetworkeUnable();
+        }
+
         // 应用程序启动(例如，从“开始”菜单启动)时执行的代码
         // 此代码在重新激活应用程序时不执行
         private async void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            ShowMessageIfNetworkeUnable();
             try
             {
-                Global.Token = await StaticMethods.ReadTokenAsync();
+                Global.LoginUser = StaticMethods.ReadUser();
                 //如果Token存在
-                if (!string.IsNullOrWhiteSpace(Global.Token))
+                if (Global.LoginUser != null && !string.IsNullOrWhiteSpace(Global.LoginUser.Token))
                 {
                     //使用Mapper来直接跳转到MainPage
                     RootFrame.UriMapper = Resources["LoginPageMapper"] as UriMapper;
@@ -80,15 +87,18 @@ namespace Archive
             }
             catch (Exception)
             {
-                MessageBox.Show("登录失效，请重新登录");
+                Debug.WriteLine("登录失效，请重新登录");
             }
-            
+            DeviceNetworkInformation.NetworkAvailabilityChanged += ChangeDetected;
         }
 
         // 激活应用程序(置于前台)时执行的代码
         // 此代码在首次启动应用程序时不执行
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
+            ShowMessageIfNetworkeUnable();
+            DeviceNetworkInformation.NetworkAvailabilityChanged -= ChangeDetected;
+            DeviceNetworkInformation.NetworkAvailabilityChanged += ChangeDetected;
         }
 
         // 停用应用程序(发送到后台)时执行的代码
@@ -239,6 +249,14 @@ namespace Archive
                 }
 
                 throw;
+            }
+        }
+
+        private void ShowMessageIfNetworkeUnable()
+        {
+            if (!DeviceNetworkInformation.IsNetworkAvailable)
+            {
+                RootFrame.Dispatcher.BeginInvoke(() => MessageBox.Show("No available Network"));
             }
         }
     }

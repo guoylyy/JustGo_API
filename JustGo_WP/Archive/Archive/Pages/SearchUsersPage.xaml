@@ -15,10 +15,12 @@
                             mc:Ignorable="d"
                             shell:SystemTray.IsVisible="True"
                             shell:SystemTray.ForegroundColor="#FF23A7FC"
-                            shell:SystemTray.Opacity="0.01">
+                            shell:SystemTray.Opacity="0.01"
+                            KeyDown="SearchUsersPage_OnKeyDown">
 
     <phone:PhoneApplicationPage.Resources>
         <converter:CountToGoalStringConverter x:Key="CountToGoalStringConverter"/>
+        <converter:UrlStringToBitmapConverter x:Key="UrlStringToBitmapConverter"/>
     </phone:PhoneApplicationPage.Resources>
     
     <!--LayoutRoot 是包含所有页面内容的根网格-->
@@ -44,21 +46,24 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBox Text="小"
+            <TextBox x:Name="SearchTextBox"
                      Foreground="Black"
                      Background="{StaticResource MainPageContentBackBrush}"
                      VerticalAlignment="Top"
-                     Margin="0,10,0,0" />
+                     Margin="0,10,0,0" InputScope="Url" />
 
             <phone:LongListSelector Grid.Row="1"
-                                    ItemsSource="{Binding SearchedUsers}">
-                <phone:LongListSelector.DataContext>
+                                    ItemsSource="{Binding SearchedUsers}"
+                                    SelectionChanged="LongListSelector_OnSelectionChanged"
+                                    x:Name="UserList">
+                <!--<phone:LongListSelector.DataContext>
                     <viewModel:SearchUsersViewModel />
-                </phone:LongListSelector.DataContext>
+                </phone:LongListSelector.DataContext>-->
 
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="15,15,0,0">
+                        <Grid Margin="15,15,0,0"
+                              Tap="UIElement_OnTap">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -66,7 +71,7 @@
 
                             <Image Width="80"
                                    Height="80"
-                                   Source="{Binding ImageSource}"
+                                   Source="{Binding ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}"
                                    Margin="0,0,20,0" />
                             <Grid Grid.Column="1">
                                 <Grid.RowDefinitions>

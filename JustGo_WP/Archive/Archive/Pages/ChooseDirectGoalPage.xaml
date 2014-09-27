@@ -5,6 +5,7 @@
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:converter="clr-namespace:Archive.Converter"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
@@ -16,6 +17,9 @@
                             shell:SystemTray.ForegroundColor="#FF23A7FC"
                             Loaded="PhoneApplicationPage_Loaded">
 
+    <phone:PhoneApplicationPage.Resources>
+        <converter:NumberToParticipantsConverter x:Key="NumberToParticipantsConverter"/>
+    </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
           Background="White">
@@ -59,7 +63,7 @@
                                        Foreground="{StaticResource ContentBlackColorBrush}"/>
                             <TextBlock Grid.Row="1"
                                        Foreground="{StaticResource SystemBlueBrush}"
-                                       Text="{Binding Participants}"/>
+                                       Text="{Binding Participants,Converter={StaticResource NumberToParticipantsConverter}}"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

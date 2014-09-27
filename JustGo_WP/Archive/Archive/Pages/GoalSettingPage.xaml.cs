@@ -23,23 +23,23 @@ namespace Archive.Pages
 
         private void SettingDoneButton_OnClick(object sender, EventArgs e)
         {
-            Global.AddGoal.NeedReminder = ReminderPicker.SelectedItem.ToString() == "On";
-            Global.AddGoal.ReminderTime = ReminderTimePicker.Value;
-            Global.AddGoal.TimeSpan = int.Parse(InsistPicker.SelectedItem.ToString().Split(' ')[0]);
-            Global.AddGoal.StartDate = DateTime.Now;
-            Global.AddGoal.EndDate = DateTime.Now + TimeSpan.FromDays(Global.AddGoal.TimeSpan);
+            Global.AddingGoalJoin.NeedReminder = ReminderPicker.SelectedItem.ToString() == "On";
+            Global.AddingGoalJoin.ReminderTime = ReminderTimePicker.Value;
+            Global.AddingGoalJoin.TimeSpan = int.Parse(InsistPicker.SelectedItem.ToString().Split(' ')[0]);
+            Global.AddingGoalJoin.StartDate = DateTime.Now;
+            Global.AddingGoalJoin.EndDate = DateTime.Now + TimeSpan.FromDays(Global.AddingGoalJoin.TimeSpan);
 
-            Global.AddGoal.Frequency = string.Empty;
-            Global.AddGoal.Frequency += SundayCheckBox.IsChecked != null && SundayCheckBox.IsChecked.Value ? "1;" : "0;";
-            Global.AddGoal.Frequency += MondayCheckBox.IsChecked != null && MondayCheckBox.IsChecked.Value ? "1;" : "0;";
-            Global.AddGoal.Frequency += TuesdayCheckBox.IsChecked != null && TuesdayCheckBox.IsChecked.Value ? "1;" : "0;";
-            Global.AddGoal.Frequency += WednesdayCheckBox.IsChecked != null && WednesdayCheckBox.IsChecked.Value ? "1;" : "0;";
-            Global.AddGoal.Frequency += ThursdayCheckBox.IsChecked != null && ThursdayCheckBox.IsChecked.Value ? "1;" : "0;";
-            Global.AddGoal.Frequency += FridayCheckBox.IsChecked != null && FridayCheckBox.IsChecked.Value ? "1;" : "0;";
-            Global.AddGoal.Frequency += SaturdayCheckBox.IsChecked != null && SaturdayCheckBox.IsChecked.Value ? "1" : "0";
-            Global.AddGoal.GoalTracks = new ObservableCollection<GoalTrack>();
+            Global.AddingGoalJoin.Frequency = string.Empty;
+            Global.AddingGoalJoin.Frequency += SundayCheckBox.IsChecked != null && SundayCheckBox.IsChecked.Value ? "1;" : "0;";
+            Global.AddingGoalJoin.Frequency += MondayCheckBox.IsChecked != null && MondayCheckBox.IsChecked.Value ? "1;" : "0;";
+            Global.AddingGoalJoin.Frequency += TuesdayCheckBox.IsChecked != null && TuesdayCheckBox.IsChecked.Value ? "1;" : "0;";
+            Global.AddingGoalJoin.Frequency += WednesdayCheckBox.IsChecked != null && WednesdayCheckBox.IsChecked.Value ? "1;" : "0;";
+            Global.AddingGoalJoin.Frequency += ThursdayCheckBox.IsChecked != null && ThursdayCheckBox.IsChecked.Value ? "1;" : "0;";
+            Global.AddingGoalJoin.Frequency += FridayCheckBox.IsChecked != null && FridayCheckBox.IsChecked.Value ? "1;" : "0;";
+            Global.AddingGoalJoin.Frequency += SaturdayCheckBox.IsChecked != null && SaturdayCheckBox.IsChecked.Value ? "1" : "0";
+            Global.AddingGoalJoin.GoalTracks = new ObservableCollection<GoalTrack>();
 
-            ViewModelLocator.GoalViewModel.MyGoals.Insert(0, Global.AddGoal);
+            ViewModelLocator.GoalViewModel.MyGoals.Insert(0, Global.AddingGoalJoin);
             CsvUtil.SaveGoalJoin(ViewModelLocator.GoalViewModel.MyGoals);
 
             NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));

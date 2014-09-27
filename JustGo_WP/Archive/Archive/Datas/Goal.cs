@@ -12,7 +12,7 @@ namespace Archive.Datas
         public string GoalId { get; set; }
         public string GoalCategory { get; set; }
         public string Description { get; set; }
-        public string Image { get; set; }
+        
         public DateTime UpDateTime { get; set; }
 
         private string _goalName;
@@ -30,8 +30,8 @@ namespace Archive.Datas
             }
         }
 
-        private string _participants;
-        public string Participants
+        private int _participants;
+        public int Participants
         {
             get { return _participants; }
 
@@ -41,6 +41,20 @@ namespace Archive.Datas
                 {
                     _participants = value;
                     NotifyPropertyChanged("Participants");
+                }
+            }
+        }
+
+        private string _image;
+        public string Image
+        {
+            get { return _image; }
+            set
+            {
+                if (value != _image)
+                {
+                    _image = value;
+                    NotifyPropertyChanged("Image");
                 }
             }
         }

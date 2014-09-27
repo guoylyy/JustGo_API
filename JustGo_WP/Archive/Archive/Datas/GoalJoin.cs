@@ -91,7 +91,7 @@ namespace Archive.Datas
             }
         }
 
-        public string Participants { get; set; }
+        public int Participants { get; set; }
         //private int _participants;
         //public int Participants
         //{

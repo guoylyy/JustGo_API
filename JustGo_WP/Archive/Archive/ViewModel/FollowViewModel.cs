@@ -12,8 +12,8 @@ namespace Archive.ViewModel
 {
     public class FollowViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<Person> _followPersons;
-        public ObservableCollection<Person> FollowPersons
+        private ObservableCollection<User> _followPersons;
+        public ObservableCollection<User> FollowPersons
         {
             get
             {
@@ -26,14 +26,14 @@ namespace Archive.ViewModel
             }
         }
 
-        public ObservableCollection<AlphaKeyGroup<Person>> GroupedFollow
+        public ObservableCollection<AlphaKeyGroup<User>> GroupedFollow
         {
             get
             {
-                return new ObservableCollection<AlphaKeyGroup<Person>>
-                    (AlphaKeyGroup<Person>.CreateGroups(
+                return new ObservableCollection<AlphaKeyGroup<User>>
+                    (AlphaKeyGroup<User>.CreateGroups(
                     FollowPersons,
-                    (Person s) => { return s.Name; },
+                    (User s) => { return s.UserName; },
                     true));
 
             }
@@ -41,33 +41,43 @@ namespace Archive.ViewModel
 
         public FollowViewModel()
         {
-            FollowPersons = new ObservableCollection<Person>();
-            LoadData();
+            FollowPersons = new ObservableCollection<User>();
         }
 
-        private void LoadData()
+        //public void LoadData()
+        //{
+        //    string[] CensusFemaleNames = { "嫣", "丹", "萌", "梦", "冉", "芬", "芳", "美", "妹", "洁" };
+        //    string[] CensusMaleNames = { "伟", "壮", "刚", "强", "猛", "壕", "昊", "熊", "三", "斯", "严", "睿" };
+        //    string[] CensusFamilyNames = { "陈", "赵", "王", "李", "钱", "孙", "苏", "常", "杨", "潘", "郭" };
+        //    Random rnd = new Random(42);
+
+
+        //    for (int i = 0; i < 50; i++)
+        //    {
+        //        var familyName = CensusFamilyNames[rnd.Next(CensusFamilyNames.Length - 1)];
+        //        var name = rnd.Next(2) == 1
+        //            ? CensusFemaleNames[rnd.Next(CensusFemaleNames.Length - 1)]
+        //            : CensusMaleNames[rnd.Next(CensusMaleNames.Length - 1)];
+        //        string fullName = familyName + name;
+
+        //        FollowPersons.Add(new Person(fullName, "http://image.tjcsdc.com/user-header/4/0/4.150x163.jpe?_ts=20140919080439000000"));
+        //    }
+
+        //}
+
+        public async Task LoadFollowers()
         {
-            string[] CensusFemaleNames = { "嫣", "丹", "萌", "梦", "冉", "芬", "芳", "美", "妹", "洁" };
-            string[] CensusMaleNames = { "伟", "壮", "刚", "强", "猛", "壕", "昊", "熊", "三", "斯", "严", "睿" };
-            string[] CensusFamilyNames = { "陈", "赵", "王", "李", "钱", "孙", "苏", "常", "杨", "潘", "郭" };
-            Random rnd = new Random(42);
-
-
-            for (int i = 0; i < 50; i++)
-            {
-                var familyName = CensusFamilyNames[rnd.Next(CensusFamilyNames.Length - 1)];
-                var name = rnd.Next(2) == 1
-                    ? CensusFemaleNames[rnd.Next(CensusFemaleNames.Length - 1)]
-                    : CensusMaleNames[rnd.Next(CensusMaleNames.Length - 1)];
-                string fullName = familyName + name;
-
-                FollowPersons.Add(new Person(fullName, "/Assets/MainPage/DefaulHead.jpg"));
-            }
-            
-
-
+            FollowPersons.Clear();
+            await ServerApi.GetUserFollowersAsync(Global.LoginUser.Token, FollowPersons);
+            NotifyPropertyChanged("GroupedFollow");
         }
 
+        public async Task LoadFollowings()
+        {
+            FollowPersons.Clear();
+            await ServerApi.GetUserFollowingsAsync(Global.LoginUser.Token, FollowPersons);
+            NotifyPropertyChanged("GroupedFollow");
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

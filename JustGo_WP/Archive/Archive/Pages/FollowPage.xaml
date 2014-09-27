@@ -6,6 +6,7 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:viewModel="clr-namespace:Archive.ViewModel"
+                            xmlns:converter="clr-namespace:Archive.Converter"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
@@ -14,10 +15,11 @@
                             mc:Ignorable="d"
                             shell:SystemTray.IsVisible="True"
                             shell:SystemTray.ForegroundColor="#FF23A7FC"
-                            shell:SystemTray.Opacity="0.01">
+                            shell:SystemTray.Opacity="0.01"
+                            Loaded="FollowPage_OnLoaded">
 
     <phone:PhoneApplicationPage.Resources>
-
+        <converter:UrlStringToBitmapConverter x:Key="UrlStringToBitmapConverter"/>
         <phone:JumpListItemBackgroundConverter x:Key="BackgroundConverter" />
         <phone:JumpListItemForegroundConverter x:Key="ForegroundConverter" />
 
@@ -69,13 +71,14 @@
 
         <DataTemplate x:Key="LongListSelectorItemTemplate">
             <StackPanel Orientation="Horizontal"
-                        Margin="4,4">
+                        Margin="4,4"
+                        Tap="UIElement_OnTap">
                 <Image Width="62"
                        Height="62"
-                       Source="{Binding ImageUrl}"
+                       Source="{Binding ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}"
                        VerticalAlignment="Top"
                        Margin="0,0,10,0" />
-                <TextBlock Text="{Binding Name}"
+                <TextBlock Text="{Binding UserName}"
                            Foreground="{StaticResource ContentBlackColorBrush}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Left"
@@ -107,17 +110,17 @@
         <Grid x:Name="ContentPanel"
               Grid.Row="1"
               Margin="20,20,12,0">
-            <Grid.DataContext>
+            <!--<Grid.DataContext>
                 <viewModel:FollowViewModel/>
-            </Grid.DataContext>
+            </Grid.DataContext>-->
             <phone:LongListSelector Name="PeopleLongListSelector"
-                                    ItemsSource="{Binding GroupedFollow}"
+                                    ItemsSource="{Binding GroupedFollow, Mode=TwoWay}"
                                     JumpListStyle="{StaticResource LongListSelectorJumpListStyle}"
                                     GroupHeaderTemplate="{StaticResource LongListSelectorGroupHeaderTemmplate}"
                                     ItemTemplate="{StaticResource LongListSelectorItemTemplate}"
                                     HideEmptyGroups="true"
                                     IsGroupingEnabled="true"
-                                    LayoutMode="List">
+                                    LayoutMode="List" SelectionChanged="PeopleLongListSelector_SelectionChanged">
             </phone:LongListSelector>
         </Grid>
 

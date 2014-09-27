@@ -125,7 +125,24 @@ namespace Archive.Datas
                     NotifyPropertyChanged("Comments");
                 }
             }
-        } 
+        }
+
+        private string _goalName;
+        public string GoalName
+        {
+            get { return _goalName; }
+            set
+            {
+                if (value != _goalName)
+                {
+                    _goalName = value;
+                    NotifyPropertyChanged("GoalName");
+                }
+            }
+        }
+
+        public string GoalId { get; set; }
+        public string GoalRecordId { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)

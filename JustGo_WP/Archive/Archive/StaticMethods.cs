@@ -7,82 +7,79 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Archive.Datas;
 
 namespace Archive
 {
     public static class StaticMethods
     {
-        private const string TokenFileName = "Token.txt";//token文件名
+        private const string TokenName = "Token";
+        private const string LoginUser = "LoginUser";
 
         /// <summary>
         /// 将token写入指定的文件中
         /// </summary>
         /// <param name="token">新的token字符串</param>
-        public static async void WriteTokenAsync(string token)
+        public static void WriteToken(string token)
         {
-            using (var store = IsolatedStorageFile.GetUserStoreForApplication())
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(TokenName))
             {
-                //要写入Token的byte数据
-                byte[] tokenDataBytes = Encoding.UTF8.GetBytes(token);
-
-                //获取Token文件，不存在则新建一个
-                var tokenFileStream = store.OpenFile(TokenFileName, FileMode.OpenOrCreate, FileAccess.Write);
-                await tokenFileStream.WriteAsync(tokenDataBytes, 0, tokenDataBytes.Length);
-                tokenFileStream.Close();
+                IsolatedStorageSettings.ApplicationSettings.Add(TokenName,token);
             }
+            else
+            {
+                IsolatedStorageSettings.ApplicationSettings[TokenName] = token;
+            }
+            IsolatedStorageSettings.ApplicationSettings.Save();
         }
         /// <summary>
         /// 读取已保存的token
         /// </summary>
         /// <returns>token字符串</returns>
-        public static async Task<string> ReadTokenAsync()
+        public static string ReadToken()
         {
-            //using (var store = IsolatedStorageFile.GetUserStoreForApplication())
-            //{
-            //    if (!store.FileExists(TokenFileName))
-            //    {
-            //        return "";
-            //    }
-            //    using (var tokenFileStream = store.OpenFile(TokenFileName, FileMode.Open, FileAccess.Read))
-            //    {
-            //        byte[] tokenBytes = new byte[(int)tokenFileStream.Length];
-            //        await tokenFileStream.ReadAsync(tokenBytes, 0, tokenBytes.Length);
-            //        return Encoding.UTF8.GetString(tokenBytes, 0, tokenBytes.Length);
-            //    }
-            //}
-
-
-            StorageFile tokenFile = null;
-            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-            byte[] tokenDataBytes;
-
-            try
+            string token;
+            if (IsolatedStorageSettings.ApplicationSettings.TryGetValue(TokenName, out token))
             {
-                tokenFile = await localFolder.GetFileAsync(TokenFileName);
-
-                using (Stream stream = await tokenFile.OpenStreamForReadAsync())
-                {
-                    tokenDataBytes = new byte[stream.Length];
-                    await stream.ReadAsync(tokenDataBytes, 0, (int)stream.Length);
-                    return Encoding.UTF8.GetString(tokenDataBytes, 0, tokenDataBytes.Length);
-                }
+                return token;
             }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            return "";
+            return string.Empty;
         }
 
+        /// <summary>
+        /// 删除本地的Token
+        /// </summary>
         public static void DeleteToken()
         {
-            using (var store = IsolatedStorageFile.GetUserStoreForApplication())
+            IsolatedStorageSettings.ApplicationSettings.Remove(TokenName);
+        }
+
+        public static void WriteUser(User user)
+        {
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(LoginUser))
             {
-                if (store.FileExists(TokenFileName))
-                {
-                    store.DeleteFile(TokenFileName);
-                }
+                IsolatedStorageSettings.ApplicationSettings.Add(LoginUser, user);
             }
+            else
+            {
+                IsolatedStorageSettings.ApplicationSettings[LoginUser] = user;
+            }
+            IsolatedStorageSettings.ApplicationSettings.Save();
+        }
+
+        public static User ReadUser()
+        {
+            User loginUser;
+            if(IsolatedStorageSettings.ApplicationSettings.TryGetValue(LoginUser,out loginUser))
+            {
+                return loginUser;
+            }
+            return null;
+        }
+
+        public static bool IsUserLogin()
+        {
+            return Global.LoginUser != null && Global.LoginUser.Token != null;
         }
     }
 }

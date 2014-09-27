@@ -33,26 +33,26 @@ namespace Archive.Pages
                 }
             }
         }
-
+        
         private async void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
         {
-            var inputUserName = UserNameBox.Text;
-            var inputPassword = PasswordBlock.Password;
-            var postString = string.Format("username={0}&password={1}", inputUserName, inputPassword);
+            //var inputUserName = UserNameBox.Text;
+            //var inputPassword = PasswordBlock.Password;
+            //var postString = string.Format("username={0}&password={1}", inputUserName, inputPassword);
 
-            string url = ServerApi.Login;
-            HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
-            request.Method = "POST";
-            request.ContentType = ServerApi.FormContentType;
+            //string url = ServerApi.Login;
+            //HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
+            //request.Method = "POST";
+            //request.ContentType = ServerApi.FormContentType;
 
-            using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream, request.EndGetRequestStream, null))
-            {
-                //将用户名和密码写入post请求中
-                byte[] postBytes = Encoding.UTF8.GetBytes(postString);
-                await stream.WriteAsync(postBytes, 0, postBytes.Length);
-            }
+            //using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream, request.EndGetRequestStream, null))
+            //{
+            //    //将用户名和密码写入post请求中
+            //    byte[] postBytes = Encoding.UTF8.GetBytes(postString);
+            //    await stream.WriteAsync(postBytes, 0, postBytes.Length);
+            //}
 
-            request.BeginGetResponse(ResphonseCallBack, request);
+            //request.BeginGetResponse(ResphonseCallBack, request);
         }
 
         private void ResphonseCallBack(IAsyncResult ar)
@@ -82,7 +82,7 @@ namespace Archive.Pages
                         //保存Token并写入文件
                         JObject resultJson = (JObject)jObject["result"];
                         Global.Token = (string)resultJson["token"];
-                        StaticMethods.WriteTokenAsync(Global.Token);
+                        StaticMethods.WriteToken(Global.Token);
                         //导航到主界面
                         Dispatcher.BeginInvoke(() => NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative)));
                         //while (NavigationService.CanGoBack)

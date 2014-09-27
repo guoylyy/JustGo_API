@@ -20,6 +20,8 @@
 
     <phone:PhoneApplicationPage.Resources>
         <converter:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+        <converter:UrlStringToBitmapConverter x:Key="StringToBitmapConverter"/>
+        <converter:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot 是包含所有页面内容的根网格-->
@@ -51,8 +53,8 @@
                         Margin="10,0,0,15">
                 <circleImage:CircleImage Width="70"
                                          Height="70"
-                                         Source="/Assets/MainPage/DefaulHead.jpg" />
-                <TextBlock Text="12"
+                                         x:Name="FightingImage"/>
+                <TextBlock Text="{Binding Records.Count}"
                            FontSize="30"
                            Margin="10,15,0,10"
                            Foreground="{StaticResource SystemBlueBrush}" />
@@ -71,10 +73,12 @@
                        Width="7" />
 
             <phone:LongListSelector Grid.Row="1"
-                                    ItemsSource="{Binding Records}">
-                <phone:LongListSelector.DataContext>
+                                    x:Name="FightingList"
+                                    ItemsSource="{Binding Records}"
+                                    SelectionChanged="FightingList_OnSelectionChanged">
+                <!--<phone:LongListSelector.DataContext>
                     <viewModel:FightingCenterViewModel />
-                </phone:LongListSelector.DataContext>
+                </phone:LongListSelector.DataContext>-->
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0,10,0,0">
@@ -108,7 +112,7 @@
                                 <TextBlock Text="{Binding RecordTime,Converter={StaticResource DateTimeToStringConverter}}"
                                            Foreground="{StaticResource ContentGrayColorBrush}"
                                            Margin="0,5,0,0" />
-                                <Grid>
+                                <Grid Visibility="{Binding AwesomeUsers.Count, Converter={StaticResource CountToVisibilityConverter}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -128,7 +132,7 @@
                                                        Height="46"
                                                        Margin="10,0,0,0"
                                                        Stretch="UniformToFill"
-                                                       Source="{Binding ImageSource}" />
+                                                       Source="{Binding ImageSource, Converter={StaticResource StringToBitmapConverter}}" />
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                         <ListBox.ItemsPanel>
@@ -137,22 +141,10 @@
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
                                     </ListBox>
-                                    <!--<StackPanel Grid.Column="1"
-                                                        Orientation="Horizontal">
-                                                <Image Width="46"
-                                                       Height="46"
-                                                       Margin="10,0,0,0"
-                                                       Stretch="UniformToFill"
-                                                       Source="/Assets/AlignmentGrid.png" />
-                                                <Image Width="46"
-                                                       Height="46"
-                                                       Margin="10,0,0,0"
-                                                       Source="/Assets/AlignmentGrid.png"
-                                                       Stretch="UniformToFill" />
-                                            </StackPanel>-->
                                 </Grid>
 
-                                <Grid Margin="0,10,0,0">
+                                <Grid Margin="0,10,0,0"
+                                      Visibility="{Binding Comments.Count, Converter={StaticResource CountToVisibilityConverter}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -165,14 +157,15 @@
                                           Height="26"
                                           Width="28"
                                           Stroke="#FF226CB9"
-                                          VerticalAlignment="Top" />
+                                          VerticalAlignment="Top" 
+                                          Margin="0,5,0,0"/>
                                     <ListBox Grid.Column="1"
                                              Grid.Row="0"
                                              ItemsSource="{Binding Comments}"
                                              ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid>
+                                                <Grid >
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
@@ -188,8 +181,8 @@
                                                            VerticalAlignment="Top"
                                                            Grid.RowSpan="2"
                                                            Stretch="UniformToFill"
-                                                           Source="{Binding User.ImageSource}"
-                                                           Margin="10,0,0,0" />
+                                                           Source="{Binding User.ImageSource, Converter={StaticResource StringToBitmapConverter}}"
+                                                           Margin="10,5,10,0" />
                                                     <TextBlock Grid.Row="0"
                                                                Grid.Column="1"
                                                                Text="{Binding User.UserName}"
@@ -197,18 +190,17 @@
                                                     <TextBlock Grid.Row="1"
                                                                Grid.Column="1"
                                                                Text="{Binding CommentContent}"
-                                                               Foreground="Black" />
+                                                               Foreground="Black" 
+                                                               TextWrapping="Wrap"/>
                                                 </Grid>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                    <HyperlinkButton Grid.Row="1"
-                                                     Grid.Column="1"
-                                                     Content="view all comments(10)"
+                                </Grid>
+                                <HyperlinkButton     Content="view details"
                                                      Foreground="{StaticResource SystemBlueBrush}"
                                                      HorizontalAlignment="Left"
                                                      Click="MoreComments_OnClick" />
-                                </Grid>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

@@ -38,27 +38,27 @@ namespace Archive.Pages
 
         private async void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
         {
-            //todo:注册
-            var inputUserName = UserNameBox.Text;
-            var inputPassword = PasswordBox.Password;
-            var inputEmail = EmailBox.Text;
-            var postString = string.Format("username={0}&password={1}&email={2}", inputUserName, inputPassword,
-                inputEmail);
+            
+            //var inputUserName = UserNameBox.Text;
+            //var inputPassword = PasswordBox.Password;
+            //var inputEmail = EmailBox.Text;
+            //var postString = string.Format("username={0}&password={1}&email={2}", inputUserName, inputPassword,
+            //    inputEmail);
 
-            string url = ServerApi.Register;
-            HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
-            request.Method = "POST";
-            request.ContentType = ServerApi.FormContentType;
-            //request.Method = "GET";
+            //string url = ServerApi.Register;
+            //HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
+            //request.Method = "POST";
+            //request.ContentType = ServerApi.FormContentType;
+            ////request.Method = "GET";
 
-            using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream,request.EndGetRequestStream,null))
-            {
-                //将用户名和密码写入post请求中
-                byte[] postBytes = Encoding.UTF8.GetBytes(postString);
-                await stream.WriteAsync(postBytes, 0, postBytes.Length);
-            }
+            //using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream,request.EndGetRequestStream,null))
+            //{
+            //    //将用户名和密码写入post请求中
+            //    byte[] postBytes = Encoding.UTF8.GetBytes(postString);
+            //    await stream.WriteAsync(postBytes, 0, postBytes.Length);
+            //}
 
-            request.BeginGetResponse(ResponseCallBack, request);
+            //request.BeginGetResponse(ResponseCallBack, request);
         }
 
         private void ResponseCallBack(IAsyncResult ar)

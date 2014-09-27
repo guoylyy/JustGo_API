@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -27,8 +28,8 @@ namespace Archive.Datas
             }
         }
 
-        private BitmapImage _imageSource;
-        public BitmapImage ImageSource
+        private string _imageSource;
+        public string ImageSource
         {
             get { return _imageSource; }
             set
@@ -37,6 +38,34 @@ namespace Archive.Datas
                 {
                     _imageSource = value;
                     NotifyPropertyChanged("ImageSource");
+                }
+            }
+        }
+
+        private string _imageSourceMedium;
+        public string ImageSourceMedium
+        {
+            get { return _imageSourceMedium; }
+            set
+            {
+                if (value != _imageSourceMedium)
+                {
+                    _imageSourceMedium = value;
+                    NotifyPropertyChanged("ImageSourceMedium");
+                }
+            }
+        }
+
+        private string _imageSourceSmall;
+        public string ImageSourceSmall
+        {
+            get { return _imageSourceSmall; }
+            set
+            {
+                if (value != _imageSourceSmall)
+                {
+                    _imageSourceSmall = value;
+                    NotifyPropertyChanged("ImageSourceSmall");
                 }
             }
         }
@@ -70,15 +99,57 @@ namespace Archive.Datas
             }
         }
 
+        private int _followerCount;
+        public int FollowerCount
+        {
+            get { return _followerCount; }
+            set
+            {
+                if (value != _followerCount)
+                {
+                    _followerCount = value;
+                    NotifyPropertyChanged("FollowerCount");
+                }
+            }
+        }
+
+        private int _followingCount;
+        public int FollowingCount
+        {
+            get { return _followingCount; }
+            set
+            {
+                if (value != _followingCount)
+                {
+                    _followingCount = value;
+                    NotifyPropertyChanged("FollowingCount");
+                }
+            }
+        }
+
         /// <summary>
         /// 访问服务器的token
         /// </summary>
         public string Token { get; set; }
 
         /// <summary>
-        /// 访问facebook的token
+        /// facebook的id，作为注册的唯一标识
         /// </summary>
-        public string FacebookToken { get; set; }
+        public string FacebookId { get; set; }
+
+        public bool CanFollow { get; set; }
+
+        public void NotifyAllPropertyChanged()
+        {
+            NotifyPropertyChanged("UserName");
+            NotifyPropertyChanged("ImageSource");
+            NotifyPropertyChanged("ImageSourceMedium");
+            NotifyPropertyChanged("ImageSourceSmall");
+            NotifyPropertyChanged("Description");
+            NotifyPropertyChanged("GoalCount");
+            NotifyPropertyChanged("FollowerCount");
+            NotifyPropertyChanged("FollowingCount");
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)

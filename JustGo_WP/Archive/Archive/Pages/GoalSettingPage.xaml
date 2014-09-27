@@ -61,6 +61,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                
                 <toolkit:ListPicker Background="{StaticResource MainPageContentBackBrush}"
                                     Foreground="Black" 
                                     x:Name="ReminderPicker"

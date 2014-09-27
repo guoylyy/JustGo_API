@@ -9,6 +9,17 @@ namespace Archive.Datas
 {
     public class Person : INotifyPropertyChanged
     {
+        private string _id;
+        public string Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                NotifyPropertyChanged("Id");
+            }
+        }
+
         private string _name;
         public string Name
         {
@@ -35,16 +46,6 @@ namespace Archive.Datas
                 _imageUrl = value;
                 NotifyPropertyChanged("ImageUrl");
             }
-        }
-
-        public Person(string name, string imageurl)
-        {
-            Name = name;
-            ImageUrl = imageurl;
-        }
-
-        public Person()
-        {
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

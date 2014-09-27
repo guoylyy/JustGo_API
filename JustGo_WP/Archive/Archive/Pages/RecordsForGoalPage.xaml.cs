@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Archive.Datas;
+using Archive.ViewModel;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
@@ -17,11 +18,12 @@ namespace Archive.Pages
         public GoalsPopularPage()
         {
             InitializeComponent();
+            DataContext = ViewModelLocator.RecordsForGoalViewModel;
         }
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
-            HeadGrid.DataContext = Global.SelectedGoal;
+            GoalNameTextBlock.Text = Global.SelectedGoalJoin.GoalName;
         }
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
@@ -29,15 +31,15 @@ namespace Archive.Pages
             NavigationService.Navigate(new Uri("/Pages/CommentsPage.xaml", UriKind.Relative));
         }
 
-        private void RecordList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            var item = RecordList.SelectedItem as UserRecord;
-        }
-
-
         private void AwesomeUsers_OnTap(object sender, GestureEventArgs e)
         {
-            NavigationService.Navigate(new Uri("/Pages/AwesomePage.xaml", UriKind.Relative));
+            //NavigationService.Navigate(new Uri("/Pages/AwesomePage.xaml", UriKind.Relative));
+        }
+
+        private void RecordList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = RecordList.SelectedItem as UserRecord;
+            Global.SelectedUserRecord = item;
         }
     }
 }

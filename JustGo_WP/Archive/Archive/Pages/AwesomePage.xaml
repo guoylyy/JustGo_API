@@ -19,6 +19,7 @@
 
     <phone:PhoneApplicationPage.Resources>
         <converter:CountToGoalStringConverter x:Key="CountToGoalStringConverter" />
+        <converter:StringToBitmapConverter x:Key="StringToBitmapConverter"/>
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot 是包含所有页面内容的根网格-->
@@ -55,7 +56,7 @@
 
                             <Image Width="80"
                                    Height="80"
-                                   Source="{Binding ImageSource}"
+                                   Source="{Binding ImageSource,Converter={StaticResource StringToBitmapConverter}}"
                                    Margin="0,0,20,0" />
                             <Grid Grid.Column="1">
                                 <Grid.RowDefinitions>

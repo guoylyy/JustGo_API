@@ -10,6 +10,10 @@ MDIL image C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archi
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Archive.dll output C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\MDIL\Archive.dll
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\CircleImage.dll
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\CircleImage.dll is not in the compile filter. Skipping.
+Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Facebook.Client.dll
+File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Facebook.Client.dll is not in the compile filter. Skipping.
+Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Facebook.dll
+File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Facebook.dll is not in the compile filter. Skipping.
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\GalaSoft.MvvmLight.Extras.WP8.dll
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\GalaSoft.MvvmLight.Extras.WP8.dll is not in the compile filter. Skipping.
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\GalaSoft.MvvmLight.WP8.dll
@@ -20,8 +24,18 @@ Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Microsoft.Phone.Controls.Toolkit.dll is not in the compile filter. Skipping.
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Microsoft.Practices.ServiceLocation.dll
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Microsoft.Practices.ServiceLocation.dll is not in the compile filter. Skipping.
+Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Microsoft.Threading.Tasks.Extensions.dll
+File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Microsoft.Threading.Tasks.Extensions.dll is not in the compile filter. Skipping.
+Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Microsoft.Threading.Tasks.Extensions.Phone.dll
+File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Microsoft.Threading.Tasks.Extensions.Phone.dll is not in the compile filter. Skipping.
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Newtonsoft.Json.dll
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Newtonsoft.Json.dll is not in the compile filter. Skipping.
+Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\System.Net.Http.dll
+File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\System.Net.Http.dll is not in the compile filter. Skipping.
+Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\System.Net.Http.Extensions.dll
+File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\System.Net.Http.Extensions.dll is not in the compile filter. Skipping.
+Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\System.Net.Http.Primitives.dll
+File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\System.Net.Http.Primitives.dll is not in the compile filter. Skipping.
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\System.Windows.Interactivity.dll
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\System.Windows.Interactivity.dll is not in the compile filter. Skipping.
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\WMAppManifest.xml

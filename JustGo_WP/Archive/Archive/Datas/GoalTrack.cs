@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Archive.Datas
 {
-    public class GoalTrack : INotifyPropertyChanged
+    public class GoalTrack : SyncDataBase, INotifyPropertyChanged
     {
         public string GoalTrackId { get; set; }
 
@@ -27,8 +27,6 @@ namespace Archive.Datas
                 }
             }
         }
-
-        public DateTime UpDateTime { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)

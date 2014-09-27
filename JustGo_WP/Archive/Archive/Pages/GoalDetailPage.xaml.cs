@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Archive.Datas;
+using Archive.ViewModel;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
@@ -15,49 +16,28 @@ namespace Archive.Pages
 {
     public partial class GoalDetailPage : PhoneApplicationPage
     {
-        private string _description;
-        public ObservableCollection<User> Participants { get; set; }
+        //private string _description;
 
         public GoalDetailPage()
         {
             InitializeComponent();
-            Participants = new ObservableCollection<User>();
-            ParticipantsImageList.DataContext = this;
-            LoadData();
+            DataContext = ViewModelLocator.GoalDetailViewModel;
+            //ParticipantsImageList.DataContext = this;
+            //ViewModelLocator.GoalDetailViewModel.LoadData();
+           
         }
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
-            GoalNameBlock.Text = Global.AddGoal.GoalName;
-            ParticipantsBlock.Text = Global.AddGoal.Participants;
-            DescriptionBlock.Text = _description;
+            ViewModelLocator.GoalDetailViewModel.GoalName = Global.AddingGoalJoin.GoalName;
+            ViewModelLocator.GoalDetailViewModel.Joins = Global.AddingGoalJoin.Participants;
+            //DescriptionBlock.Text = _description;
+            LoadData();
         }
 
         private void LoadData()
         {
-            _description = "This is a 21-day goal to help you build the habit of “Drink more water.”"
-                + " Each day is supported by optional discussion prompts.";
-
-            Participants.Add(new User
-            {
-                ImageSource = new BitmapImage(new Uri(@"/Assets/MainPage/DefaulHead.jpg", UriKind.Relative))
-            });
-            Participants.Add(new User
-            {
-                ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head6.png", UriKind.Relative))
-            });
-            Participants.Add(new User
-            {
-                ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head7.png", UriKind.Relative))
-            });
-            Participants.Add(new User
-            {
-                ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head8.png", UriKind.Relative))
-            });
-            Participants.Add(new User
-            {
-                ImageSource = new BitmapImage(new Uri(@"/Assets/Heads/head9.png", UriKind.Relative))
-            });
+            ViewModelLocator.GoalDetailViewModel.LoadData();
         }
 
         private void JoinButton_OnClick(object sender, RoutedEventArgs e)
