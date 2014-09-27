@@ -156,7 +156,8 @@ class Goal(db.Model):
 	goal_records = db.relationship('GoalRecord', backref='goal', lazy='dynamic',order_by="desc(GoalRecord.goal_record_id)")
 	is_active = db.Column(db.Boolean, default=True)
 	
-	goal_history_joins = db.relationship('GoalHistoryJoin', backref='goal', lazy='dynamic')
+	goal_history_joins = db.relationship('GoalHistoryJoin', backref='goal', lazy='dynamic',\
+		order_by="desc(GoalHistoryJoin.goal_his_join_id)")
 
 	def __init__(self, goal_name, description):
 		self.goal_name = goal_name
