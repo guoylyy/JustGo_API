@@ -28,7 +28,8 @@ class BaseTest(unittest.TestCase):
         rep = self.client.post(self.base_url+'/login',headers=dict(
             name= user_name,
             facebooktoken= str(facebook_token),
-            description='I am a test_user'
+            description='I am a test_user',
+            headerurl='http://ww3.sinaimg.cn/mw690/63ea4d33gw1ejhpwui71sj20u00k045s.jpg'
             ))
         return json.loads(rep.data)['token']
 
@@ -36,7 +37,8 @@ class BaseTest(unittest.TestCase):
         rep = self.client.post(self.base_url+'/login',headers=dict(
             name= user_name + '_t',
             facebooktoken= facebook_token + '_t',
-            description='I am a test user num 2'
+            description='I am a test user num 2',
+            headerurl='http://ww3.sinaimg.cn/mw690/63ea4d33gw1ejhpwui71sj20u00k045s.jpg'
             ))
         self.stranger_token = json.loads(rep.data)['token']
         return self.get_user_profile(json.loads(rep.data)['token'])
