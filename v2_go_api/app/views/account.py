@@ -66,6 +66,21 @@ class IndexView(MethodView):
     def get(self):
         return redirect('/login')
 
+class PolicyView(MethodView):
+    def get(self):
+        return render_template('forend/policy.html')
+
+class SupportView(MethodView):
+    def get(self):
+        return render_template('forend/support.html')
+
+class ServiceView(MethodView):
+    def get(self):
+        return render_template('forend/service.html')
+
 instance.add_url_rule('/',view_func=IndexView.as_view('index'),methods=['GET'])
+instance.add_url_rule('/policy',view_func=PolicyView.as_view('policy'),methods=['GET'])
+instance.add_url_rule('/service',view_func=ServiceView.as_view('service'),methods=['GET'])
+instance.add_url_rule('/support',view_func=SupportView.as_view('support'),methods=['GET'])
 instance.add_url_rule('/login',view_func=LoginView.as_view('login'),methods=['GET','POST'])
 instance.add_url_rule('/logout',view_func=LogoutView.as_view('logout'),methods=['GET','POST'])
