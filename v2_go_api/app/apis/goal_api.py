@@ -21,6 +21,15 @@ class GoalRest(Resource):
 		goals = c.goals
 		return [g.to_json() for g in goals], 200
 
+class GoalImageRest(Resource):
+	def get(self, goal_id):
+		g = Goal.query.filter(Goal.goal_id==goal_id).first()
+		if g:
+			with store_context(fs_store):
+				return {'image': g.image.locate()}, 200
+		else:
+			abort(404, message="Image not found")
+
 class GoalDetails(Resource):
 	def get(self, goal_id):
 		g = Goal.query.filter(Goal.goal_id==goal_id).first()
@@ -127,6 +136,9 @@ class GoalRecordListRest(Resource):
 			return [gr.to_preview_json() for gr in grs], 200
 		else:
 			return [],200
+
+
+
 
 class GoalRecordCommentRest(Resource):
 	def get(self, record_id):
