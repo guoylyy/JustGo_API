@@ -12,7 +12,7 @@ class UserRest(Resource):
 		""" 
 			Get the basic information of one user
 		"""
-		u = check_authorization()
+		u = get_user()
 		user = abort_if_user_doesnt_exit(user_id)
 		return user.to_json(u), 200
 
