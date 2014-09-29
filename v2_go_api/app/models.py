@@ -90,7 +90,9 @@ class User(db.Model):
 			}
 
 	def to_json(self, user=None):
-		if user is None or (user.user_id == self.user_id):
+		if user is None:
+			can_follow = True
+		elif user.user_id == self.user_id:
 			can_follow = False
 		else:
 			can_follow = not (user in self.fans)
