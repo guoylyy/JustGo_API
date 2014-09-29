@@ -88,24 +88,7 @@
 
 			<link rel="shortcut icon" href="{{ url_for('.static', filename='lib/metronic/image/favicon.ico')}}" />
 
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '344702782359268',
-      xfbml      : true,
-      version    : 'v2.1'
-    });
-  };
 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>
-</head>
 
 			<!-- END HEAD -->
 
@@ -113,12 +96,7 @@
 
 <body class="login">
 			{%- block content %}{%- endblock %}
-			<div
-			  class="fb-like"
-			  data-share="true"
-			  data-width="450"
-			  data-show-faces="true">
-			</div>
+			
 			<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 
 			<!-- BEGIN CORE PLUGINS -->
