@@ -129,7 +129,7 @@ class Category(db.Model):
 	create_time = db.Column(db.DateTime)
 	update_time = db.Column(db.DateTime)
 	goals = db.relationship('Goal', secondary=goal_category, backref=db.backref('categorys', lazy='dynamic'),\
-		order_by="desc(Goal.goal_id)")
+		order_by="desc(Goal.update_time)")
 
 	def __init__(self, category_name, description):
 		self.category_name = category_name
