@@ -34,9 +34,7 @@ class DefaultConfig(object):
     PREVIEW_SIZE = 5
     
     SESSION_EXPIRE_DAYS = 7
-    
-    IMAGE_UPLOAD_URL = '/Users/globit/git/JustGo_Project/go_api/userimages'
-    IMAGE_URL = 'file:///Users/globit/git/JustGo_Project/go_api/userimages/'
+
 
     HEADER_SIZE_LARGE = 480
     HEADER_SIZE_MEDIUM = 150
@@ -75,9 +73,6 @@ class TestConfig(object):
     
     SESSION_EXPIRE_DAYS = 7
     
-    IMAGE_UPLOAD_URL = '/Users/globit/git/JustGo_Project/v2_go_api/userimages_test'
-    IMAGE_URL = 'file:///Users/globit/git/JustGo_Project/v2_go_api/userimages_test/'
-
     HEADER_SIZE_LARGE = 480
     HEADER_SIZE_MEDIUM = 150
     HEADER_SIZE_SMALL = 48

@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from sqlalchemy_imageattach.stores.fs import FileSystemStore
 
-__all__ = ['db', 'fs_store','login_manager']
 
-IMAGE_UPLOAD_URL = '/Users/globit/git/JustGo_Project/v2_go_api/userimages'
+__all__ = ['db', 'fs_store','login_manager']
+basedir = os.path.abspath(os.path.dirname(__file__))
+#IMAGE_UPLOAD_URL = '/Users/globit/git/JustGo_Project/v2_go_api/userimages'
+IMAGE_UPLOAD_URL = os.path.join(basedir, 'userimages')
 IMAGE_URL = 'file:///Users/globit/git/JustGo_Project/v2_go_api/userimages/'
+
 
 db = SQLAlchemy()
 fs_store = FileSystemStore(IMAGE_UPLOAD_URL, IMAGE_URL)
