@@ -8,7 +8,8 @@ from flask.ext.restful import abort
 from app.models import User, Category
 from sqlalchemy.orm.exc import NoResultFound
 from flask.ext.restful import  reqparse
-from app.helpers import check_expire
+from app.helpers import check_expire, make_token
+from app.extensions import db
 
 
 def abort_if_category_doesnt_exist(category_name):
@@ -49,9 +50,18 @@ def check_authorization():
 		abort(500, message="Authorization Failed")
 	else:
 		token = urllib.unquote(parser.parse_args()['Authorization']).decode('utf8') 
-		check_expire(token)
+		#check_result = check_expire(token)  #TO-DO should be open if app support
+		#if check_result is not False:
+		#	abort(500, message="Token Expire")
 		u = User.query.filter(User.token==token).first()
 		if u:
-			return u
+			return u 
 		else:
 			abort(500, message='Invalid Authorization')
+
+def remake_token(id):
+	u = User.query.filter(User.user_id==id).first()
+	u.token = make_token(u.user_id)
+	db.session.add(u)
+	db.session.commit()
+	return u

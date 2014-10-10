@@ -41,10 +41,8 @@ def make_token(id):
 def check_expire(token):
     '''
     '''
-    try :
-        md5, expire, id = token.split(":", 3)
-        if int(expire) > stime.time():
-            return False
-        abort(500, message='Expire Token')
-    except Exception as e:
-        abort(500, message='Invalid Authorization')
+    md5, expire, id = token.split(":", 3)
+    if int(expire) > stime.time():
+        return False
+    return id
+    

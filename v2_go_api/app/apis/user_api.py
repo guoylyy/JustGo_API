@@ -122,7 +122,9 @@ class LoginRest(Resource):
 			else:
 				return {'result':'fail'}, 404
 		else:
-			check_expire(user.token)
+			r = check_expire(user.token)
+			if r is not False:
+				user = remake_token(r)
 			return {'token': user.token}, 200
 
 	def __user_parser(self):
