@@ -137,9 +137,6 @@ class GoalRecordListRest(Resource):
 		else:
 			return [],200
 
-
-
-
 class GoalRecordCommentRest(Resource):
 	def get(self, record_id):
 		""" 
@@ -285,7 +282,7 @@ class EncourageRest(Resource):
 		user = check_authorization()
 		receiver = User.query.filter(User.user_id==user_id).first()
 		b_now = datetime.fromtimestamp(stime.mktime(date.today().timetuple()))
-		n = Notification.query.filter(Notification.sender_id==user.user_id, \
+		n = Notification.query.filter(Notification.sender_id==user.user_id, Notification.receiver_id=user_id,\
 			Notification.create_time>=b_now).first()
 		if n or receiver is None:
 			abort(500, message="You have encouraged this user today")
