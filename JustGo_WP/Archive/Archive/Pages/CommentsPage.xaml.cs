@@ -2,22 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using Archive.Datas;
 using Archive.ViewModel;
+using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Archive.Pages
 {
     public partial class CommentsPage : PhoneApplicationPage
     {
+        private CommentsViewModel _commentsViewModel;
+        //private bool _hasLoadData = false;
+
         public CommentsPage()
         {
             InitializeComponent();
-            DataContext = ViewModelLocator.CommentsViewModel;
+            //DataContext = ViewModelLocator.CommentsViewModel;
+            _commentsViewModel = new CommentsViewModel();
+            DataContext = _commentsViewModel;
         }
 
         private void CommentsButton_OnClick(object sender, EventArgs e)
@@ -40,12 +49,19 @@ namespace Archive.Pages
                 var result = await ViewModelLocator.CommentsViewModel.Awesome();
                 if (string.IsNullOrEmpty(result))
                 {
-                    MessageBox.Show("You Can't awsome a record twice");
+                    if (StaticMethods.IsNetworkEnable())
+                    {
+                        StaticMethods.ShowToast("You can't awsome a record twice");
+                    }
+                    else
+                    {
+                        StaticMethods.ShowRequestFailedToast();
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Awsome success");
-                    ViewModelLocator.CommentsViewModel.AwesomeUsers.Add(Global.LoginUser);
+                    _commentsViewModel.AwesomeUsers.Add(Global.LoginUser);
+                    Global.SelectedUserRecord.AwesomeUsers.Add(Global.LoginUser);
                 }
             }
             else
@@ -54,10 +70,49 @@ namespace Archive.Pages
             }
         }
 
-        private void CommentsPage_OnLoaded(object sender, RoutedEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            UserNameTextBlock.Text = Global.SelectedUserRecord.User.UserName;
-            AuthorImage.Source = new BitmapImage(new Uri(Global.SelectedUserRecord.User.ImageSource));
+            base.OnNavigatedTo(e);
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                if (Global.AddingComment != null)
+                {
+                    var comment = new Comment
+                    {
+                        User = Global.AddingComment.User,
+                        CommentContent = Global.AddingComment.CommentContent
+                    };
+                    _commentsViewModel.Comments.Insert(0, comment);
+                    Global.AddingComment = null;
+                }
+            }
+        }
+
+        private async void CommentsPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+                UserNameTextBlock.Text = Global.SelectedUserRecord.User.UserName;
+                AuthorImage.Source = new BitmapImage(new Uri(Global.SelectedUserRecord.User.ImageSource));
+                await _commentsViewModel.LoadData();
+                //_hasLoadData = true;
+
+                ProgressGrid.Visibility = Visibility.Collapsed;
+                ContentPanelGrid.Visibility = Visibility.Visible;
+                ApplicationBar.IsVisible = true;
+        }
+
+        private void CommentsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var listBox = (ListBox)sender;
+            if (listBox.SelectedItems != null && listBox.SelectedItems.Count != 0)
+            {
+                var comment = (Comment)listBox.SelectedItems[0];
+                Global.SelectedUser = comment.User;
+            }
+        }
+
+        private void CommentGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/UserProfilePage.xaml", UriKind.Relative));
         }
     }
 }

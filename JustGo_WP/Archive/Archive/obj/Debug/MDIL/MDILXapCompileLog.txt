@@ -10,6 +10,8 @@ MDIL image C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archi
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Archive.dll output C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\MDIL\Archive.dll
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\CircleImage.dll
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\CircleImage.dll is not in the compile filter. Skipping.
+Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Coding4Fun.Toolkit.Controls.dll
+File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Coding4Fun.Toolkit.Controls.dll is not in the compile filter. Skipping.
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Facebook.Client.dll
 File C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Facebook.Client.dll is not in the compile filter. Skipping.
 Processing file: C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\MDIL\Facebook.dll

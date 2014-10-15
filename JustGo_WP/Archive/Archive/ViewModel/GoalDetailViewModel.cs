@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Windows.Documents;
+using Archive.Datas;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Archive.Datas;
+using System.Windows;
 
 namespace Archive.ViewModel
 {
@@ -87,34 +86,20 @@ namespace Archive.ViewModel
             Participants = new ObservableCollection<User>();
         }
 
-        public async void LoadData()
+        public async Task<bool> LoadData()
         {
             Participants.Clear();
             Records.Clear();
             await Task.Delay(10);
 
-            await ServerApi.GetGoalDetailAsync(Records, Global.AddingGoalJoin.GoalId);
+            if (!await ServerApi.GetGoalDetailAsync(Records, Global.AddingGoalJoin.GoalId))
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(StaticMethods.ShowRequestFailedToast);
+                return false;
+            }
 
-            Participants.Add(new User
-            {
-                ImageSource = @"/Assets/MainPage/DefaulHead.jpg"
-            });
-            Participants.Add(new User
-            {
-                ImageSource = @"/Assets/Heads/head6.png"
-            });
-            Participants.Add(new User
-            {
-                ImageSource = @"/Assets/Heads/head7.png"
-            });
-            Participants.Add(new User
-            {
-                ImageSource = @"/Assets/Heads/head8.png"
-            });
-            Participants.Add(new User
-            {
-                ImageSource = @"/Assets/Heads/head9.png"
-            });
+            StaticMethods.SaveGoalImage(Global.AddingGoalJoin.GoalId,ImageUrl);
+            return true;
         }
     }
 }

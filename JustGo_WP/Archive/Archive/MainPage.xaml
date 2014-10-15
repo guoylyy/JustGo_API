@@ -19,9 +19,11 @@
                             Loaded="MainPage_OnLoaded">
     <phone:PhoneApplicationPage.Resources>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <!--<converter:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>-->
         <converter:UrlStringToBitmapConverter x:Key="UrlStringToBitmapConverter"/>
         <converter:NumberToParticipantsConverter x:Key="NumberToParticipantsConverter"/>
-        
+        <converter:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <converter:WhiteFalseGrayTrueConverter x:Key="WhiteFalseGrayTrueConverter"/>
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot 是包含所有页面内容的根网格-->
@@ -95,7 +97,7 @@
                 </DataTemplate>
             </phone:Pivot.HeaderTemplate>-->
             <phone:PivotItem Name="GoalsPivotItem"
-                             Header="My goals"
+                             Header="my goals"
                              Margin="0,28,0,60">
                 <phone:LongListSelector ItemsSource="{Binding MyGoals}"
                                         x:Name="GoalList"
@@ -110,7 +112,7 @@
                                     <ColumnDefinition Width="5*" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Margin="0,0,0,17">
+                                <StackPanel Margin="0,15,0,20">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding PassedDays}"
                                                    FontSize="48"
@@ -122,13 +124,19 @@
                                         <TextBlock Text="{Binding TimeSpan}"
                                                    Margin="1,30,0,0"
                                                    Foreground="{StaticResource MainPageGoalTextBrush}" />
-                                        <TextBlock Text="{Binding GoalName}"
-                                                   TextWrapping="Wrap"
+                                        <Grid>
+                                            <TextBlock Text="{Binding GoalName}"
+                                                       x:Name="GoalNameTextBlock"
                                                    Foreground="{StaticResource MainPageGoalTextBrush}"
                                                    FontSize="32"
-                                                   Margin="10,15,0,0" />
+                                                   Margin="20,15,0,0"/>
+                                            <!--<Line Fill="{StaticResource MainPageGoalTextBrush}"
+                                                  Stroke="{StaticResource MainPageGoalTextBrush}"
+                                                  />-->
+                                        </Grid>
+                                        
                                     </StackPanel>
-                                    <StackPanel x:Name="ProgressPanel"
+                                    <!--<StackPanel x:Name="ProgressPanel"
                                                 Orientation="Horizontal"
                                                 Margin="20,15,0,5">
                                         <Path x:Name="ProgressPath"
@@ -141,7 +149,7 @@
                                               Fill="#FF0D5F7F"
                                               Height="13"
                                               Width="13" />
-                                    </StackPanel>
+                                    </StackPanel>-->
                                 </StackPanel>
                                 <Path x:Name="CheckPath"
                                       Visibility="{Binding IsFinishedToday, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -157,9 +165,10 @@
             </phone:PivotItem>
 
             <phone:PivotItem Name="ExplorePivotItem"
-                             Header="Explore"
+                             Header="explore"
                              Margin="0,28,0,0">
                 <phone:LongListSelector ItemsSource="{Binding Explores}"
+                                        ListHeader="{Binding TopExplore}"
                                         x:Name="ExploreList"
                                         LayoutMode="Grid"
                                         GridCellSize="240,144"
@@ -192,49 +201,40 @@
                             <Grid Height="288"
                                   HorizontalAlignment="Left"
                                   VerticalAlignment="Top"
-                                  Width="480">
-                                <Image Source="/Assets\MainPage\Push-up.png"
+                                  Width="480"
+                                  Tap="TopExploreGrid_OnTap"
+                                  Visibility="{Binding GoalName, Converter={StaticResource StringToVisibilityConverter}}">
+                                <Image Source="{Binding Image, Converter={StaticResource UrlStringToBitmapConverter}}"
                                        Stretch="UniformToFill" />
                                 <Rectangle Fill="Black"
                                            Opacity="0.4" />
-                                <TextBlock Text="Do Pushups Every Day"
+                                <TextBlock Text="{Binding GoalName}"
                                            Margin="0,55,0,0"
                                            FontSize="32"
                                            TextAlignment="Center"
                                            VerticalAlignment="Top" />
-                                <TextBlock Text="14,241 participants"
+                                <TextBlock Text="{Binding Participants, Converter={StaticResource NumberToParticipantsConverter}}"
                                            VerticalAlignment="Top"
                                            TextAlignment="Center"
-                                           Margin="0,104,0,0"
+                                           Margin="0,114,0,0"
                                            FontSize="22" />
                                 <Grid VerticalAlignment="Bottom"
-                                      Margin="70,0,70,40">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="50" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image Source="/Assets\Heads\head1.png" />
-                                    <Image Grid.Column="1"
-                                           Source="/Assets\Heads\head2.png" />
-                                    <Image Grid.Column="2"
-                                           Source="/Assets\Heads\head3.png" />
-                                    <Image Grid.Column="3"
-                                           Source="/Assets\Heads\head4.png" />
-                                    <Image Grid.Column="4"
-                                           Source="/Assets\Heads\head5.png" />
-                                    <Grid Grid.Column="5">
-                                        <Ellipse Height="50"
-                                                 Width="50"
-                                                 Fill="#FF999999"
-                                                 Opacity="0.8" />
-                                        <TextBlock Text="more"
-                                                   Padding="4,10,0,0"
-                                                   FontSize="18" />
-                                    </Grid>
+                                      Margin="70,0,70,55">
+                                    <ListBox ItemsSource="{Binding JoinedUsers}"
+                                             ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Center">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <circleImage:CircleImage Width="50"
+                                                                         Height="50"
+                                                                         Source="{Binding ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}"/>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                    </ListBox>
                                 </Grid>
                             </Grid>
                         </DataTemplate>
@@ -243,7 +243,7 @@
             </phone:PivotItem>
 
             <phone:PivotItem Name="ProfilePivotItem"
-                             Header="Profile"
+                             Header="profile"
                              Margin="0,28,0,0">
                 <Grid Background="{StaticResource SystemBlueBrush}"
                       Margin="0,-1,0,0">
@@ -447,8 +447,9 @@
                                   Margin="0,0,14,9"
                                   VerticalAlignment="Bottom"
                                   HorizontalAlignment="Right"
-                                  Width="210">
-                                    <Rectangle Fill="#FFB2AFAB" />
+                                  Width="210"
+                                      Tap="AchievementsGrid_OnTap">
+                                    <Rectangle Fill="{StaticResource ProfileButtonBackBrush}" />
                                     <TextBlock Foreground="White"
                                            FontSize="18"
                                            FontFamily="Arial"
@@ -468,7 +469,19 @@
                             </Grid>
                         </StackPanel>
                     </Grid>
-                    
+
+                    <Grid x:Name="ProgressGrid"
+                          Background="#7F000000" 
+                          Margin="0,-133,0,0"
+                          Visibility="Collapsed">
+                        <ProgressBar IsIndeterminate="True" 
+                             Foreground="{StaticResource SystemBlueBrush}"/>
+                        <TextBlock Text="Loading"
+                           TextAlignment="Center"
+                           Foreground="{StaticResource SystemBlueBrush}"
+                           Margin="0,40,0,0" 
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
                 </Grid>
             </phone:PivotItem>
         </phone:Pivot>

@@ -82,10 +82,10 @@
                                 <TextBlock Text="{Binding UserName}"
                                            Foreground="{StaticResource ContentBlackColorBrush}"
                                            FontSize="30" />
-                                <TextBlock Grid.Row="1"
+                                <!--<TextBlock Grid.Row="1"
                                            Foreground="{StaticResource ContentGrayColorBrush}"
                                            FontSize="20"
-                                           Text="{Binding GoalCount,Converter={StaticResource CountToGoalStringConverter}}" />
+                                           Text="{Binding GoalCount,Converter={StaticResource CountToGoalStringConverter}}" />-->
                             </Grid>
                         </Grid>
                     </DataTemplate>

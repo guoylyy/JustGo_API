@@ -14,7 +14,11 @@ namespace Archive.Converter
         {
             var url = value as string;
 
-            return url == null ? null:new BitmapImage(new Uri(url));
+            if (string.IsNullOrEmpty(url))
+            {
+                return null;
+            }
+            return new BitmapImage(new Uri(url));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

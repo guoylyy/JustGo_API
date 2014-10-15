@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Archive.Datas;
 
 namespace Archive.ViewModel
@@ -44,18 +45,32 @@ namespace Archive.ViewModel
             FollowPersons = new ObservableCollection<User>();
         }
 
-        public async Task LoadFollowers()
+        public async Task LoadFollowers(string userId)
         {
             FollowPersons.Clear();
-            await ServerApi.GetOtherFollowersAsync(Global.LoginUser.Token, FollowPersons,Global.SelectedUser.UserId);
-            NotifyPropertyChanged("OtherGroupedFollow");
+            if (await ServerApi.GetOtherFollowersAsync(FollowPersons, userId))
+            {
+                NotifyPropertyChanged("OtherGroupedFollow");
+            }
+            else
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(StaticMethods.ShowRequestFailedToast);
+            }
+
         }
 
-        public async Task LoadFollowings()
+        public async Task LoadFollowings(string userId)
         {
             FollowPersons.Clear();
-            await ServerApi.GetOtherFollowingsAsync(Global.LoginUser.Token, FollowPersons,Global.SelectedUser.UserId);
-            NotifyPropertyChanged("OtherGroupedFollow");
+            if (await ServerApi.GetOtherFollowingsAsync(FollowPersons, userId))
+            {
+                NotifyPropertyChanged("OtherGroupedFollow");
+            }
+            else
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(StaticMethods.ShowRequestFailedToast);
+            }
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

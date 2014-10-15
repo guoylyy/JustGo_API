@@ -54,6 +54,7 @@ namespace Archive.Pages
                 await ViewModelLocator.FollowViewModel.LoadFollowings();
                 TopicTextBlock.Text = ViewModelLocator.FollowViewModel.FollowPersons.Count + " FOLLOWINGS";
             }
+            ProgressGrid.Visibility = Visibility.Collapsed;
         }
 
         private void PeopleLongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)

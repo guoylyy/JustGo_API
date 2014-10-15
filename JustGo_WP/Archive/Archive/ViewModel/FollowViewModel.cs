@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Archive.Datas;
 
 namespace Archive.ViewModel
@@ -68,15 +69,29 @@ namespace Archive.ViewModel
         public async Task LoadFollowers()
         {
             FollowPersons.Clear();
-            await ServerApi.GetUserFollowersAsync(Global.LoginUser.Token, FollowPersons);
-            NotifyPropertyChanged("GroupedFollow");
+            if (await ServerApi.GetUserFollowersAsync(Global.LoginUser.Token, FollowPersons))
+            {
+                NotifyPropertyChanged("GroupedFollow");
+            }
+            else
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(StaticMethods.ShowRequestFailedToast);
+            }
+            
         }
 
         public async Task LoadFollowings()
         {
             FollowPersons.Clear();
-            await ServerApi.GetUserFollowingsAsync(Global.LoginUser.Token, FollowPersons);
-            NotifyPropertyChanged("GroupedFollow");
+            if (await ServerApi.GetUserFollowingsAsync(Global.LoginUser.Token, FollowPersons))
+            {
+                NotifyPropertyChanged("GroupedFollow");
+            }
+            else
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(StaticMethods.ShowRequestFailedToast);
+            }
+            
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

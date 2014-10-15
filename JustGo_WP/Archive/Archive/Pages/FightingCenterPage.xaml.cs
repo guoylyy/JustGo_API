@@ -10,12 +10,14 @@ using Archive.Datas;
 using Archive.ViewModel;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Archive.Pages
 {
     public partial class FightingCenterPage : PhoneApplicationPage
     {
         private bool _isOtherUser;
+        private bool _needLoadData;
 
         public FightingCenterPage()
         {
@@ -34,21 +36,24 @@ namespace Archive.Pages
             {
                 _isOtherUser = true;
             }
+            _needLoadData = e.NavigationMode == NavigationMode.New;
         }
 
-        private void FightingCenterPage_Loaded(object sender, RoutedEventArgs e)
+        private async void FightingCenterPage_Loaded(object sender, RoutedEventArgs e)
         {
             if (_isOtherUser)
             {
-                ViewModelLocator.FightingCenterViewModel.LoadOtherData();
+                await ViewModelLocator.FightingCenterViewModel.LoadOtherData(_needLoadData);
                 FightingImage.Source = new BitmapImage(new Uri(Global.SelectedUser.ImageSource));
             }
             else
             {
-                ViewModelLocator.FightingCenterViewModel.LoadData();
+                await ViewModelLocator.FightingCenterViewModel.LoadData(_needLoadData);
                 FightingImage.Source = new BitmapImage(new Uri(Global.LoginUser.ImageSource));
             }
-            
+
+            ProgressGrid.Visibility = Visibility.Collapsed;
+            ContentPanel.Visibility = Visibility.Visible;
         }
 
         private void MoreComments_OnClick(object sender, RoutedEventArgs e)
@@ -59,6 +64,21 @@ namespace Archive.Pages
         private void FightingList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Global.SelectedUserRecord = FightingList.SelectedItem as UserRecord;
+        }
+
+        private void CommentsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var listBox = (ListBox)sender;
+            if (listBox.SelectedItems != null && listBox.SelectedItems.Count != 0)
+            {
+                var comment = (Comment)listBox.SelectedItems[0];
+                Global.SelectedUser = comment.User;
+            }
+        }
+
+        private void CommentGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/UserProfilePage.xaml", UriKind.Relative));
         }
     }
 }

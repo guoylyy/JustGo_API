@@ -30,12 +30,15 @@ namespace Archive.Pages
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
-            TypeName.Text = Global.AddGoalType;
+            TypeName.Text = Global.AddGoalType.ToUpper();
         }
 
         private async void LoadData()
         {
-            await ServerApi.GetCategoryGoalsAsync(Goals, Global.AddGoalType);
+            if (!await ServerApi.GetCategoryGoalsAsync(Goals, Global.AddGoalType))
+            {
+                StaticMethods.ShowRequestFailedToast();
+            }
         }
 
         private void DirectGoalListBox_Tap(object sender, System.Windows.Input.GestureEventArgs e)

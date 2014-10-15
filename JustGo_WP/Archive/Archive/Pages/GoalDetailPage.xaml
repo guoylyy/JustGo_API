@@ -28,185 +28,192 @@
     
         <Grid x:Name="LayoutRoot"
               Background="White">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+            
 
-            <Grid Margin="0,27,0,0"
-                  Height="280">
+            <Grid x:Name="ContentGrid"
+                  Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-
-                <Image Source="{Binding ImageUrl, Converter={StaticResource UrlStringToBitmapConverter}}"
-                       Stretch="UniformToFill"
-                       Grid.RowSpan="4" />
-                <Rectangle Grid.Row="0"
-                           Grid.RowSpan="4"
-                           Fill="Black"
-                           Opacity="0.4" />
-                <TextBlock Grid.Row="0"
-                           FontSize="22"
-                           Text="Goal detail"
-                           Margin="20,40,0,0" />
-                <TextBlock x:Name="GoalNameBlock"
-                           Text="{Binding GoalName}"
-                           Grid.Row="1"
-                           FontSize="34"
-                           TextAlignment="Center"
-                           Margin="0,40,0,0" />
-                <Button Grid.Row="2"
-                        Content="JOIN"
-                        Background="{StaticResource SystemBlueBrush}"
-                        BorderThickness="0"
-                        Width="160"
-                        Click="JoinButton_OnClick"/>
-                <TextBlock Grid.Row="2"
-                           FontSize="22"
-                           Text="JOINED"
-                           TextAlignment="Center"
-                           Margin="0,20,0,0" 
-                           Visibility="Collapsed"/>
-            </Grid>
-
-            <ScrollViewer Grid.Row="1">
-                <Grid>
+                
+                <Grid Margin="0,27,0,0"
+                      Height="288">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-            <TextBlock Text="Description"
-                       Foreground="{StaticResource SystemBlueBrush}"
-                       FontSize="22"
-                       Margin="20,10,0,0" />
-            <TextBlock x:Name="DescriptionBlock"
-                       Text="{Binding Description}"
-                       Grid.Row="1"
-                       Foreground="{StaticResource ContentBlackColorBrush}"
-                       FontSize="24"
-                       Margin="20,5,0,0"
-                       TextWrapping="Wrap" />
 
-            <!--<TextBlock x:Name="ParticipantsBlock"
-                       Grid.Row="2"
-                       Text="{Binding Joins, Converter={StaticResource NumberToParticipantsConverter}}"
-                       Foreground="{StaticResource SystemBlueBrush}"
-                       FontSize="22"
-                       Margin="20,20,0,0" />
-            <ListBox x:Name="ParticipantsImageList"
-                     Grid.Row="3"
-                     ItemsSource="{Binding Participants}"
-                     Margin="10,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Image Width="46"
-                               Height="46"
-                               Source="{Binding ImageSource, Converter={StaticResource StringToBitmapConverter}}"
-                               Stretch="UniformToFill"
-                               Margin="10,0,0,0" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>-->
+                    <Image Source="{Binding ImageUrl, Converter={StaticResource UrlStringToBitmapConverter}}"
+                           Stretch="UniformToFill"
+                           Grid.RowSpan="4" />
+                    <Rectangle Grid.Row="0"
+                               Grid.RowSpan="4"
+                               Fill="Black"
+                               Opacity="0.4" />
+                    <TextBlock Grid.Row="0"
+                               FontSize="22"
+                               Text="GOAL DETAIL"
+                               Margin="20,40,0,0" />
+                    <TextBlock x:Name="GoalNameBlock"
+                               Text="{Binding GoalName}"
+                               Grid.Row="1"
+                               FontSize="34"
+                               TextAlignment="Center"
+                               Margin="0,40,0,0" />
+                    <Button Grid.Row="2"
+                            x:Name="JoinButton"
+                            Content="JOIN"
+                            Background="{StaticResource SystemBlueBrush}"
+                            BorderThickness="0"
+                            Width="160"
+                            Click="JoinButton_OnClick"/>
+                    <TextBlock Grid.Row="2"
+                               x:Name="JoinedTextBlock"
+                               Foreground="White"
+                               Width="160"
+                               TextAlignment="Center"
+                               Text="joined" 
+                               FontSize="22.667" 
+                               FontFamily="Segoe WP Semibold"
+                               Margin="0,15,0,0"/>
+                </Grid>
 
-            <TextBlock Grid.Row="2"
+                <ScrollViewer Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Description"
+                           Foreground="{StaticResource SystemBlueBrush}"
+                           FontSize="22"
+                           Margin="20,10,0,0" />
+                        <TextBlock x:Name="DescriptionBlock"
+                           Text="{Binding Description}"
+                           Grid.Row="1"
+                           Foreground="{StaticResource ContentBlackColorBrush}"
+                           FontSize="24"
+                           Margin="20,5,0,0"
+                           TextWrapping="Wrap" />
+
+                <!--<TextBlock x:Name="ParticipantsBlock"
+                    Grid.Row="2"
+                    Text="{Binding Joins, Converter={StaticResource NumberToParticipantsConverter}}"
+                    Foreground="{StaticResource SystemBlueBrush}"
+                    FontSize="22"
+                    Margin="20,20,0,0" />
+                <ListBox x:Name="ParticipantsImageList"
+                         Grid.Row="3"
+                         ItemsSource="{Binding Participants}"
+                         Margin="10,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Image Width="46"
+                                   Height="46"
+                                   Source="{Binding ImageSource, Converter={StaticResource StringToBitmapConverter}}"
+                                   Stretch="UniformToFill"
+                                   Margin="10,0,0,0" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>-->
+
+                    <TextBlock Grid.Row="2"
                        Text="How others doing"
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontSize="22"
                        Margin="20,20,0,0" />
 
-            <phone:LongListSelector ItemsSource="{Binding Records}"
-                     Grid.Row="3">
-                <!--<phone:LongListSelector.DataContext>
-                    <viewModel:RecordsForGoalViewModel />
-                </phone:LongListSelector.DataContext>-->
-                <phone:LongListSelector.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="0,10,0,0">
-                            <StackPanel Margin="20,0,0,0">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                    <phone:LongListSelector ItemsSource="{Binding Records}"
+                                    x:Name="RecordsList"
+                                    Grid.Row="3"
+                                    SelectionChanged="RecordsList_OnSelectionChanged">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="20,10,0,0">
+                                    <Grid x:Name="UserGrid"
+                                  Tap="UserGrid_OnTap">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <Image Width="46"
-                                           Height="46"
-                                           Grid.RowSpan="2"
-                                           Source="{Binding User.ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}"
-                                           Margin="0,0,10,0" />
-                                    <TextBlock Grid.Column="1"
-                                               Grid.Row="0"
-                                               Text="{Binding User.UserName}"
-                                               TextWrapping="Wrap"
-                                               Foreground="#FF656565"
-                                               FontSize="22"
-                                               FontFamily="Helvetica-Bold"
-                                               FontWeight="Bold" />
-                                    <TextBlock Grid.Column="1"
-                                               Grid.Row="1"
-                                               Text="{Binding RecordTime,Converter={StaticResource DateTimeToStringConverter}}"
-                                               Foreground="#FF999999" />
-                                </Grid>
+                                        <Image Width="46"
+                                               Height="46"
+                                               Grid.RowSpan="2"
+                                               Source="{Binding User.ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}"
+                                               Margin="0,0,10,0" 
+                                               Stretch="UniformToFill"/>
+                                        <TextBlock Grid.Column="1"
+                                            Grid.Row="0"
+                                            Text="{Binding User.UserName}"
+                                            TextWrapping="Wrap"
+                                            Foreground="#FF656565"
+                                            FontSize="22"
+                                            FontFamily="Helvetica-Bold"
+                                            FontWeight="Bold" />
+                                        <TextBlock Grid.Column="1"
+                                            Grid.Row="1"
+                                            Text="{Binding RecordTime,Converter={StaticResource DateTimeToStringConverter}}"
+                                            Foreground="#FF999999" />
+                                    </Grid>
 
-                                <TextBlock Text="{Binding RecordContent}"
-                                           Foreground="{StaticResource ContentBlackColorBrush}"
-                                           FontSize="22"
-                                           TextWrapping="Wrap" />
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Path Data="F1M24.327,8.788C24.327,4.868 21.647,1.689 18.341,1.689 16.067,1.689 14.09,3.192 13.076,5.405 12.062,3.192 10.085,1.689 7.811,1.689 4.506,1.689 1.825,4.868 1.825,8.788 1.825,11.075 2.738,13.108 4.154,14.406 4.154,14.406 4.096,14.419 4.096,14.419 8.178,18.647 12.26,19.235 12.967,22.986 12.967,22.986 13.185,22.986 13.185,22.986 13.892,19.235 17.973,18.647 22.056,14.419 22.056,14.419 21.998,14.406 21.998,14.406 23.414,13.108 24.327,11.075 24.327,8.788z"
-                                          Height="26"
-                                          Width="28"
-                                          Stroke="#FFF15126"
-                                          Margin="0,0,10,0" />
-                                    <TextBlock Grid.Column="1"
-                                               Foreground="#FFF15126"
-                                               FontFamily="Helvetica-Bold"
-                                               FontSize="26"
-                                               Text="{Binding AllAwesomeCount}"
-                                               Margin="0,0,40,0" />
-                                    <Path Data="F1M20.122,1.8C20.122,1.8 7.772,1.8 7.772,1.8 4.375,1.8 1.597,4.579 1.597,7.975 1.597,7.975 1.597,12.092 1.597,12.092 1.597,15.488 4.375,18.267 7.772,18.267 7.772,18.267 8.801,18.267 8.801,18.267 8.801,18.267 8.801,24.442 8.801,24.442 8.801,24.442 15.858,18.267 15.858,18.267 15.858,18.267 20.122,18.267 20.122,18.267 23.518,18.267 26.297,15.488 26.297,12.092 26.297,12.092 26.297,7.975 26.297,7.975 26.297,4.579 23.518,1.8 20.122,1.8"
-                                          Height="26"
-                                          Width="28"
-                                          Grid.Column="2"
-                                          Stroke="#FF226CB9"
-                                          VerticalAlignment="Top"
-                                          Margin="0,0,10,0" />
-                                    <TextBlock Grid.Column="3"
-                                               Foreground="#FF226CB9"
-                                               FontFamily="Helvetica-Bold"
-                                               FontSize="26"
-                                               Text="{Binding AllCommentsCount}" />
-                                </Grid>
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </phone:LongListSelector.ItemTemplate>
-            </phone:LongListSelector>
-            <!--<HyperlinkButton Grid.Row="4"
+                                    <TextBlock Text="{Binding RecordContent}"
+                                        Foreground="{StaticResource ContentBlackColorBrush}"
+                                        FontSize="22"
+                                        TextWrapping="Wrap" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Path Data="F1M24.327,8.788C24.327,4.868 21.647,1.689 18.341,1.689 16.067,1.689 14.09,3.192 13.076,5.405 12.062,3.192 10.085,1.689 7.811,1.689 4.506,1.689 1.825,4.868 1.825,8.788 1.825,11.075 2.738,13.108 4.154,14.406 4.154,14.406 4.096,14.419 4.096,14.419 8.178,18.647 12.26,19.235 12.967,22.986 12.967,22.986 13.185,22.986 13.185,22.986 13.892,19.235 17.973,18.647 22.056,14.419 22.056,14.419 21.998,14.406 21.998,14.406 23.414,13.108 24.327,11.075 24.327,8.788z"
+                                        Height="26"
+                                        Width="28"
+                                        Stroke="#FFF15126"
+                                        Margin="0,0,10,0" />
+                                        <TextBlock Grid.Column="1"
+                                            Foreground="#FFF15126"
+                                            FontFamily="Helvetica-Bold"
+                                            FontSize="26"
+                                            Text="{Binding AllAwesomeCount}"
+                                            Margin="0,0,40,0" />
+                                        <Path Data="F1M20.122,1.8C20.122,1.8 7.772,1.8 7.772,1.8 4.375,1.8 1.597,4.579 1.597,7.975 1.597,7.975 1.597,12.092 1.597,12.092 1.597,15.488 4.375,18.267 7.772,18.267 7.772,18.267 8.801,18.267 8.801,18.267 8.801,18.267 8.801,24.442 8.801,24.442 8.801,24.442 15.858,18.267 15.858,18.267 15.858,18.267 20.122,18.267 20.122,18.267 23.518,18.267 26.297,15.488 26.297,12.092 26.297,12.092 26.297,7.975 26.297,7.975 26.297,4.579 23.518,1.8 20.122,1.8"
+                                        Height="26"
+                                        Width="28"
+                                        Grid.Column="2"
+                                        Stroke="#FF226CB9"
+                                        VerticalAlignment="Top"
+                                        Margin="0,0,10,0" />
+                                        <TextBlock Grid.Column="3"
+                                            Foreground="#FF226CB9"
+                                            FontFamily="Helvetica-Bold"
+                                            FontSize="26"
+                                            Text="{Binding AllCommentsCount}" />
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                    <!--<HyperlinkButton Grid.Row="4"
                              Content="see more"
                              FontSize="22"
                              Foreground="#FF999999"
@@ -215,6 +222,20 @@
                              FontFamily="Helvetica-Bold" />-->
                 </Grid>
             </ScrollViewer>
+            </Grid>
+            
+
+            <Grid x:Name="ProgressGrid"
+                  Background="#7F000000">
+                <ProgressBar IsIndeterminate="True" 
+                             Foreground="{StaticResource SystemBlueBrush}"/>
+                <TextBlock Text="Loading"
+                           TextAlignment="Center"
+                           Foreground="{StaticResource SystemBlueBrush}"
+                           Margin="0,40,0,0" 
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+       
         </Grid>
 
 </phone:PhoneApplicationPage>

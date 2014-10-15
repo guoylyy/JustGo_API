@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Archive.Datas;
 using Archive.Pages;
+using Archive.ViewModel;
 
 namespace Archive
 {
@@ -27,6 +28,6 @@ namespace Archive
         public static string Token { get; set; }
         public static User SelectedUser { get; set; }
 
-        public static bool IsNetworkEnable { get; set; }
+        public static Comment AddingComment { get; set; }
     }
 }

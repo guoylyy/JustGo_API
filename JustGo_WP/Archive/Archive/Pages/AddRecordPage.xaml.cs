@@ -23,7 +23,7 @@ namespace Archive.Pages
 
         private void AddRecordPage_Loaded(object sender, RoutedEventArgs e)
         {
-            GoalNameTextBlock.Text = Global.SelectedGoalJoin.GoalName;
+            GoalNameTextBlock.Text = Global.SelectedGoalJoin.GoalName.ToUpper();
         }
 
         private void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
@@ -33,6 +33,7 @@ namespace Archive.Pages
                 User = Global.LoginUser,
                 RecordContent = TextBox.Text,
                 RecordTime = DateTime.Now,
+                GoalId = Global.SelectedGoalJoin.GoalId,
                 AwesomeUsers = new ObservableCollection<User>(),
                 Comments = new ObservableCollection<Comment>()
             };

@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 using Newtonsoft.Json.Linq;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
@@ -21,64 +22,39 @@ namespace Archive.Pages
         public SettingPage()
         {
             InitializeComponent();
+            Loaded += SettingPage_Loaded;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SettingPage_Loaded(object sender, RoutedEventArgs e)
         {
-            //string postString = string.Format("token={0}", Global.Token);
-            //string url = ServerApi.Logout;
-
-            //HttpWebRequest request = WebRequest.CreateHttp(new Uri(url));
-            //request.Method = "POST";
-            //request.ContentType = ServerApi.FormContentType;
-
-            //using (var stream = await Task.Factory.FromAsync<Stream>(request.BeginGetRequestStream, request.EndGetRequestStream, null))
-            //{
-            //    //将用户名和密码写入post请求中
-            //    byte[] postBytes = Encoding.UTF8.GetBytes(postString);
-            //    await stream.WriteAsync(postBytes, 0, postBytes.Length);
-            //}
-
-            //request.BeginGetResponse(ResphonseCallBack, request);
-            //App.RootFrame.UriMapper = null;
-            //NavigationService.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative));
-        }
-
-        private void ResphonseCallBack(IAsyncResult ar)
-        {
-            string response;
-            try
+            if (StaticMethods.IsUserLogin())
             {
-                HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
-
-                WebResponse webResponse = request.EndGetResponse(ar);
-                using (Stream stream = webResponse.GetResponseStream())
-                {
-                    StreamReader sr = new StreamReader(stream);
-                    response = sr.ReadToEnd();
-
-                    Debug.WriteLine(response);
-                    JObject jObject = JObject.Parse(response);
-                    if ((string)jObject["result"] == "success")
-                    {
-                        StaticMethods.DeleteToken();
-                        //Dispatcher.BeginInvoke(
-                        //    () => NavigationService.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative)));
-
-                    }
-
-                    sr.Close();
-                }
-            }
-            catch (WebException we)
-            {
-                Debug.WriteLine(we.Message);
+                LogoutButton.Visibility = Visibility.Visible;
             }
         }
 
         private void NotificationsGrid_OnTap(object sender, GestureEventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/NotificationSettingPage.xaml", UriKind.Relative));
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            var fb = FacebookAgent.Current;
+            fb.Logout();
+            StaticMethods.DeleteUserId();
+
+            Global.LoginUser = null;
+            NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+        }
+
+        private void FeedbackGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            var emailTask = new EmailComposeTask();
+            emailTask.Subject = "Insist Feedback";
+            emailTask.To = "18801790649@163.com";
+
+            emailTask.Show();
         }
     }
 }

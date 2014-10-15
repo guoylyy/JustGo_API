@@ -1,30 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Archive.Datas;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-using Archive.Datas;
+using System.Windows;
 
 namespace Archive.ViewModel
 {
     public class RecordsForGoalViewModel
     {
         public ObservableCollection<UserRecord> Records { get; set; }
+        public bool IsLoaded { get; private set; }
 
         public RecordsForGoalViewModel()
         {
             Records = new ObservableCollection<UserRecord>();
-
-            LoadRecords();
         }
 
-        private async void LoadRecords()
+        public async Task<bool> LoadRecords(bool isForce = false)
         {
-            await ServerApi.GetAllRecordsForGoalAsync(Records, Global.SelectedGoalJoin.GoalId);
-
+            await Task.Delay(100);
+            if (isForce || !IsLoaded)
+            {
+                Records.Clear();
+                if (!await ServerApi.GetAllRecordsForGoalAsync(Records, Global.SelectedGoalJoin.GoalId))
+                {
+                    Deployment.Current.Dispatcher.BeginInvoke(StaticMethods.ShowRequestFailedToast);
+                    return false;
+                }
+                IsLoaded = true;
+            }
+            return true;
         }
     }
 }

@@ -27,8 +27,8 @@ namespace Archive.Pages
         private void SendViaMessageGrid_OnTap(object sender, GestureEventArgs e)
         {
             var smsComposeTask = new SmsComposeTask();
-            //todo:加入应用链接
-            smsComposeTask.Body = "Try this new application. It's great!";
+            smsComposeTask.Body = "I'm using Insist to achieve my goals. Come and join me to insist on daily habits. We could look after each other! Get the app here: http://www.windowsphone.com/s?appid=46f060c1-9afc-4082-9a0c-d7f41dabf68c"
+                + Environment.NewLine + "Thanks";
 
             smsComposeTask.Show();
         }
@@ -37,8 +37,8 @@ namespace Archive.Pages
         {
             var emailTask = new EmailComposeTask();
             emailTask.Subject = "Suggest App";
-            //todo:加入应用链接
-            emailTask.Body = "I Found a great App, you must try it!";
+            emailTask.Body =
+                "I'm using Insist to achieve my goals. Come and join me to insist on daily habits. We could look after each other! Get the app here: http://www.windowsphone.com/s?appid=46f060c1-9afc-4082-9a0c-d7f41dabf68c";
 
             emailTask.Show();
         }

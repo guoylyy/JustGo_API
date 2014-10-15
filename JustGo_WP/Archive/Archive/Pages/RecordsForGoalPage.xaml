@@ -31,11 +31,11 @@
                               ForegroundColor="#FF23A7FC"
                               Mode="Minimized">
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/refresh2.png"
-                                            Text="refresh" />
+                                            Text="refresh"
+                                            Click="ApplicationBarIconButton_OnClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 
-    <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
           Background="White">
         <Grid.RowDefinitions>
@@ -43,14 +43,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--TitlePanel 包含应用程序的名称和页标题-->
         <Grid x:Name="HeadGrid"
               Margin="24,27,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Goal - "
+            <TextBlock Text="GOAL - "
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontFamily="Segoe WP Semibold"
                        FontSize="22" />
@@ -61,18 +60,19 @@
                        FontSize="22" />
         </Grid>
 
-
-        <!--ContentPanel - 在此处放置其他内容-->
         <Grid x:Name="ContentPanel"
               Grid.Row="1"
-              Margin="12,0,12,0">
+              Margin="12,0,12,0"
+              Opacity="0">
 
             <Rectangle Fill="#FFEDEDED"
+                       x:Name="Rectangle"
                        HorizontalAlignment="Left"
-                       Height="672"
-                       Margin="38,69,0,0"
+                       Height="710"
+                       Margin="38,10,0,0"
                        VerticalAlignment="Top"
-                       Width="7" />
+                       Width="7" 
+                       Visibility="Collapsed"/>
 
             <phone:LongListSelector x:Name="RecordList"
                                     ItemsSource="{Binding Records}"
@@ -98,7 +98,7 @@
 
                             <StackPanel Grid.Column="1"
                                         Margin="10,0,0,0">
-                                <Grid>
+                                <Grid Tap="UserHeaderGrid_OnTap">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -106,6 +106,7 @@
                                     
                                     <Image Width="46"
                                            Height="46"
+                                           Stretch="UniformToFill"
                                            Source="{Binding User.ImageSource, Converter={StaticResource UrlStringToBitmapConverter}}" />
 
                                     <Grid Grid.Column="1"
@@ -182,10 +183,12 @@
                                     <ListBox Grid.Column="1"
                                              Grid.Row="0"
                                              ItemsSource="{Binding Comments}"
-                                             ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                             SelectionMode="Single"
+                                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                             SelectionChanged="CommentsList_OnSelectionChanged">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid>
+                                                <Grid Tap="CommentGrid_OnTap">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
@@ -228,6 +231,19 @@
                 </phone:LongListSelector.ItemTemplate>
             </phone:LongListSelector>
 
+        </Grid>
+
+        <Grid x:Name="ProgressGrid"
+              Grid.RowSpan="2"
+              Grid.Row="0"
+              Background="#7F000000">
+            <ProgressBar IsIndeterminate="True" 
+                             Foreground="{StaticResource SystemBlueBrush}"/>
+            <TextBlock Text="Loading"
+                           TextAlignment="Center"
+                           Foreground="{StaticResource SystemBlueBrush}"
+                           Margin="0,40,0,0" 
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>
     </Grid>
 

@@ -5,6 +5,7 @@
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:local="clr-namespace:Archive"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
@@ -13,7 +14,8 @@
                             mc:Ignorable="d"
                             shell:SystemTray.IsVisible="True"
                             shell:SystemTray.Opacity="0.01"
-                            shell:SystemTray.ForegroundColor="#FF23A7FC">
+                            shell:SystemTray.ForegroundColor="#FF23A7FC"
+                            local:TiltEffect.IsTiltEnabled="True">
 
     <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
@@ -33,20 +35,18 @@
         <Grid x:Name="ContentPanel"
               Grid.Row="1">
             <ListBox x:Name="GoalTypeListBox"
-                     ItemsSource="{Binding GoalTypes}"
-                     Foreground="{StaticResource ContentBlackColorBrush}"
-                     Tap="GoalTypeListBox_Tap"
-                     Margin="0,31,0,0">
+                     Margin="0,20,0,0"
+                     SelectionChanged="GoalTypeListBox_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}"
-                                   FontSize="40"
-                                   Margin="22,10,0,0"/>
+                        <Grid Margin="22,10,0,0"
+                              Tap="UIElement_OnTap">
+                            <TextBlock Text="{Binding}"
+                                       FontSize="40"
+                                       Foreground="{StaticResource ContentBlackColorBrush}"/>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-                <!--<ListBoxItem Content="test text"
-                             FontSize="50"
-                             Margin="24,0,0,0" />-->
             </ListBox>
         </Grid>
     </Grid>

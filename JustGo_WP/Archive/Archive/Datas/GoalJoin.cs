@@ -66,6 +66,7 @@ namespace Archive.Datas
                     _passedDays = value;
                     NotifyPropertyChanged("PassedDays");
                     NotifyPropertyChanged("LeftDays");
+                    NotifyPropertyChanged("IsDone");
                 }
             }
         }
@@ -113,7 +114,7 @@ namespace Archive.Datas
         {
             get
             {
-                return _timeSpan - PassedDays;
+                return TimeSpan - PassedDays;
             }
         }
 
@@ -148,6 +149,48 @@ namespace Archive.Datas
         public string GoalTracksId
         {
             get { return GoalId + "&" + StartDate.ToString("s").Replace(':',' '); }
+        }
+
+        /// <summary>
+        /// 判断目标是否已经结束
+        /// </summary>
+        public bool IsDone 
+        {
+            get { return LeftDays == 0; } 
+        }
+
+        public bool IsTodayPass
+        {
+            get
+            {
+                bool value = false;
+                var frequency = Frequency.Split(';');
+                switch (DateTime.Now.DayOfWeek)
+                {
+                    case DayOfWeek.Sunday:
+                        value = frequency[0] == "0";
+                        break;
+                    case DayOfWeek.Monday:
+                        value = frequency[1] == "0";
+                        break;
+                    case DayOfWeek.Tuesday:
+                        value = frequency[2] == "0";
+                        break;
+                    case DayOfWeek.Wednesday:
+                        value = frequency[3] == "0";
+                        break;
+                    case DayOfWeek.Thursday:
+                        value = frequency[4] == "0";
+                        break;
+                    case DayOfWeek.Friday:
+                        value = frequency[5] == "0";
+                        break;
+                    case DayOfWeek.Saturday:
+                        value = frequency[6] == "0";
+                        break;
+                }
+                return value;
+            }
         }
 
         /// <summary>

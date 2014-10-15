@@ -38,11 +38,24 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel 包含应用程序的名称和页标题-->
-        <TextBlock Text="NOTIFICATIONS(2)"
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="NOTIFICATIONS("
                    FontFamily="Segoe WP Semibold"
                    FontSize="22"
                    Foreground="{StaticResource SystemBlueBrush}"
                    Margin="25,27,0,0" />
+            <TextBlock Text="{Binding Notifications.Count}"
+                   FontFamily="Segoe WP Semibold"
+                   FontSize="22"
+                   Foreground="{StaticResource SystemBlueBrush}"
+                   Margin="0,27,0,0" />
+            <TextBlock Text=")"
+                   FontFamily="Segoe WP Semibold"
+                   FontSize="22"
+                   Foreground="{StaticResource SystemBlueBrush}"
+                   Margin="0,27,0,0" />
+        </StackPanel>
+        
 
         <!--ContentPanel - 在此处放置其他内容-->
         <Grid x:Name="ContentPanel"

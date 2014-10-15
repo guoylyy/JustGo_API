@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Archive.Datas;
 
 namespace Archive.ViewModel
@@ -31,7 +32,18 @@ namespace Archive.ViewModel
             //    Content = "dafdirtjiaof",
             //    NotificationTime = DateTime.Now
             //});
-            await ServerApi.GetNotificationAsync(Global.LoginUser.Token, Notifications);
+            switch (await ServerApi.GetNotificationAsync(Global.LoginUser.Token, Notifications))
+            {
+                case -1:
+                    Deployment.Current.Dispatcher.BeginInvoke(StaticMethods.ShowRequestFailedToast);
+                    break;
+                case 0:
+                    Deployment.Current.Dispatcher.BeginInvoke(()=>StaticMethods.ShowToast("No more new data"));
+                    break;
+                case 1:
+                    break;
+            }
+            
         }
     }
 }

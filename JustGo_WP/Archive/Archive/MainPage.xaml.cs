@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
+﻿using System.Linq;
+using Archive.Datas;
+using Archive.ViewModel;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Archive.Datas;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using Archive.Resources;
-using Archive.ViewModel;
-using Newtonsoft.Json.Linq;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Archive
@@ -27,8 +17,7 @@ namespace Archive
     {
         private ApplicationBar _goalApplicationBar;
         private ApplicationBar _profileApplicationBar;
-        private FacebookAgent _facebookAgent = new FacebookAgent();
-        private bool _hasLoadExplore;
+        private FacebookAgent _facebookAgent = FacebookAgent.Current;
 
         // 构造函数
         public MainPage()
@@ -116,12 +105,14 @@ namespace Archive
         }
 
         //切换pivot页面时的响应函数,用于改变appbar状态
-        private void ContentPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ContentPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //ApplicationBar.Mode = !e.AddedItems[0].Equals(GoalsPivotItem) ? ApplicationBarMode.Minimized : ApplicationBarMode.Default;
             if (e.AddedItems[0].Equals(ExplorePivotItem))
             {
                 ApplicationBar.IsVisible = false;
+
+                Task.Run(() => ViewModelLocator.ExploreViewModel.LoadData());
             }
             else if (e.AddedItems[0].Equals(GoalsPivotItem))
             {
@@ -134,6 +125,18 @@ namespace Archive
                 ApplicationBar = _profileApplicationBar;
                 ApplicationBar.IsVisible = true;
                 ApplicationBar.Mode = ApplicationBarMode.Minimized;
+
+                if (Global.LoginUser != null && Global.LoginUser.Token != null)
+                {
+                    if (await ServerApi.GetUserProfileAsync(Global.LoginUser))
+                    {
+                        StaticMethods.WriteUser(Global.LoginUser);
+                    }
+                    else
+                    {
+                        StaticMethods.ShowRequestFailedToast();
+                    }
+                }
             }
         }
 
@@ -171,6 +174,7 @@ namespace Archive
         private void AchievementsGrid_OnTap(object sender, GestureEventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/AchievementsPage.xaml", UriKind.Relative));
+            //MessageBox.Show("Comming soon.");
         }
 
         private void FightingGrid_OnTap(object sender, GestureEventArgs e)
@@ -186,7 +190,8 @@ namespace Archive
         //使用facebook登陆
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            //todo:获取facebook的token
+            ProgressGrid.Visibility = Visibility.Visible;
+            //await _facebookAgent.AuthorizeAsync()
             if (await _facebookAgent.AuthorizeAsync())
             {
                 var resultStr = await _facebookAgent.GetUserInfoAsync();
@@ -195,8 +200,19 @@ namespace Archive
                 var userName = UserNameTextBlock.Text = strs[1];
                 Global.LoginUser.FacebookId = strs[2];
 
-                var token = await ServerApi.LoginAsync(userName, "Just do it!", Global.LoginUser.FacebookId,imageUrl);
-                Debug.WriteLine("登陆后的token:{0}", token);
+                //var imageUrl = "http://tp2.sinaimg.cn/1847191521/180/40039469890/1";
+                //var userName = UserNameTextBlock.Text = "Cool Man";
+                //Global.LoginUser.FacebookId = "0987654321";
+
+                var token = await ServerApi.LoginAsync(userName, "Just do it!", Global.LoginUser.FacebookId, imageUrl);
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    StaticMethods.ShowRequestFailedToast();
+                    ProgressGrid.Visibility = Visibility.Collapsed;
+                    return;
+                }
+
                 Global.LoginUser.Token = token;
 
                 await ServerApi.GetUserProfileAsync(Global.LoginUser);
@@ -205,33 +221,31 @@ namespace Archive
 
                 ProfileGrid.Visibility = Visibility.Visible;
                 UnLoginGrid.Visibility = Visibility.Collapsed;
+                //ProgressGrid.Visibility = Visibility.Collapsed;
             }
-
-            
+            else
+            {
+                StaticMethods.ShowRequestFailedToast();
+            }
+            ProgressGrid.Visibility = Visibility.Collapsed;
         }
 
-        private async void MainPage_OnLoaded(object sender, RoutedEventArgs e)
+        private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (Global.LoginUser == null || Global.LoginUser.Token == null)
             {
                 ProfileGrid.Visibility = Visibility.Collapsed;
                 UnLoginGrid.Visibility = Visibility.Visible;
                 Global.LoginUser = Global.LoginUser ?? new User();
-                ProfilePivotItem.DataContext = Global.LoginUser;
             }
-
-            if (!_hasLoadExplore)
+            else
             {
-                Task.Run(() => ViewModelLocator.ExploreViewModel.LoadData());
-                _hasLoadExplore = true;
+                ProfileGrid.Visibility = Visibility.Visible;
+                UnLoginGrid.Visibility = Visibility.Collapsed;
             }
+            ProfilePivotItem.DataContext = Global.LoginUser;
 
-
-            if (Global.LoginUser.Token != null)
-            {
-                await ServerApi.GetUserProfileAsync(Global.LoginUser);
-                StaticMethods.WriteUser(Global.LoginUser);
-            }
+            StaticMethods.UpdateTile();
         }
 
         private void ExploreGrid_OnTap(object sender, GestureEventArgs e)
@@ -255,13 +269,15 @@ namespace Archive
 
         private void TopExploreGrid_OnTap(object sender, GestureEventArgs e)
         {
-            //Global.AddingGoalJoin = new GoalJoin
-            //{
-            //    GoalId = ViewModelLocator.ExploreViewModel.TopExplore.GoalId,
-            //    GoalName = ViewModelLocator.ExploreViewModel.TopExplore.GoalName,
-            //    Participants = ViewModelLocator.ExploreViewModel.TopExplore.Participants
-            //};
+            Global.AddingGoalJoin = new GoalJoin
+            {
+                GoalId = ViewModelLocator.ExploreViewModel.TopExplore.GoalId,
+                GoalName = ViewModelLocator.ExploreViewModel.TopExplore.GoalName,
+                Participants = ViewModelLocator.ExploreViewModel.TopExplore.Participants
+            };
             NavigationService.Navigate(new Uri("/Pages/GoalDetailPage.xaml", UriKind.Relative));
         }
+
+        
     }
 }

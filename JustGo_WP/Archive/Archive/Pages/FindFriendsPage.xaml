@@ -65,7 +65,7 @@
                            LineHeight="22"
                            TextAlignment="Left"
                            TextWrapping="Wrap"
-                           Text="search users"
+                           Text="Search users"
                            Margin="73,0,0,0"
                            VerticalAlignment="Center" />
             </Grid>

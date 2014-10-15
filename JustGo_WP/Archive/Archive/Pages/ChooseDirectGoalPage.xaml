@@ -6,6 +6,7 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:converter="clr-namespace:Archive.Converter"
+                            xmlns:local="clr-namespace:Archive"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
@@ -15,6 +16,7 @@
                             shell:SystemTray.IsVisible="True"
                             shell:SystemTray.Opacity="0.01"
                             shell:SystemTray.ForegroundColor="#FF23A7FC"
+                            local:TiltEffect.IsTiltEnabled="True"
                             Loaded="PhoneApplicationPage_Loaded">
 
     <phone:PhoneApplicationPage.Resources>
@@ -35,7 +37,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Goals - "
+            <TextBlock Text="GOALS - "
                        Foreground="{StaticResource SystemBlueBrush}"
                        FontFamily="Segoe WP Semibold"
                        FontSize="22" />

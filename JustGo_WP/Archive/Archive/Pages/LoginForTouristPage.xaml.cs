@@ -20,7 +20,7 @@ namespace Archive.Pages
 
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            var facebookAgent = new FacebookAgent();
+            var facebookAgent = FacebookAgent.Current;
             if (await facebookAgent.AuthorizeAsync())
             {
                 var resultStr = await facebookAgent.GetUserInfoAsync();
@@ -36,6 +36,7 @@ namespace Archive.Pages
                 await ServerApi.GetUserProfileAsync(Global.LoginUser);
                 //Global.LoginUser = user;
                 StaticMethods.WriteUser(Global.LoginUser);
+                NavigationService.GoBack();
             }
         }
     }

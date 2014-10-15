@@ -1,85 +1,146 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.IsolatedStorage;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
 using Archive.Datas;
+using Archive.ViewModel;
+using Coding4Fun.Toolkit.Controls;
+using System.IO.IsolatedStorage;
+using System.Windows;
+using Microsoft.Phone.Net.NetworkInformation;
+using Microsoft.Phone.Shell;
 
 namespace Archive
 {
     public static class StaticMethods
     {
-        private const string TokenName = "Token";
         private const string LoginUser = "LoginUser";
-
-        /// <summary>
-        /// 将token写入指定的文件中
-        /// </summary>
-        /// <param name="token">新的token字符串</param>
-        public static void WriteToken(string token)
-        {
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(TokenName))
-            {
-                IsolatedStorageSettings.ApplicationSettings.Add(TokenName,token);
-            }
-            else
-            {
-                IsolatedStorageSettings.ApplicationSettings[TokenName] = token;
-            }
-            IsolatedStorageSettings.ApplicationSettings.Save();
-        }
-        /// <summary>
-        /// 读取已保存的token
-        /// </summary>
-        /// <returns>token字符串</returns>
-        public static string ReadToken()
-        {
-            string token;
-            if (IsolatedStorageSettings.ApplicationSettings.TryGetValue(TokenName, out token))
-            {
-                return token;
-            }
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// 删除本地的Token
-        /// </summary>
-        public static void DeleteToken()
-        {
-            IsolatedStorageSettings.ApplicationSettings.Remove(TokenName);
-        }
+        private static string _loginUserId;
 
         public static void WriteUser(User user)
         {
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(LoginUser))
+            _loginUserId = user.FacebookId;
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(_loginUserId))
             {
-                IsolatedStorageSettings.ApplicationSettings.Add(LoginUser, user);
+                IsolatedStorageSettings.ApplicationSettings.Add(_loginUserId, user);
             }
             else
             {
-                IsolatedStorageSettings.ApplicationSettings[LoginUser] = user;
+                IsolatedStorageSettings.ApplicationSettings[_loginUserId] = user;
             }
             IsolatedStorageSettings.ApplicationSettings.Save();
+
+            WriteUserId();
         }
 
         public static User ReadUser()
         {
-            User loginUser;
-            if(IsolatedStorageSettings.ApplicationSettings.TryGetValue(LoginUser,out loginUser))
+            if (ReadUserId())
             {
-                return loginUser;
+                User loginUser;
+                if (IsolatedStorageSettings.ApplicationSettings.TryGetValue(_loginUserId, out loginUser))
+                {
+                    return loginUser;
+                }
             }
+
             return null;
         }
 
         public static bool IsUserLogin()
         {
             return Global.LoginUser != null && Global.LoginUser.Token != null;
+        }
+
+        private static void WriteUserId()
+        {
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(LoginUser))
+            {
+                IsolatedStorageSettings.ApplicationSettings.Add(LoginUser, _loginUserId);
+            }
+            else
+            {
+                IsolatedStorageSettings.ApplicationSettings[LoginUser] = _loginUserId;
+            }
+            IsolatedStorageSettings.ApplicationSettings.Save();
+        }
+
+        private static bool ReadUserId()
+        {
+            return IsolatedStorageSettings.ApplicationSettings.TryGetValue(LoginUser, out _loginUserId);
+        }
+
+        public static void DeleteUserId()
+        {
+            IsolatedStorageSettings.ApplicationSettings.Remove(LoginUser);
+            IsolatedStorageSettings.ApplicationSettings.Save();
+        }
+
+
+        public static void SaveGoalImage(string goalId, string imageUrl)
+        {
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(goalId))
+            {
+                IsolatedStorageSettings.ApplicationSettings.Add(goalId, imageUrl);
+            }
+            else
+            {
+                IsolatedStorageSettings.ApplicationSettings[goalId] = imageUrl;
+            }
+            IsolatedStorageSettings.ApplicationSettings.Save();
+        }
+
+        public static string ReadGoalImage(string goalId)
+        {
+            string goalUrl;
+            if (IsolatedStorageSettings.ApplicationSettings.TryGetValue(goalId, out goalUrl))
+            {
+                return goalUrl;
+            }
+            return string.Empty;
+        }
+
+        public static bool IsNetworkEnable()
+        {
+            return DeviceNetworkInformation.IsWiFiEnabled
+                   || DeviceNetworkInformation.IsCellularDataEnabled
+                   || DeviceNetworkInformation.IsNetworkAvailable;
+        }
+
+        public static void ShowRequestFailedToast()
+        {
+            var toast = new ToastPrompt
+            {
+                Message = "Network request failed",
+                MillisecondsUntilHidden = 1000,
+                Margin = new Thickness(0, -40, 0, 0)
+            };
+            toast.Show();
+        }
+
+        public static void ShowToast(string message)
+        {
+            var toast = new ToastPrompt
+            {
+                Message = message,
+                MillisecondsUntilHidden = 1000,
+                Margin = new Thickness(0, -40, 0, 0)
+            };
+            toast.Show();
+        }
+
+        public static void UpdateTile()
+        {
+            var goal = ViewModelLocator.GoalViewModel.MyGoals.FirstOrDefault(g => !g.IsFinishedToday);
+            if (goal == null) return;
+
+            var tile = ShellTile.ActiveTiles.First();
+            var data = new FlipTileData
+            {
+                BackgroundImage = new Uri("/Assets/icon_336.png", UriKind.Relative),
+                Title = "Insist",
+                BackTitle = "Insist",
+                BackContent = goal.GoalName,
+            };
+            tile.Update(data);
         }
     }
 }

@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using Archive.DataBase;
+﻿using Archive.DataBase;
 using Archive.Datas;
 using Archive.ViewModel;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Archive.Pages
 {
     public partial class MyRecordPage : PhoneApplicationPage
     {
         private ApplicationBar _myRecordApplicationBar;
+        private bool _isNewInstance;
 
         public MyRecordPage()
         {
@@ -30,6 +27,12 @@ namespace Archive.Pages
             RecordsPivotItem.DataContext = ViewModelLocator.MyRecordsViewModel;
             Loaded += GoalDetailPage_Loaded;
             LayoutUpdated += GoalDetailPage_LayoutUpdated;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            _isNewInstance = e.NavigationMode == NavigationMode.New;
         }
 
         private void InitAppbar()
@@ -68,7 +71,7 @@ namespace Archive.Pages
         {
             if (StaticMethods.IsUserLogin())
             {
-                ViewModelLocator.MyRecordsViewModel.LoadRecord();
+                ViewModelLocator.MyRecordsViewModel.LoadRecord(true);
             }
             else
             {
@@ -82,20 +85,26 @@ namespace Archive.Pages
             DoneImage.Margin = new Thickness(0, 10, (LayoutRoot.ActualWidth - TestBlock.ActualWidth) / 2 - 35, 0);
         }
 
-        void GoalDetailPage_Loaded(object sender, RoutedEventArgs e)
+        private async void GoalDetailPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!ViewModelLocator.MyRecordsViewModel.IsLoaded && StaticMethods.IsUserLogin())
+            if (StaticMethods.IsUserLogin())
             {
-                ViewModelLocator.MyRecordsViewModel.LoadRecord();
-                RecordUserImage.Source = new BitmapImage(new Uri(Global.LoginUser.ImageSource));
+                ViewModelLocator.MyRecordsViewModel.LoadRecord(_isNewInstance);
+                RecordUserImage.Source = new BitmapImage(new Uri(Global.LoginUser.ImageSourceMedium));
             }
             else
             {
-                RecordUserImage.Source = new BitmapImage(new Uri("/Assets/DefaultHeader.jpg",UriKind.Relative));
+                RecordUserImage.Source = new BitmapImage(new Uri("/Assets/DefaultHeader.jpg", UriKind.Relative));
             }
+
+            var count = await ViewModelLocator.MyRecordsViewModel.LoadRecordsCountAsync();
+            BottomGrid.Visibility = Visibility.Visible;
+            RecordsCountTextBlock.Text = count.ToString(CultureInfo.InvariantCulture);
+
+            //RecordLongListSelector.UpdateLayout();
         }
 
-        private void DoneGrid_OnTap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void DoneGrid_OnTap(object sender, GestureEventArgs e)
         {
             Global.SelectedGoalJoin.IsFinishedToday = true;
             Global.SelectedGoalJoin.PassedDays++;
@@ -109,17 +118,18 @@ namespace Archive.Pages
             };
             Global.SelectedGoalJoin.GoalTracks.Insert(0, golaTrack);
             CsvUtil.SaveGoalTrack(Global.SelectedGoalJoin.GoalTracks,Global.SelectedGoalJoin.GoalTracksId);
+            StaticMethods.UpdateTile();
+
+            if (Global.SelectedGoalJoin.IsDone) Global.SelectedGoalJoin.EndDate = DateTime.Now;
         }
 
-        private void BottomGrid_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void BottomGrid_Tap(object sender, GestureEventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/RecordsForGoalPage.xaml",UriKind.Relative));
         }
 
         private void MoreComments_OnClick(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("more comments clicked");
-            //Global.SelectedUserRecord = 
             NavigationService.Navigate(new Uri("/Pages/CommentsPage.xaml", UriKind.Relative));
         }
 
@@ -130,8 +140,22 @@ namespace Archive.Pages
 
         private void RecordLongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Debug.WriteLine(".......List selection changed");
             Global.SelectedUserRecord = RecordLongListSelector.SelectedItem as UserRecord;
+        }
+
+        private void CommentGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/UserProfilePage.xaml", UriKind.Relative));
+        }
+
+        private void CommentsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var listBox = (ListBox) sender;
+            if (listBox.SelectedItems != null && listBox.SelectedItems.Count != 0)
+            {
+                var comment = (Comment)listBox.SelectedItems[0];
+                Global.SelectedUser = comment.User;
+            }
         }
     }
 }

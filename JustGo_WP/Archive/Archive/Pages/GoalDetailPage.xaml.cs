@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net;
-using System.Windows;
+﻿using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using Archive.Datas;
 using Archive.ViewModel;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
+using System;
+using System.Linq;
+using System.Windows;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Archive.Pages
 {
@@ -22,8 +18,6 @@ namespace Archive.Pages
         {
             InitializeComponent();
             DataContext = ViewModelLocator.GoalDetailViewModel;
-            //ParticipantsImageList.DataContext = this;
-            //ViewModelLocator.GoalDetailViewModel.LoadData();
            
         }
 
@@ -31,18 +25,53 @@ namespace Archive.Pages
         {
             ViewModelLocator.GoalDetailViewModel.GoalName = Global.AddingGoalJoin.GoalName;
             ViewModelLocator.GoalDetailViewModel.Joins = Global.AddingGoalJoin.Participants;
-            //DescriptionBlock.Text = _description;
+
+            if (ViewModelLocator.GoalViewModel.MyGoals.Any(g => g.GoalId == Global.AddingGoalJoin.GoalId && !g.IsDone))
+            {
+                JoinButton.Visibility = Visibility.Collapsed;
+                JoinedTextBlock.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                JoinButton.Visibility = Visibility.Visible;
+                JoinedTextBlock.Visibility = Visibility.Collapsed;
+            }
+
             LoadData();
         }
 
-        private void LoadData()
+        private async void LoadData()
         {
-            ViewModelLocator.GoalDetailViewModel.LoadData();
+            ProgressGrid.Visibility = Visibility.Visible;
+            ContentGrid.Visibility = Visibility.Collapsed;
+
+            //await Task.Delay(20);
+            if (await ViewModelLocator.GoalDetailViewModel.LoadData())
+            {
+                ProgressGrid.Visibility = Visibility.Collapsed;
+                ContentGrid.Visibility = Visibility.Visible;    
+            }
+            else
+            {
+                ProgressGrid.Visibility = Visibility.Collapsed;
+                //ContentGrid.Visibility = Visibility.Visible;
+            }
         }
 
         private void JoinButton_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/GoalSettingPage.xaml", UriKind.Relative));
+        }
+
+        private void UserGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/UserProfilePage.xaml", UriKind.Relative));
+        }
+
+        private void RecordsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var record = (UserRecord) RecordsList.SelectedItem;
+            Global.SelectedUser = record.User;
         }
     }
 }

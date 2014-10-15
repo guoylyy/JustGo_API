@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Archive.Datas;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-using Archive.Datas;
+using System.Windows;
 
 namespace Archive.ViewModel
 {
@@ -20,7 +15,10 @@ namespace Archive.ViewModel
 
         public async void LoadData(string key)
         {
-            await ServerApi.GetSearchUserAsync(Global.LoginUser.Token, key, SearchedUsers);
+            if (!await ServerApi.GetSearchUserAsync(Global.LoginUser.Token, key, SearchedUsers))
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(StaticMethods.ShowRequestFailedToast);
+            }
         }
     }
 }

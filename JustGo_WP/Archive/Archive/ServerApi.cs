@@ -1,22 +1,17 @@
-﻿using System;
+﻿using Archive.Datas;
+using Archive.ViewModel;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
-using System.Windows.Threading;
-using Archive.Datas;
-using Archive.ViewModel;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Archive
 {
@@ -24,7 +19,7 @@ namespace Archive
     {
         #region Field
 
-        private const string ServerUrl = "http://tjcsdc.com/V1/";
+        private const string ServerUrl = "http://api.tjcsdc.com/V1/";
         private const string Category = "goal_category";//获取goal分类
         private const string Goal = "goal/";//获取goal,需加上goal分类使用
         private const string GoalJoinRecord = "goal_join_record/";//获取某个用户特定任务的record，需加上goalJoinRecord的id使用
@@ -45,6 +40,8 @@ namespace Archive
         private const string FightingCenter = "goal_record/fighting_center";//获取用户所有的record
         private const string Login = "login";//用户登录
         private const string GoalRecordList = "goal_record_list/";
+        private const string GoalJoin = "goal_join";
+        private const string GoalImage = "goal_image/";
 
         private const string OtherFightingCenter = "goal_record/{0}/fighting_center";
         private const string OtherFollower = "user/{0}/fans";
@@ -52,7 +49,7 @@ namespace Archive
 
         private const string Post = "POST";
         private const string Get = "GET";
-        private const string PostContentType = "application/x-www-form-urlencoded";
+        //private const string PostContentType = "application/x-www-form-urlencoded";
         #endregion
 
         private static ManualResetEvent _waitSignal = new ManualResetEvent(false);
@@ -76,10 +73,16 @@ namespace Archive
 
         #region GET方法
 
-        public static async Task GetCategoriesAsync(ObservableCollection<string> goalCategories)
+        /// <summary>
+        /// 获取goal分类
+        /// </summary>
+        /// <param name="goalCategories">用于保存goal分类的列表</param>
+        /// <returns>是否获取成功</returns>
+        public static async Task<bool> GetCategoriesAsync(ObservableCollection<string> goalCategories)
         {
             var url = ServerUrl + Category;
             var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -89,12 +92,14 @@ namespace Archive
                 string str = d2.category_name;
                 goalCategories.Add(str);
             }
+            return true;
         }
 
-        public static async Task GetCategoryGoalsAsync(ObservableCollection<Goal> goals, string category)
+        public static async Task<bool> GetCategoryGoalsAsync(ObservableCollection<Goal> goals, string category)
         {
             var url = ServerUrl + Goal + category;
             var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -118,17 +123,20 @@ namespace Archive
                 };
                 goals.Add(addGoal);
             }
+            return true;
         }
 
-        public static async Task GetExploreAsync(ObservableCollection<Goal> goals)
+        public static async Task<bool> GetExploreAsync(ObservableCollection<Goal> goals, Goal topExplore)
         {
             var url = ServerUrl + Explore;
             var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
-            if (d == null) return;
 
+            var isFirstExplore = true;
             var list = new List<object>(d);
+
             foreach (var explore in list)
             {
                 dynamic d2 = JsonConvert.DeserializeObject(explore.ToString());
@@ -140,12 +148,31 @@ namespace Archive
                     Participants = int.Parse(d2.joins.ToString()),
                     Description = d2.description,
                 };
-                Deployment.Current.Dispatcher.BeginInvoke(() => goals.Add(goal));
 
+                if (isFirstExplore)
+                {
+                    isFirstExplore = false;
+                    var userList = new List<object>(d2.joined_users);
+                    Deployment.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        topExplore.GoalId = goal.GoalId;
+                        topExplore.GoalName = goal.GoalName;
+                        topExplore.Image = goal.Image;
+                        topExplore.Participants = goal.Participants;
+                        topExplore.JoinedUsers = new ObservableCollection<User>();
+
+                        GetAwesomeObservableCollection(userList, topExplore.JoinedUsers);
+                    });
+                }
+                else
+                {
+                    Deployment.Current.Dispatcher.BeginInvoke(() => goals.Add(goal));
+                }
             }
+            return true;
         }
 
-        public static async Task GetUserProfileAsync(User user)
+        public static async Task<bool> GetUserProfileAsync(User user)
         {
             var url = ServerUrl + Profile;
             var header = new Dictionary<string, string>
@@ -153,7 +180,10 @@ namespace Archive
                 {"Authorization", user.Token}
             };
             var result = await GetBaseAsync(url, header);
-
+            if (string.IsNullOrEmpty(result))
+            {
+                return false;
+            }
             dynamic d = JsonConvert.DeserializeObject(result);
 
             Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -167,9 +197,10 @@ namespace Archive
                 user.UserId = d.user_id;
                 user.Description = d.description;
             });
+            return true;
         }
 
-        public static async Task GetUserFollowersAsync(string token, ObservableCollection<User> followers)
+        public static async Task<bool> GetUserFollowersAsync(string token, ObservableCollection<User> followers)
         {
             var url = ServerUrl + Followers;
             var header = new Dictionary<string, string>
@@ -177,6 +208,7 @@ namespace Archive
                 {"Authorization", token}
             };
             var result = await GetBaseAsync(url, header);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -192,9 +224,10 @@ namespace Archive
                 };
                 followers.Add(follower);
             }
+            return true;
         }
 
-        public static async Task GetUserFollowingsAsync(string token, ObservableCollection<User> followings)
+        public static async Task<bool> GetUserFollowingsAsync(string token, ObservableCollection<User> followings)
         {
             var url = ServerUrl + Followings;
             var header = new Dictionary<string, string>
@@ -202,6 +235,7 @@ namespace Archive
                 {"Authorization", token}
             };
             var result = await GetBaseAsync(url, header);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -217,32 +251,10 @@ namespace Archive
                 };
                 followings.Add(follower);
             }
-
+            return true;
         }
 
-        public static async Task GetOtherUserAsync(string token, User user)
-        {
-            var url = ServerUrl + User + "/" + user.UserId;
-            var header = new Dictionary<string, string>
-            {
-                {"Authorization", token}
-            };
-            var result = await GetBaseAsync(url, header);
-
-            dynamic d = JsonConvert.DeserializeObject(result);
-
-            user.FollowerCount = int.Parse(d.fans.ToString());
-            user.FollowingCount = int.Parse(d.followings.ToString());
-            user.ImageSource = d.header_icon;
-            user.ImageSourceMedium = d.header_icon_medium;
-            user.ImageSourceSmall = d.header_icon_small;
-            user.UserName = d.name;
-            user.UserId = d.user_id;
-            user.Description = d.description;
-            user.CanFollow = d.can_follow;
-        }
-
-        public static async Task GetSearchUserAsync(string token, string key, ObservableCollection<User> users)
+        public static async Task<bool> GetSearchUserAsync(string token, string key, ObservableCollection<User> users)
         {
             var url = ServerUrl + Search + key;
             var header = new Dictionary<string, string>
@@ -250,6 +262,7 @@ namespace Archive
                 {"Authorization", token}
             };
             var result = await GetBaseAsync(url, header);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -265,9 +278,10 @@ namespace Archive
                 };
                 users.Add(user);
             }
+            return true;
         }
 
-        public static async Task GetNotificationAsync(string token, ObservableCollection<Notification> notifications)
+        public static async Task<int> GetNotificationAsync(string token, ObservableCollection<Notification> notifications)
         {
             var url = ServerUrl + Notification;
             var header = new Dictionary<string, string>
@@ -275,11 +289,12 @@ namespace Archive
                 {"Authorization", token}
             };
             var result = await GetBaseAsync(url, header);
+            if (string.IsNullOrEmpty(result)) return -1;
 
             dynamic d = JsonConvert.DeserializeObject(result);
 
             var list = new List<object>(d);
-            if (!list.Any()) return;
+            if (!list.Any()) return 0;
 
             foreach (var o in list)
             {
@@ -297,17 +312,18 @@ namespace Archive
                 };
                 notifications.Add(notification);
             }
+            return 1;
         }
 
-        public static async Task GetRecordAwesomeAsync(ObservableCollection<User> awesomeUsers, string recordId)
+        public static async Task<bool> GetRecordAwesomeAsync(ObservableCollection<User> awesomeUsers, string recordId)
         {
             var url = ServerUrl + GoalRecordAwesome + recordId;
             var result = await GetBaseAsync(url);
-            if (string.IsNullOrEmpty(result)) return;
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
-            //todo:解析数据
+
             foreach (var o in list)
             {
                 dynamic d2 = JsonConvert.DeserializeObject(o.ToString());
@@ -317,15 +333,17 @@ namespace Archive
                 };
                 awesomeUsers.Add(user);
             }
+            return true;
         }
 
-        public static async Task GetRecordCommentsAsync(ObservableCollection<Comment> commentUsers, string recrodId)
+        public static async Task<bool> GetRecordCommentsAsync(ObservableCollection<Comment> commentUsers, string recrodId)
         {
             var url = ServerUrl + GoalRecordComment + recrodId;
             var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
-            //todo：解析数据
+            
             var list = new List<object>(d);
             foreach (var o in list)
             {
@@ -336,27 +354,27 @@ namespace Archive
                     User = new User
                     {
                         ImageSource = d2.user.header,
-                        UserName = d2.user.user_name
+                        UserName = d2.user.user_name,
+                        UserId = d2.user.user_id
                     },
                     CommentContent = d2.content
                 };
                 commentUsers.Add(comment);
             }
+            return true;
         }
 
-        public static async Task GetGoalJoinRecordAsync(ObservableCollection<UserRecord> records, string goalId, string token)
+        public static async Task<bool> GetGoalJoinRecordAsync(ObservableCollection<UserRecord> records, string goalId, string token)
         {
             var url = ServerUrl + GoalJoinRecord + goalId;
             var header = new Dictionary<string, string>();
             header.Add("Authorization", token);
 
             var result = await GetBaseAsync(url, header);
-            if (string.IsNullOrEmpty(result)) return;
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
-
-            if (list.Count == 0) return;
 
             foreach (var record in list)
             {
@@ -368,28 +386,31 @@ namespace Archive
                 var goalRecordId = d2.goal_record_id.ToString();
                 var dateTime = UnixTimeStampToDateTime(double.Parse(d2.create_time.ToString()));
 
-                var userRecord = new UserRecord()
+                var userRecord = new UserRecord
                 {
                     User = Global.LoginUser,
                     RecordContent = content,
                     GoalId = goalId,
-                    AwesomeUsers = GetAwesomeObservableCollection(awesomesList),
-                    Comments = GetCommentsObservableCollection(commentsList),
+                    AwesomeUsers = new ObservableCollection<User>(),
+                    Comments = new ObservableCollection<Comment>(),
                     RecordTime = dateTime,
                     GoalRecordId = goalRecordId
                 };
+                GetAwesomeObservableCollection(awesomesList, userRecord.AwesomeUsers);
+                GetCommentsObservableCollection(commentsList, userRecord.Comments);
                 records.Insert(0, userRecord);
             }
+            return true;
         }
 
-        public static async Task GetFightingCenter(ObservableCollection<UserRecord> records, string token)
+        public static async Task<bool> GetFightingCenter(ObservableCollection<UserRecord> records, string token)
         {
             var url = ServerUrl + FightingCenter;
             var header = new Dictionary<string, string>();
             header.Add("Authorization", token);
 
             var result = await GetBaseAsync(url, header);
-            if (string.IsNullOrEmpty(result)) return;
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -404,28 +425,32 @@ namespace Archive
                 var goalRecordId = d2.goal_record_id.ToString();
                 var goalId = d2.goal_id;
                 //bool canAwesome = d2.can_awesome;
-                //var goalName = d2.goal_name;
+                var goalName = d2.goal_name;
                 var dateTime = UnixTimeStampToDateTime(double.Parse(d2.create_time.ToString()));
 
-                var userRecord = new UserRecord()
+                var userRecord = new UserRecord
                 {
                     User = Global.LoginUser,
                     RecordContent = content,
                     GoalId = goalId,
-                    AwesomeUsers = GetAwesomeObservableCollection(awesomesList),
-                    Comments = GetCommentsObservableCollection(commentsList),
+                    AwesomeUsers = new ObservableCollection<User>(),
+                    Comments = new ObservableCollection<Comment>(),
                     RecordTime = dateTime,
-                    GoalRecordId = goalRecordId
+                    GoalRecordId = goalRecordId,
+                    GoalName = goalName
                 };
+                GetAwesomeObservableCollection(awesomesList, userRecord.AwesomeUsers);
+                GetCommentsObservableCollection(commentsList, userRecord.Comments);
                 records.Insert(0, userRecord);
             }
+            return true;
         }
 
-        public static async Task GetAllRecordsForGoalAsync(ObservableCollection<UserRecord> records, string goalId)
+        public static async Task<bool> GetAllRecordsForGoalAsync(ObservableCollection<UserRecord> records, string goalId)
         {
             var url = ServerUrl + GoalRecordList + goalId;
             var result = await GetBaseAsync(url);
-            if (string.IsNullOrEmpty(result)) return;
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -445,7 +470,7 @@ namespace Archive
                 //var goalName = d2.goal_name;
                 var dateTime = UnixTimeStampToDateTime(double.Parse(d2.create_time.ToString()));
 
-                var userRecord = new UserRecord()
+                var userRecord = new UserRecord
                 {
                     User = new User
                     {
@@ -455,21 +480,34 @@ namespace Archive
                     },
                     RecordContent = content,
                     GoalId = goalId,
-                    AwesomeUsers = GetAwesomeObservableCollection(awesomesList),
-                    Comments = GetCommentsObservableCollection(commentsList),
+                    AwesomeUsers = new ObservableCollection<User>(),
+                    Comments = new ObservableCollection<Comment>(),
                     RecordTime = dateTime,
                     GoalRecordId = goalRecordId
                 };
+                GetAwesomeObservableCollection(awesomesList,userRecord.AwesomeUsers);
+                GetCommentsObservableCollection(commentsList,userRecord.Comments);
                 records.Insert(0, userRecord);
             }
+            return true;
         }
 
-        public static async Task GetGoalDetailAsync(ObservableCollection<UserRecord> records, string goalId)
+        public static async Task<int> GetRecordsCountForGoalAsync(string goalId)
+        {
+            var url = ServerUrl + GoalDetail + goalId;
+            var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return 0;
+
+            dynamic d = JsonConvert.DeserializeObject(result);
+            return int.Parse(d.joins.ToString());
+        }
+
+        public static async Task<bool> GetGoalDetailAsync(ObservableCollection<UserRecord> records, string goalId)
         {
             var url = ServerUrl + GoalDetail + goalId;
 
             var result = await GetBaseAsync(url);
-            if (string.IsNullOrEmpty(result)) return;
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
 
@@ -493,24 +531,47 @@ namespace Archive
                     UserId = d2.publisher.user_id
                 };
 
-                var userRecord = new UserRecord()
+                var userRecord = new UserRecord
                 {
-                    //todo:改为recor对应的user
                     User = user,
                     RecordContent = content,
                     GoalId = goalId,
-                    AwesomeUsers = GetAwesomeObservableCollection(awesomesList),
-                    Comments = GetCommentsObservableCollection(commentsList),
+                    AwesomeUsers = new ObservableCollection<User>(),
+                    Comments = new ObservableCollection<Comment>(),
                     RecordTime = dateTime,
                     GoalRecordId = goalRecordId,
                     AllAwesomeCount = awesomesList.Count,
                     AllCommentsCount = commentsList.Count
                 };
+                GetAwesomeObservableCollection(awesomesList,userRecord.AwesomeUsers);
+                GetCommentsObservableCollection(commentsList, userRecord.Comments);
                 records.Insert(0, userRecord);
             }
+            return true;
         }
 
-        public static async Task GetOtherFightingCenter(ObservableCollection<UserRecord> records, string token,
+        public static async Task<bool> GetOtherUserAsync(User user)
+        {
+            var url = ServerUrl + User + "/" + user.UserId;
+            var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return false;
+
+            dynamic d = JsonConvert.DeserializeObject(result);
+
+            user.FollowerCount = int.Parse(d.fans.ToString());
+            user.FollowingCount = int.Parse(d.followings.ToString());
+            user.ImageSource = d.header_icon;
+            user.ImageSourceMedium = d.header_icon_medium;
+            user.ImageSourceSmall = d.header_icon_small;
+            user.UserName = d.name;
+            user.UserId = d.user_id;
+            user.Description = d.description;
+            user.CanFollow = d.can_follow;
+
+            return true;
+        }
+
+        public static async Task<bool> GetOtherFightingCenter(ObservableCollection<UserRecord> records, string token,
             string userId)
         {
             var url = ServerUrl + string.Format(OtherFightingCenter,userId);
@@ -518,7 +579,7 @@ namespace Archive
             header.Add("Authorization", token);
 
             var result = await GetBaseAsync(url, header);
-            if (string.IsNullOrEmpty(result)) return;
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -535,28 +596,29 @@ namespace Archive
                 //bool canAwesome = d2.can_awesome;
                 var dateTime = UnixTimeStampToDateTime(double.Parse(d2.create_time.ToString()));
 
-                var userRecord = new UserRecord()
+                var userRecord = new UserRecord
                 {
                     User = Global.LoginUser,
                     RecordContent = content,
                     GoalId = goalId,
-                    AwesomeUsers = GetAwesomeObservableCollection(awesomesList),
-                    Comments = GetCommentsObservableCollection(commentsList),
+                    AwesomeUsers = new ObservableCollection<User>(),
+                    Comments = new ObservableCollection<Comment>(),
                     RecordTime = dateTime,
                     GoalRecordId = goalRecordId
                 };
+                GetAwesomeObservableCollection(awesomesList,userRecord.AwesomeUsers);
+                GetCommentsObservableCollection(commentsList,userRecord.Comments);
                 records.Insert(0, userRecord);
             }
+            return true;
         }
 
-        public static async Task GetOtherFollowersAsync(string token, ObservableCollection<User> followers, string userId)
+        public static async Task<bool> GetOtherFollowersAsync( ObservableCollection<User> followers, string userId)
         {
             var url = ServerUrl + string.Format(OtherFollower, userId);
-            var header = new Dictionary<string, string>
-            {
-                {"Authorization", token}
-            };
-            var result = await GetBaseAsync(url, header);
+            
+            var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -572,17 +634,17 @@ namespace Archive
                 };
                 followers.Add(follower);
             }
+
+            return true;
         }
 
-        public static async Task GetOtherFollowingsAsync(string token, ObservableCollection<User> followings,
+        public static async Task<bool> GetOtherFollowingsAsync( ObservableCollection<User> followings,
             string userId)
         {
             var url = ServerUrl + string.Format(OtherFollowing, userId);
-            var header = new Dictionary<string, string>
-            {
-                {"Authorization", token}
-            };
-            var result = await GetBaseAsync(url, header);
+            
+            var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return false;
 
             dynamic d = JsonConvert.DeserializeObject(result);
             var list = new List<object>(d);
@@ -598,6 +660,18 @@ namespace Archive
                 };
                 followings.Add(following);
             }
+            return true;
+        }
+
+        public static async Task<string> GetGoalImageAsync(string goalId)
+        {
+            var url = ServerUrl + GoalImage + goalId;
+            var result = await GetBaseAsync(url);
+            if (string.IsNullOrEmpty(result)) return string.Empty;
+
+            dynamic d = JsonConvert.DeserializeObject(result);
+
+            return d.image.ToString();
         }
 
         /// <summary>
@@ -608,7 +682,7 @@ namespace Archive
         /// <returns>从服务器获取的json字符串</returns>
         private static async Task<string> GetBaseAsync(string url, Dictionary<string, string> headers = null)
         {
-            var request = WebRequest.CreateHttp(new Uri(url + "?t=" + DateTime.Now.ToString("g")));
+            var request = WebRequest.CreateHttp(new Uri(url + "?t=" + DateTime.Now.ToString("G")));
 
             request.Method = Get;
             if (headers != null)
@@ -659,12 +733,9 @@ namespace Archive
                {"facebooktoken",facebookToken},
                {"headerurl",header}
             };
-            //var postData = new Dictionary<string, string>
-            //{
-            //    {"test","test"}
-            //};
 
             var responseJson = await PostBaseAsync(url, "", headers);
+            if (string.IsNullOrEmpty(responseJson)) return string.Empty;
 
             dynamic d = JsonConvert.DeserializeObject(responseJson);
             return d.token.ToString();
@@ -686,7 +757,7 @@ namespace Archive
 
             dynamic d = JsonConvert.DeserializeObject(responseJson);
 
-            return d.result;
+            return d.goal_record_id;
         }
 
         public static async Task<string> PostRecordAwesomeAsync(string recordId, string token)
@@ -778,6 +849,23 @@ namespace Archive
                 {"name",userName},
                 {"description",description}
             };
+            var responseJson = await PostBaseAsync(url, "", headers);
+            if (string.IsNullOrEmpty(responseJson)) return string.Empty;
+
+            dynamic d = JsonConvert.DeserializeObject(responseJson);
+
+            return d.result;
+        }
+
+        public static async Task<string> PostNewJoinAsync(string token, string goalId)
+        {
+            var url = ServerUrl + GoalJoin;
+            var headers = new Dictionary<string, string>
+            {
+                {"Authorization", token},
+                {"goalid",goalId}
+            };
+
             var responseJson = await PostBaseAsync(url, "", headers);
             if (string.IsNullOrEmpty(responseJson)) return string.Empty;
 
@@ -896,14 +984,13 @@ namespace Archive
             return dtDateTime;
         }
 
-        private static ObservableCollection<User> GetAwesomeObservableCollection(List<object> list)
+        private static void GetAwesomeObservableCollection(List<object> list, ObservableCollection<User> userList)
         {
             if (!list.Any())
             {
-                return new ObservableCollection<User>();
+                return;
             }
 
-            var userList = new List<User>();
             foreach (var o in list)
             {
                 dynamic d = JsonConvert.DeserializeObject(o.ToString());
@@ -916,17 +1003,15 @@ namespace Archive
                 userList.Add(user);
             }
 
-            return new ObservableCollection<User>(userList);
         }
 
-        private static ObservableCollection<Comment> GetCommentsObservableCollection(List<object> list)
+        private static void GetCommentsObservableCollection(List<object> list, ObservableCollection<Comment> commentList)
         {
             if (!list.Any())
             {
-                return new ObservableCollection<Comment>();
+                return;
             }
 
-            var userList = new List<Comment>();
             foreach (var o in list)
             {
                 dynamic d = JsonConvert.DeserializeObject(o.ToString());
@@ -940,10 +1025,9 @@ namespace Archive
                     },
                     CommentContent = d.content.ToString()
                 };
-                userList.Add(comment);
+                commentList.Add(comment);
             }
 
-            return new ObservableCollection<Comment>(userList);
         }
     }
 }

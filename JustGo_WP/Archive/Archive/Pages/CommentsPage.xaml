@@ -28,169 +28,188 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="#FFB3D3E8"
                               ForegroundColor="#FF23A7FC"
-                              Opacity="0.99">
+                              Opacity="0.99"
+                              IsVisible="False">
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/favorite.png"
-                                            Text="refresh" 
+                                            Text="awesome" 
                                             Click="AwesomeButton_OnClick"/>
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/comment.png"
-                                            Text="refresh" 
+                                            Text="comment" 
                                             Click="CommentsButton_OnClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 
-    <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
           Background="White">
-        <!--<Grid.DataContext>
-            <vm:CommentsViewModel />
-        </Grid.DataContext>-->
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <Grid x:Name="ContentPanelGrid"
+              Visibility="Collapsed">
 
-        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Image Source="/Assets/GoalDetail/TopBackground.png"
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Image Source="{Binding GoalImage, Converter={StaticResource UrlStringToBitmapConverter}}"
                    Stretch="UniformToFill"
-                   Height="280"
+                   Height="288"
                    Grid.RowSpan="3" />
-            <StackPanel Grid.Row="0"
+                <Rectangle Grid.Row="0"
+                       Grid.RowSpan="3"
+                       Fill="Black"
+                       Opacity="0.4" />
+                <StackPanel Grid.Row="0"
                         Orientation="Horizontal">
-                <TextBlock FontSize="22"
+                    <TextBlock FontSize="22"
                            x:Name="CommentsCountTextBlock"
                            Text="{Binding Comments.Count}"
                            Margin="20,40,0,0" />
-                <TextBlock FontSize="22"
-                           Text=" comments"
+                    <TextBlock FontSize="22"
+                           Text=" COMMENTS"
                            Margin="0,40,0,0" />
-            </StackPanel>
-            
-            <Image Grid.Row="2"
+                </StackPanel>
+
+                <Image Grid.Row="2"
                    x:Name="AuthorImage"
                    Width="46"
                    Height="46"
                    HorizontalAlignment="Left"
                    Margin="20,0,0,10"/>
-            <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="2"
                        x:Name="UserNameTextBlock"
                        Margin="80,0,0,0"
                        FontSize="30" 
                        Text="{Binding UserName}"/>
-        </Grid>
-        
-        <ScrollViewer Grid.Row="1">
-            <Grid x:Name="ContentGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                
-                <TextBlock Text="{Binding Topic}"
+            </Grid>
+
+            <ScrollViewer Grid.Row="1">
+                <Grid x:Name="ContentGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding Topic}"
                            Foreground="{StaticResource ContentBlackColorBrush}"
                            FontFamily="Helvetica"
                            FontSize="24"
                            Margin="20,10,0,0" 
                            TextWrapping="Wrap"/>
-                <TextBlock Grid.Row="1"
+                    <TextBlock Grid.Row="1"
                            Text="{Binding Time, Converter={StaticResource DateTimeToStringConverter}}"
                            Foreground="#FF999999"
                            FontFamily="Helvetica"
                            FontSize="18"
                            Margin="20,10,0,0" />
 
-                <Grid Grid.Row="2"
+                    <Grid Grid.Row="2"
                       Margin="20,20,0,0"
                       Visibility="{Binding AwesomeUsers.Count, Converter={StaticResource CountToVisibilityConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <Path Data="F1M24.327,8.788C24.327,4.868 21.647,1.689 18.341,1.689 16.067,1.689 14.09,3.192 13.076,5.405 12.062,3.192 10.085,1.689 7.811,1.689 4.506,1.689 1.825,4.868 1.825,8.788 1.825,11.075 2.738,13.108 4.154,14.406 4.154,14.406 4.096,14.419 4.096,14.419 8.178,18.647 12.26,19.235 12.967,22.986 12.967,22.986 13.185,22.986 13.185,22.986 13.892,19.235 17.973,18.647 22.056,14.419 22.056,14.419 21.998,14.406 21.998,14.406 23.414,13.108 24.327,11.075 24.327,8.788z"
+                        <Path Data="F1M24.327,8.788C24.327,4.868 21.647,1.689 18.341,1.689 16.067,1.689 14.09,3.192 13.076,5.405 12.062,3.192 10.085,1.689 7.811,1.689 4.506,1.689 1.825,4.868 1.825,8.788 1.825,11.075 2.738,13.108 4.154,14.406 4.154,14.406 4.096,14.419 4.096,14.419 8.178,18.647 12.26,19.235 12.967,22.986 12.967,22.986 13.185,22.986 13.185,22.986 13.892,19.235 17.973,18.647 22.056,14.419 22.056,14.419 21.998,14.406 21.998,14.406 23.414,13.108 24.327,11.075 24.327,8.788z"
                           Height="26"
                           Width="28"
                           Stroke="#FFF15126" />
-                    <ListBox Grid.Column="1" ItemsSource="{Binding AwesomeUsers}"
+                        <ListBox Grid.Column="1" ItemsSource="{Binding AwesomeUsers}"
                              ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Image Width="46"
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Image Width="46"
                                        Height="46"
                                        Margin="10,0,0,0"
                                        Stretch="UniformToFill"
                                        Source="{Binding ImageSource,Converter={StaticResource UrlStringToBitmapConverter}}" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                    </ListBox>
-                </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                    </Grid>
 
-                <Grid Grid.Row="3"
+                    <Grid Grid.Row="3"
                       Margin="20,10,0,0"
                       Visibility="{Binding Comments.Count, Converter={StaticResource CountToVisibilityConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <Path Data="F1M20.122,1.8C20.122,1.8 7.772,1.8 7.772,1.8 4.375,1.8 1.597,4.579 1.597,7.975 1.597,7.975 1.597,12.092 1.597,12.092 1.597,15.488 4.375,18.267 7.772,18.267 7.772,18.267 8.801,18.267 8.801,18.267 8.801,18.267 8.801,24.442 8.801,24.442 8.801,24.442 15.858,18.267 15.858,18.267 15.858,18.267 20.122,18.267 20.122,18.267 23.518,18.267 26.297,15.488 26.297,12.092 26.297,12.092 26.297,7.975 26.297,7.975 26.297,4.579 23.518,1.8 20.122,1.8"
+                        <Path Data="F1M20.122,1.8C20.122,1.8 7.772,1.8 7.772,1.8 4.375,1.8 1.597,4.579 1.597,7.975 1.597,7.975 1.597,12.092 1.597,12.092 1.597,15.488 4.375,18.267 7.772,18.267 7.772,18.267 8.801,18.267 8.801,18.267 8.801,18.267 8.801,24.442 8.801,24.442 8.801,24.442 15.858,18.267 15.858,18.267 15.858,18.267 20.122,18.267 20.122,18.267 23.518,18.267 26.297,15.488 26.297,12.092 26.297,12.092 26.297,7.975 26.297,7.975 26.297,4.579 23.518,1.8 20.122,1.8"
                           Height="26"
                           Width="28"
                           Stroke="#FF226CB9"
                           VerticalAlignment="Top" />
-                    <ListBox Grid.Column="1"
+                        <ListBox Grid.Column="1"
                              ItemsSource="{Binding Comments}"
-                             ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             SelectionChanged="CommentsList_OnSelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Tap="CommentGrid_OnTap">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
 
-                                    <Image Width="46"
+                                        <Image Width="46"
                                            Height="46"
                                            VerticalAlignment="Top"
                                            Grid.RowSpan="2"
                                            Stretch="UniformToFill"
                                            Source="{Binding User.ImageSource,Converter={StaticResource UrlStringToBitmapConverter}}"
                                            Margin="10,0,10,0" />
-                                    <TextBlock Grid.Row="0"
+                                        <TextBlock Grid.Row="0"
                                                Grid.Column="1"
                                                Text="{Binding User.UserName}"
                                                Foreground="{StaticResource SystemBlueBrush}" />
-                                    <TextBlock Grid.Row="1"
+                                        <TextBlock Grid.Row="1"
                                                Grid.Column="1"
                                                Text="{Binding CommentContent}"
                                                Foreground="Black" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-                <Grid Grid.Row="4" 
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                    <Grid Grid.Row="4" 
                       Height="72"/>
-            </Grid>
-        </ScrollViewer>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+        
+
+        <Grid x:Name="ProgressGrid"
+                  Background="#7F000000">
+            <ProgressBar IsIndeterminate="True" 
+                             Foreground="{StaticResource SystemBlueBrush}"/>
+            <TextBlock Text="Loading"
+                           TextAlignment="Center"
+                           Foreground="{StaticResource SystemBlueBrush}"
+                           Margin="0,40,0,0" 
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
     </Grid>
 
 </phone:PhoneApplicationPage>

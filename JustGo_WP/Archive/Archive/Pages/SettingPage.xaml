@@ -48,6 +48,7 @@
             </Grid.RowDefinitions>
 
             <Grid x:Name="NotificationsGrid"
+                  Margin="0,0,0,20"
                   Tap="NotificationsGrid_OnTap">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -65,7 +66,7 @@
                            FontSize="22" />
             </Grid>
 
-            <Grid Grid.Row="1"
+            <!--<Grid Grid.Row="1"
                   Margin="0,0,0,20">
                 <TextBlock Text="Social accounts"
                            Foreground="{StaticResource ContentBlackColorBrush}"
@@ -77,10 +78,11 @@
                            Text="Join and insist with your friends"
                            Margin="15,45,0,0"
                            FontSize="22" />
-            </Grid>
+            </Grid>-->
 
             <Grid Grid.Row="2"
-                  Margin="0,0,0,20">
+                  Margin="0,0,0,20"
+                  Tap="FeedbackGrid_OnTap">
                 <TextBlock Text="Feedback"
                            Foreground="{StaticResource ContentBlackColorBrush}"
                            FontSize="35"
@@ -102,18 +104,21 @@
                            Margin="14,0,0,0" />
                 <TextBlock Grid.Column="0"
                            Foreground="{StaticResource ContentGrayColorBrush}"
-                           Text="Current: 1.0.0"
+                           Text="Current: 1.0.0.1"
                            Margin="15,45,0,0"
                            FontSize="22" />
             </Grid>
 
             <Button Content="log out"
+                    x:Name="LogoutButton"
                     Grid.Row="4"
                     BorderBrush="{StaticResource SystemBlueBrush}"
                     Foreground="{StaticResource SystemBlueBrush}"
                     BorderThickness="2"
                     Height="90"
-                    VerticalAlignment="Top" />
+                    VerticalAlignment="Top" 
+                    Click="ButtonBase_OnClick"
+                    Visibility="Collapsed"/>
 
         </Grid>
     </Grid>

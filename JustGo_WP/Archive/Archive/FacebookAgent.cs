@@ -1,20 +1,12 @@
-﻿using System;
+﻿using Facebook;
+using Facebook.Client;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Navigation;
-using Facebook;
-using Facebook.Client;
-using Microsoft.Phone.Controls;
-using Newtonsoft.Json;
 
 namespace Archive
 {
@@ -30,7 +22,7 @@ namespace Archive
         // 用户授权后获取到的token
         private FacebookSession _accessToken;
         // 申请的权限
-        private const string ExtendedPermissions = "user_about_me,read_stream,publish_stream,user_photos";
+        //private const string ExtendedPermissions = "user_about_me";
         //用于登陆登出的client
         private FacebookSessionClient _facebookSessionClient;
 
@@ -40,7 +32,13 @@ namespace Archive
 
         #endregion
 
-        public FacebookAgent()
+        private static FacebookAgent _current;
+        public static FacebookAgent Current
+        {
+            get { return _current ?? (_current = new FacebookAgent()); }
+        }
+
+        private FacebookAgent()
         {
             AppId = "344702782359268";
             _facebookSessionClient = new FacebookSessionClient(AppId);
@@ -79,23 +77,32 @@ namespace Archive
 
             if (string.IsNullOrWhiteSpace(AppId)) return false;
 
-            _accessToken = await _facebookSessionClient.LoginAsync(ExtendedPermissions);
-            // 将token信息记录到系统的Settings信息中
-            if (_accessToken != null)
+            try
             {
-                if (IsolatedStorageSettings.ApplicationSettings.Contains(SettingsKeyForFacebookToken))
+                _accessToken = await _facebookSessionClient.LoginAsync();
+                // 将token信息记录到系统的Settings信息中
+                if (_accessToken != null)
                 {
-                    IsolatedStorageSettings.ApplicationSettings[SettingsKeyForFacebookToken] = _accessToken;
-                }
-                else
-                {
-                    IsolatedStorageSettings.ApplicationSettings.Add(SettingsKeyForFacebookToken, _accessToken);
-                }
-                IsolatedStorageSettings.ApplicationSettings.Save();
+                    if (IsolatedStorageSettings.ApplicationSettings.Contains(SettingsKeyForFacebookToken))
+                    {
+                        IsolatedStorageSettings.ApplicationSettings[SettingsKeyForFacebookToken] = _accessToken;
+                    }
+                    else
+                    {
+                        IsolatedStorageSettings.ApplicationSettings.Add(SettingsKeyForFacebookToken, _accessToken);
+                    }
+                    IsolatedStorageSettings.ApplicationSettings.Save();
 
-                return true;
+                    return true;
+                }
+                return false;
             }
-            return false;
+            catch (Exception e)
+            {
+                Debug.WriteLine("facebook登陆出错:{0}",e.Message);
+                return false;
+            }
+            
         }
 
         /// <summary>
@@ -109,31 +116,35 @@ namespace Archive
             IsolatedStorageSettings.ApplicationSettings.Remove(SettingsKeyForFacebookToken);
 
             //在前台添加webBrowser，用于删除服务端的cookie
-            Deployment.Current.Dispatcher.BeginInvoke(() =>
-            {
-                var popup = new Popup();
-                var webBrowser = new WebBrowser();
-                popup.Child = webBrowser;
-                popup.IsOpen = true;
+            //Deployment.Current.Dispatcher.BeginInvoke(() =>
+            //{
+            //    var popup = new Popup();
+            //    var webBrowser = new WebBrowser
+            //    {
+            //        Width = 200,
+            //        Height = 200
+            //    };
+            //    popup.Child = webBrowser;
+            //    popup.IsOpen = true;
 
-                LoadCompletedEventHandler loadCompleted = null;
-                loadCompleted = (sender, e) =>
-                {
-                    if (
-                        webBrowser.SaveToString().Contains("logout_form"))
-                    {
-                        webBrowser.InvokeScript("eval", "document.forms['logout_form'].submit();");
-                        webBrowser.Visibility = Visibility.Collapsed;
-                        webBrowser.LoadCompleted -= loadCompleted;
-                        popup.IsOpen = false;
-                        popup = null;
-                    }
-                };
+            //    LoadCompletedEventHandler loadCompleted = null;
+            //    loadCompleted = (sender, e) =>
+            //    {
+            //        if (
+            //            webBrowser.SaveToString().Contains("logout_form"))
+            //        {
+            //            webBrowser.InvokeScript("eval", "document.forms['logout_form'].submit();");
+            //            webBrowser.Visibility = Visibility.Collapsed;
+            //            webBrowser.LoadCompleted -= loadCompleted;
+            //            popup.IsOpen = false;
+            //            popup = null;
+            //        }
+            //    };
 
-                webBrowser.LoadCompleted += loadCompleted;
-                //跳转到登出所需网址
-                webBrowser.Navigate(new Uri("https://www.facebook.com/logout.php"));
-            });
+            //    webBrowser.LoadCompleted += loadCompleted;
+            //    //跳转到登出所需网址
+            //    webBrowser.Navigate(new Uri("https://www.facebook.com/logout.php"));
+            //});
         }
 
         /// <summary>
@@ -154,7 +165,7 @@ namespace Archive
                 parameters["message"] = text;
                 var postTask = new TaskCompletionSource<bool>();
 
-                var fb = new Facebook.FacebookClient(_accessToken.AccessToken);
+                var fb = new FacebookClient(_accessToken.AccessToken);
                 fb.PostCompleted += (sender, args) => postTask.SetResult(args.Error == null);
 
                 await fb.PostTaskAsync("me/feed", parameters);
@@ -177,13 +188,13 @@ namespace Archive
             try
             {
                 //创建FacebookMediaStream
-                using (var tFile = new Facebook.FacebookMediaStream
+                using (var tFile = new FacebookMediaStream
                 {
                     ContentType = "image/jpeg",
                     FileName = DateTime.Now.ToString("yyyyMMMMddhhmmss")
                 }.SetValue(fileStream))
                 {
-                    var fb = new Facebook.FacebookClient(_accessToken.AccessToken);
+                    var fb = new FacebookClient(_accessToken.AccessToken);
                     var postTask = new TaskCompletionSource<bool>();
                     fb.PostCompleted += (sender, args) => { postTask.SetResult(args.Error == null); };
                     //发布图像至我的照片：/me/photos/
@@ -300,7 +311,7 @@ namespace Archive
                 var pictureUrl = data["url"];
                 userTask.SetResult(pictureUrl.ToString());
             };
-            await fb.GetTaskAsync("me/picture?redirect=false&width=480");
+            await fb.GetTaskAsync("me/picture?redirect=0&height=720&type=normal&width=720");
 
             return await userTask.Task;
         }

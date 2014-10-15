@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -25,17 +26,25 @@ namespace Archive.Pages
                 Global.LoginUser.Token, CommentTextBox.Text);
             if (!string.IsNullOrEmpty(str))
             {
-                ViewModelLocator.CommentsViewModel.Comments.Insert(0, new Comment
+                var comment = new Comment
                 {
                     User = Global.LoginUser,
                     CommentContent = CommentTextBox.Text
-                });
-                MessageBox.Show("Comment successed");
+                };
+                Global.AddingComment = comment;
+
+                Global.SelectedUserRecord.Comments.Insert(0, comment);
+                if (Global.SelectedUserRecord.Comments.Count > 5)
+                {
+                    Global.SelectedUserRecord.Comments.RemoveAt(5);
+                }
+
                 NavigationService.GoBack();
             }
             else
             {
-                MessageBox.Show("Comment failed");
+                StaticMethods.ShowRequestFailedToast();
+                Global.AddingComment = null;
                 NavigationService.GoBack();
             }
         }

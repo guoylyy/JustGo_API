@@ -4,6 +4,7 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
+using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Net.NetworkInformation;
 using Microsoft.Phone.Shell;
@@ -56,11 +57,11 @@ namespace Archive
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
-            
+
             //RootFrame.UriMapper = Resources["LoginPageMapper"] as UriMapper;
         }
 
-        void ChangeDetected(object sender, NetworkNotificationEventArgs e)
+        private void ChangeDetected(object sender, NetworkNotificationEventArgs e)
         {
             ShowMessageIfNetworkeUnable();
         }
@@ -69,21 +70,9 @@ namespace Archive
         // 此代码在重新激活应用程序时不执行
         private async void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            ShowMessageIfNetworkeUnable();
             try
             {
                 Global.LoginUser = StaticMethods.ReadUser();
-                //如果Token存在
-                if (Global.LoginUser != null && !string.IsNullOrWhiteSpace(Global.LoginUser.Token))
-                {
-                    //使用Mapper来直接跳转到MainPage
-                    RootFrame.UriMapper = Resources["LoginPageMapper"] as UriMapper;
-                    //RootFrame.Navigate(new Uri("/Pages/LoginPage.xaml", UriKind.Relative));
-                }
-                //else
-                //{
-                //    RootFrame.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
-                //}
             }
             catch (Exception)
             {
@@ -254,9 +243,22 @@ namespace Archive
 
         private void ShowMessageIfNetworkeUnable()
         {
-            if (!DeviceNetworkInformation.IsNetworkAvailable)
+            if (!DeviceNetworkInformation.IsWiFiEnabled && !DeviceNetworkInformation.IsCellularDataEnabled
+                && !DeviceNetworkInformation.IsNetworkAvailable)
             {
-                RootFrame.Dispatcher.BeginInvoke(() => MessageBox.Show("No available Network"));
+                //RootFrame.Dispatcher.BeginInvoke(() => MessageBox.Show("No available Network"));
+                RootFrame.Dispatcher.BeginInvoke(() =>
+                {
+                    var toast = new ToastPrompt
+                    {
+                        Message = "No available Network",
+                        MillisecondsUntilHidden = 1000,
+                        Margin = new Thickness(0, -40, 0, 0)
+                    };
+                    toast.Show();
+                });
+
+
             }
         }
     }

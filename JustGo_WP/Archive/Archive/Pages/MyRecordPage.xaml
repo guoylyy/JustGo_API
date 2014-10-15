@@ -32,11 +32,11 @@
           Background="White">
 
         <!--ContentPanel - 在此处放置其他内容-->
-        <phone:Pivot Title="Goal detail"
+        <phone:Pivot Title="GOAL DETAIL"
                      Foreground="{StaticResource SystemBlueBrush}"
                      Margin="0,10,0,0"
                      SelectionChanged="Pivot_OnSelectionChanged">
-            <phone:PivotItem Header="Intro"
+            <phone:PivotItem Header="intro"
                              Margin="0,28,0,0"
                              x:Name="IntroPivotItem">
                 <Grid>
@@ -124,7 +124,8 @@
                           Background="#FF4F99A6"
                           Margin="0,0,0,10"
                           local:TiltEffect.IsTiltEnabled="True"
-                          Tap="BottomGrid_Tap">
+                          Tap="BottomGrid_Tap"
+                          Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -146,7 +147,7 @@
                                    Stretch="None"
                                    Grid.Column="1"
                                    Margin="0,3,0,0" />
-                            <TextBlock Text="14,241"
+                            <TextBlock x:Name="RecordsCountTextBlock"
                                        Foreground="White"
                                        Grid.Column="2"
                                        FontSize="36"
@@ -161,7 +162,7 @@
                         <TextBlock Grid.Row="1"
                                    Grid.Column="0"
                                    Foreground="White"
-                                   Text="all over the world finish this goal"
+                                   Text="all over the world joined this goal"
                                    TextAlignment="Center"
                                    VerticalAlignment="Bottom"
                                    Margin="0,0,0,10" />
@@ -179,7 +180,7 @@
             </phone:PivotItem>
 
             <phone:PivotItem x:Name="RecordsPivotItem"
-                             Header="My records">
+                             Header="my records">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -191,7 +192,7 @@
                         <circleImage:CircleImage Width="70"
                                                  Height="70"
                                                  x:Name="RecordUserImage"
-                                                 Source="/Assets/DefaultHeader.jpg" />
+                                                 Source="/Assets/DefaultHeader.jpg"/>
                         <TextBlock Text="{Binding Records.Count}"
                                    FontSize="30"
                                    Margin="10,15,0,10" />
@@ -295,10 +296,12 @@
                                             <ListBox Grid.Column="1"
                                                      Grid.Row="0"
                                                      ItemsSource="{Binding Comments}"
-                                                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                                     SelectionMode="Single"
+                                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                                     SelectionChanged="CommentsList_OnSelectionChanged">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Grid>
+                                                        <Grid Tap="CommentGrid_OnTap">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto" />
                                                                 <ColumnDefinition Width="*" />

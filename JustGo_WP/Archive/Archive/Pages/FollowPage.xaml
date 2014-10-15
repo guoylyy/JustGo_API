@@ -98,8 +98,7 @@
 
         <!--TitlePanel 包含应用程序的名称和页标题-->
 
-        <TextBlock Text="4 FOLLOWERS"
-                   x:Name="TopicTextBlock"
+        <TextBlock x:Name="TopicTextBlock"
                    FontFamily="Segoe WP Semibold"
                    FontSize="25"
                    Foreground="{StaticResource SystemBlueBrush}"
@@ -124,6 +123,18 @@
             </phone:LongListSelector>
         </Grid>
 
+        <Grid x:Name="ProgressGrid"
+              Background="#7F000000"
+              Grid.RowSpan="2"
+              Grid.Row="0">
+            <ProgressBar IsIndeterminate="True" 
+                             Foreground="{StaticResource SystemBlueBrush}"/>
+            <TextBlock Text="Loading"
+                           TextAlignment="Center"
+                           Foreground="{StaticResource SystemBlueBrush}"
+                           Margin="0,40,0,0" 
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
     </Grid>
 
 </phone:PhoneApplicationPage>

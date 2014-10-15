@@ -103,7 +103,9 @@
     <Compile Include="Converter\DateTimeToStringConverter.cs" />
     <Compile Include="Converter\NumberToParticipantsConverter.cs" />
     <Compile Include="Converter\StringToBitmapConverter.cs" />
+    <Compile Include="Converter\StringToVisibilityConverter.cs" />
     <Compile Include="Converter\UrlStringToBitmapConverter.cs" />
+    <Compile Include="Converter\WhiteTrueGrayFalseConverter.cs" />
     <Compile Include="DataBase\CsvUtil.cs" />
     <Compile Include="Datas\Comment.cs" />
     <Compile Include="Datas\Goal.cs" />
@@ -196,6 +198,9 @@
     </Compile>
     <Compile Include="ServerApi.cs" />
     <Compile Include="StaticMethods.cs" />
+    <Compile Include="Tiles\CycleTile.cs" />
+    <Compile Include="Tiles\StandardTile.cs" />
+    <Compile Include="Tiles\TileHelper.cs" />
     <Compile Include="TiltEffect.cs" />
     <Compile Include="ViewModel\AwesomeViewModel.cs" />
     <Compile Include="ViewModel\CommentsViewModel.cs" />
@@ -369,13 +374,16 @@
     <Content Include="Assets\Heads\head7.png" />
     <Content Include="Assets\Heads\head8.png" />
     <Content Include="Assets\Heads\head9.png" />
+    <Content Include="Assets\icon_100.png" />
+    <Content Include="Assets\icon_159.png" />
+    <Content Include="Assets\icon_336.png" />
+    <Content Include="Assets\icon_691_336.png" />
     <Content Include="Assets\MainPage\DefaulHead.jpg" />
     <Content Include="Assets\MainPage\DrinkWater.png" />
     <Content Include="Assets\MainPage\Health Diet.png" />
     <Content Include="Assets\MainPage\Push-up.png" />
     <Content Include="Assets\MyRecord\Done.png" />
     <Content Include="Assets\MyRecord\People.png" />
-    <Content Include="Assets\splash.jpg" />
     <Content Include="Assets\Tiles\FlipCycleTileLarge.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -391,12 +399,8 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\tile_flip_medium.png" />
-    <Content Include="Assets\tile_flip_small.png" />
-    <Content Include="Assets\tile_flip_wide.png" />
-    <Content Include="Assets\tile_iconic_medium.png" />
-    <Content Include="Assets\tile_iconic_small.png" />
     <Content Include="README_FIRST.txt" />
+    <Content Include="SplashScreenImage.jpg" />
     <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
@@ -414,6 +418,9 @@
     <Reference Include="CircleImage">
       <HintPath>references\CircleImage.dll</HintPath>
     </Reference>
+    <Reference Include="Coding4Fun.Toolkit.Controls">
+      <HintPath>..\packages\Coding4Fun.Toolkit.Controls.2.0.7\lib\windowsphone8\Coding4Fun.Toolkit.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="Facebook">
       <HintPath>..\packages\Facebook.6.8.0\lib\wp8\Facebook.dll</HintPath>
     </Reference>
@@ -426,8 +433,7 @@
     <Reference Include="GalaSoft.MvvmLight.WP8">
       <HintPath>..\packages\MvvmLightLibs.4.3.31.0\lib\wp8\GalaSoft.MvvmLight.WP8.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=8.0.1.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">

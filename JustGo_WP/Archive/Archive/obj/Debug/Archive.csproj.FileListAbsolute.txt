@@ -288,6 +288,7 @@ C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debu
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Pages\FollowPage.g.cs
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Pages\GoalDetailPage.g.cs
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Pages\GoalSettingPage.g.cs
+C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Pages\LoginForTouristPage.g.cs
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Pages\MyRecordPage.g.cs
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Pages\NotificationSettingPage.g.cs
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Pages\NotificationsPage.g.cs
@@ -304,4 +305,4 @@ C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debu
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Archive.pdb
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\XapCacheFile.xml
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Archive.csprojResolveAssemblyReference.cache
-C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Debug\Pages\LoginForTouristPage.g.cs
+C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Debug\Coding4Fun.Toolkit.Controls.dll

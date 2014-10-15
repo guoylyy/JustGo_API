@@ -16,13 +16,20 @@ namespace Archive.Pages
     public partial class OtherFollowPage : PhoneApplicationPage
     {
         private bool _isFans;
+        private string _userId;
+        private OtherFollowViewModel _viewModel;
+
         public OtherFollowPage()
         {
             InitializeComponent();
-            DataContext = ViewModelLocator.OtherFollowViewModel;
+
+            _userId = Global.SelectedUser.UserId;
+            _viewModel = new OtherFollowViewModel();
+            DataContext = _viewModel;
+            //DataContext = ViewModelLocator.OtherFollowViewModel;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -45,15 +52,15 @@ namespace Archive.Pages
         {
             if (_isFans)
             {
-                await ViewModelLocator.OtherFollowViewModel.LoadFollowers();
-                TopicTextBlock.Text = ViewModelLocator.FollowViewModel.FollowPersons.Count + " FOLLOWERS";
-                
+                await _viewModel.LoadFollowers(_userId);
+                TopicTextBlock.Text = _viewModel.FollowPersons.Count + " FOLLOWERS";
             }
             else
             {
-                await ViewModelLocator.OtherFollowViewModel.LoadFollowings();
-                TopicTextBlock.Text = ViewModelLocator.FollowViewModel.FollowPersons.Count + " FOLLOWINGS";
+                await _viewModel.LoadFollowings(_userId);
+                TopicTextBlock.Text = _viewModel.FollowPersons.Count + " FOLLOWINGS";
             }
+            ProgressGrid.Visibility = Visibility.Collapsed;
         }
 
         private void PeopleLongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)

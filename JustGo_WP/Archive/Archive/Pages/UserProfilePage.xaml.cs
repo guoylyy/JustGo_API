@@ -49,9 +49,14 @@ namespace Archive.Pages
             };
             followButton.Click += async (sender, e) =>
             {
+                if (!StaticMethods.IsUserLogin())
+                {
+                    NavigationService.Navigate(new Uri("/Pages/LoginForTouristPage.xaml", UriKind.Relative));
+                    return;
+                }
                 if (await ServerApi.PostFollowAsync(Global.LoginUser.Token, _user.UserId) == "success")
                 {
-                    MessageBox.Show("Follow success");
+                    StaticMethods.ShowToast("Follow success");
                     ApplicationBar = _unFollowApplicationBar;
                     Global.LoginUser.FollowingCount++;
                     StaticMethods.WriteUser(Global.LoginUser);
@@ -76,7 +81,7 @@ namespace Archive.Pages
             {
                 if (await ServerApi.PostUnFollowAsync(Global.LoginUser.Token, _user.UserId) == "success")
                 {
-                    MessageBox.Show("Unfollow success");
+                    StaticMethods.ShowToast("Unfollow success");
                     ApplicationBar = _followApplicationBar;
                     Global.LoginUser.FollowingCount--;
                     StaticMethods.WriteUser(Global.LoginUser);
@@ -88,9 +93,20 @@ namespace Archive.Pages
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await LoadUser();
+            if (await LoadUser())
+            {
+                ChangeAppbar();
+            }
+            else
+            {
+                StaticMethods.ShowRequestFailedToast();
+                EncourageButton.IsEnabled = false;
+                FollowersGrid.IsHitTestVisible = false;
+                FollowingsGrid.IsHitTestVisible = false;
+                FightingCenterGrid.IsHitTestVisible = false;
+            }
             //_user.NotifyAllPropertyChanged();
-            ChangeAppbar();
+            
         }
 
         private void ChangeAppbar()
@@ -98,23 +114,28 @@ namespace Archive.Pages
             ApplicationBar = _user.CanFollow ? _followApplicationBar : _unFollowApplicationBar;
         }
 
-        private async Task LoadUser()
+        private async Task<bool> LoadUser()
         {
-            await ServerApi.GetOtherUserAsync(Global.LoginUser.Token, _user);
+            return await ServerApi.GetOtherUserAsync(_user);
         }
 
         private async void EncourageButton_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!StaticMethods.IsUserLogin())
+            {
+                NavigationService.Navigate(new Uri("/Pages/LoginForTouristPage.xaml", UriKind.Relative));
+                return;
+            }
+
             var result = await ServerApi.PostEncourgeAsync(Global.LoginUser.Token, _user.UserId);
             if (string.IsNullOrEmpty(result))
             {
-                MessageBox.Show("You have encourged him/her today");
+                StaticMethods.ShowToast("You have encourged him/her today");
             }
             else
             {
-                MessageBox.Show("Encourged success");
+                StaticMethods.ShowToast("Encourged success");
             }
-            Debug.WriteLine("Encourage result:{0}", result);
         }
 
         private void FightingCenterGrid_OnTap(object sender, GestureEventArgs e)
@@ -130,6 +151,11 @@ namespace Archive.Pages
         private void FollowingsGrid_OnTap(object sender, GestureEventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/OtherFollowPage.xaml?type=following", UriKind.Relative));
+        }
+
+        private void AchievementsGrid_OnTap(object sender, GestureEventArgs e)
+        {
+            MessageBox.Show("Coming soon.");
         }
     }
 }
