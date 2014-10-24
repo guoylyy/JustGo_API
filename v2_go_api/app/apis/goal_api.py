@@ -48,13 +48,16 @@ class GoalJoinRest(Resource):
 		user = get_user()
 		up = self.__record_parser()
 		goal = Goal.query.filter(Goal.goal_id==up['goalid']).first()
-		if goal and user:
-			ghj = GoalHistoryJoin.query.filter(GoalHistoryJoin.goal_id==goal.goal_id, \
-				GoalHistoryJoin.user_id==user.user_id).first()
-			if not ghj:
-				nghj = GoalHistoryJoin(goal.goal_id, user.user_id)
-				db.session.add(nghj)
-				db.session.commit()
+		if goal:
+			goal.participation = goal.participation + 1
+			db.session.add(goal)
+			if user:
+				ghj = GoalHistoryJoin.query.filter(GoalHistoryJoin.goal_id==goal.goal_id, \
+					GoalHistoryJoin.user_id==user.user_id).first()
+				if not ghj:
+					nghj = GoalHistoryJoin(goal.goal_id, user.user_id)
+					db.session.add(nghj)
+			db.session.commit()
 			return {'result':'success'}
 		else:
 			return {'result':'fail'}
@@ -63,6 +66,34 @@ class GoalJoinRest(Resource):
 		up = reqparse.RequestParser()
 		up.add_argument('goalid', type=int, location='headers')
 		return up.parse_args()
+
+class GoalJoinRemove(Resource):
+	def post(self):
+		"""
+			Remove goal join of all user
+		"""
+		user = get_user()
+		up = self.__record_parser()
+		goal = Goal.query.filter(Goal.goal_id==up['goalid']).first()
+		if goal:
+			if goal.participation > 0:
+				goal.participation = goal.participation - 1
+			if user:
+				ghj = GoalHistoryJoin.query.filter(GoalHistoryJoin.goal_id==goal.goal_id, \
+					GoalHistoryJoin.user_id==user.user_id).first()
+				if not ghj:
+					db.session.delete(ghj)
+			db.session.add(goal)
+			db.session.commit()
+			return {'result':'success'}
+		else:
+			return {'result':'fail'}
+
+	def __record_parser(self):
+		up = reqparse.RequestParser()
+		up.add_argument('goalid', type=int, location='headers')
+		return up.parse_args()
+
 
 class GoalJoinTrackRest(Resource):
 	def get(self):

@@ -157,6 +157,7 @@ class Goal(db.Model):
 	goal_joins = db.relationship('GoalJoin', backref='goal', lazy='dynamic')
 	goal_records = db.relationship('GoalRecord', backref='goal', lazy='dynamic',order_by="desc(GoalRecord.goal_record_id)")
 	is_active = db.Column(db.Boolean, default=True)
+	participation = db.Column(db.Integer, default=0)
 	
 	goal_history_joins = db.relationship('GoalHistoryJoin', backref='goal', lazy='dynamic',\
 		order_by="desc(GoalHistoryJoin.goal_his_join_id)")
@@ -175,7 +176,7 @@ class Goal(db.Model):
 				'description' : self.description + '',
 				'joins' : self.goal_joins.count(),
 				'image' : self.image.locate(),
-				'joins' : self.goal_history_joins.count()
+				'joins' : self.participation
 			}
 
 	def to_json_with_header(self):
@@ -186,7 +187,7 @@ class Goal(db.Model):
 				'description' : self.description + '',
 				'joins' : self.goal_joins.count(),
 				'image' : self.image.locate(),
-				'joins' : self.goal_history_joins.count(),
+				'joins' : self.participation,
 				'joined_users' : [ghj.user.header_json() for ghj in self.goal_history_joins.limit(5)]
 			}
 

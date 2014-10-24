@@ -16,6 +16,7 @@ def create_api(api, base_url):
 
 	api.add_resource(GoalJoinTrackRest, base_url + '/goal_join_track')
 	api.add_resource(GoalJoinRest, base_url + '/goal_join')
+	api.add_resource(GoalJoinRemove,  base_url + '/goal_checkout')
 	api.add_resource(SyncGoalJoinRest, base_url + '/sync_goal_join', base_url + '/goal_join/update_time')
 	api.add_resource(SyncGoalJoinTrackRest, base_url + '/sync_goal_join_track', base_url + '/goal_join_track/update_time')
 	
