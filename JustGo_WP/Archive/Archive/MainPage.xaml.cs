@@ -174,7 +174,6 @@ namespace Archive
         private void AchievementsGrid_OnTap(object sender, GestureEventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/AchievementsPage.xaml", UriKind.Relative));
-            //MessageBox.Show("Comming soon.");
         }
 
         private void FightingGrid_OnTap(object sender, GestureEventArgs e)
@@ -191,13 +190,14 @@ namespace Archive
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             ProgressGrid.Visibility = Visibility.Visible;
+            ApplicationBar.IsVisible = false;
             //await _facebookAgent.AuthorizeAsync()
             if (await _facebookAgent.AuthorizeAsync())
             {
                 var resultStr = await _facebookAgent.GetUserInfoAsync();
                 var strs = resultStr.Split(',');
                 var imageUrl = strs[0];
-                var userName = UserNameTextBlock.Text = strs[1];
+                var userName = strs[1];
                 Global.LoginUser.FacebookId = strs[2];
 
                 //var imageUrl = "http://tp2.sinaimg.cn/1847191521/180/40039469890/1";
@@ -216,8 +216,9 @@ namespace Archive
                 Global.LoginUser.Token = token;
 
                 await ServerApi.GetUserProfileAsync(Global.LoginUser);
-                //Global.LoginUser = user;
+                
                 StaticMethods.WriteUser(Global.LoginUser);
+                StaticMethods.SendAllGoalJoin();
 
                 ProfileGrid.Visibility = Visibility.Visible;
                 UnLoginGrid.Visibility = Visibility.Collapsed;
@@ -228,6 +229,7 @@ namespace Archive
                 StaticMethods.ShowRequestFailedToast();
             }
             ProgressGrid.Visibility = Visibility.Collapsed;
+            ApplicationBar.IsVisible = true;
         }
 
         private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -277,7 +279,5 @@ namespace Archive
             };
             NavigationService.Navigate(new Uri("/Pages/GoalDetailPage.xaml", UriKind.Relative));
         }
-
-        
     }
 }

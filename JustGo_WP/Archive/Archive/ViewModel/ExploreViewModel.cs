@@ -18,10 +18,11 @@ namespace Archive.ViewModel
             TopExplore = new Goal();
         }
 
-        public async void LoadData()
+        public async void LoadData(bool isForce = false)
         {
-            if (!HasLoadExplore)
+            if (!HasLoadExplore || isForce)
             {
+                Deployment.Current.Dispatcher.BeginInvoke(()=>Explores.Clear());
                 if (await ServerApi.GetExploreAsync(Explores, TopExplore))
                 {
                     HasLoadExplore = true;

@@ -19,19 +19,9 @@ namespace Archive.ViewModel
             //LoadData();
         }
 
-        public async void LoadData()
+        public async Task LoadData()
         {
             Notifications.Clear();
-            //Notifications.Add(new Notification
-            //{
-            //    User=new User
-            //    {
-            //        ImageSource = "http://image.tjcsdc.com/user-header/4/0/4.150x163.jpe?_ts=20140919080439000000",
-            //        UserName = "Sofea"
-            //    },
-            //    Content = "dafdirtjiaof",
-            //    NotificationTime = DateTime.Now
-            //});
             switch (await ServerApi.GetNotificationAsync(Global.LoginUser.Token, Notifications))
             {
                 case -1:

@@ -1,4 +1,5 @@
-﻿using Archive.DataBase;
+﻿using System.Threading.Tasks;
+using Archive.DataBase;
 using Archive.Datas;
 using Archive.ViewModel;
 using Microsoft.Phone.Controls;
@@ -17,6 +18,9 @@ namespace Archive.Pages
 
         private async void SettingDoneButton_OnClick(object sender, EventArgs e)
         {
+            ApplicationBar.IsVisible = false;
+            await Task.Delay(50);
+
             Global.AddingGoalJoin.NeedReminder = ReminderPicker.SelectedItem.ToString() == "On";
             Global.AddingGoalJoin.ReminderTime = ReminderTimePicker.Value;
             Global.AddingGoalJoin.TimeSpan = int.Parse(InsistPicker.SelectedItem.ToString().Split(' ')[0]);
@@ -40,10 +44,21 @@ namespace Archive.Pages
             CsvUtil.SaveGoalJoin(ViewModelLocator.GoalViewModel.MyGoals);
             StaticMethods.UpdateTile();
 
-            await ServerApi.PostNewJoinAsync(Global.LoginUser.Token, Global.AddingGoalJoin.GoalId);
-            if(StaticMethods.IsUserLogin())
-                ViewModelLocator.ExploreViewModel.AddParticipants(Global.AddingGoalJoin.GoalId, Global.LoginUser);
+            
+            if (StaticMethods.IsUserLogin())
+            {
+                if (await ServerApi.PostNewJoinAsync(Global.LoginUser.Token, Global.AddingGoalJoin.GoalId) == "success")
+                {
+                    ViewModelLocator.ExploreViewModel.LoadData(true);
+                }
+                else
+                {
+                    StaticMethods.ShowRequestFailedToast();
+                }
+                    //ViewModelLocator.ExploreViewModel.AddParticipants(Global.AddingGoalJoin.GoalId, Global.LoginUser);
+            }
 
+            ApplicationBar.IsVisible = true;
             NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
         }
     }

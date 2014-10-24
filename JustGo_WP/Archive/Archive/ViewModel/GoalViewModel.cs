@@ -29,5 +29,12 @@ namespace Archive.ViewModel
                 goalJoin.PassedDays = goalJoin.GoalTracks.Count;
             }
         }
+
+        public void RemoveGoalJoin(GoalJoin goalJoin)
+        {
+            MyGoals.Remove(goalJoin);
+            CsvUtil.DeleteGoalTrack(goalJoin.GoalTracksId);
+            CsvUtil.SaveGoalJoin(MyGoals);
+        }
     }
 }

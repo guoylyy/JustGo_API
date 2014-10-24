@@ -27,7 +27,7 @@ namespace Archive.DataBase
                     myStore.CreateDirectory(UserId);
                 }
 
-                using (var stream = myStore.OpenFile(fullPath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (var stream = myStore.OpenFile(fullPath, FileMode.Create, FileAccess.ReadWrite))
                 {
                     string str = string.Empty;
                     foreach (var goal in datas)
@@ -152,6 +152,25 @@ namespace Archive.DataBase
                         }
                     }
                 }
+            }
+        }
+
+        public static void DeleteGoalTrack(string goalJoinId)
+        {
+            using (var myStore = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                var fullPath = Path.Combine(UserId, GoalTrackFolder, goalJoinId + ".csv");
+
+                if (!myStore.DirectoryExists(UserId))
+                {
+                    return;
+                }
+                if (!myStore.DirectoryExists(Path.Combine(UserId, GoalTrackFolder)))
+                {
+                    return;
+                }
+
+                myStore.DeleteFile(fullPath);
             }
         }
     }

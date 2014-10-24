@@ -14,6 +14,7 @@ namespace Archive
     {
         private const string LoginUser = "LoginUser";
         private static string _loginUserId;
+        private const string Notification = "Notification";
 
         public static void WriteUser(User user)
         {
@@ -130,17 +131,63 @@ namespace Archive
         public static void UpdateTile()
         {
             var goal = ViewModelLocator.GoalViewModel.MyGoals.FirstOrDefault(g => !g.IsFinishedToday);
-            if (goal == null) return;
-
             var tile = ShellTile.ActiveTiles.First();
-            var data = new FlipTileData
+            ShellTileData tileData;
+
+            if (goal == null)
             {
-                BackgroundImage = new Uri("/Assets/icon_336.png", UriKind.Relative),
-                Title = "Insist",
-                BackTitle = "Insist",
-                BackContent = goal.GoalName,
-            };
-            tile.Update(data);
+                tileData = new FlipTileData
+                {
+                    Title = "Insist",
+                    BackgroundImage = new Uri("/Assets/icon_336.png", UriKind.Relative),
+                    BackTitle = "Insist",
+                    BackContent = "You have finished all goals today"
+                };
+            }
+            else
+            {
+                tileData = new FlipTileData
+                {
+                    BackgroundImage = new Uri("/Assets/icon_336.png", UriKind.Relative),
+                    Title = "Insist",
+                    BackTitle = "Insist",
+                    BackContent = "Remember your goals today" + Environment.NewLine + goal.GoalName,
+                };
+            }
+
+            tile.Update(tileData);
+        }
+
+        public static void ChangeNotificationSetting(bool value)
+        {
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(Notification))
+            {
+                IsolatedStorageSettings.ApplicationSettings.Add(Notification, value);
+            }
+            else
+            {
+                IsolatedStorageSettings.ApplicationSettings[Notification] = value;
+            }
+            IsolatedStorageSettings.ApplicationSettings.Save();
+        }
+
+        public static bool ReadNotificationSetting()
+        {
+            bool value;
+            if (IsolatedStorageSettings.ApplicationSettings.TryGetValue(Notification, out value))
+            {
+                return value;
+            }
+            return true;
+        }
+
+        public static async void SendAllGoalJoin()
+        {
+            foreach (var goalJoin in ViewModelLocator.GoalViewModel.MyGoals)
+            {
+                await ServerApi.PostNewJoinAsync(Global.LoginUser.Token, goalJoin.GoalId);
+            }
+            ViewModelLocator.ExploreViewModel.LoadData(true);
         }
     }
 }

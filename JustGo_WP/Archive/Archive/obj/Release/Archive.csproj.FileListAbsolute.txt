@@ -19,6 +19,7 @@ C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Rele
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\Properties\WMAppManifest.xml
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\Archive_Release_AnyCPU.xap
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\CircleImage.dll
+C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\Coding4Fun.Toolkit.Controls.dll
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\Facebook.Client.dll
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\Facebook.dll
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\GalaSoft.MvvmLight.Extras.WP8.dll
@@ -95,6 +96,7 @@ C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Rele
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\vi-VN\Microsoft.Phone.Controls.Toolkit.resources.dll
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\zh-CN\Microsoft.Phone.Controls.Toolkit.resources.dll
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\zh-TW\Microsoft.Phone.Controls.Toolkit.resources.dll
+C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Release\Archive.csprojResolveAssemblyReference.cache
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Release\App.g.cs
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Release\MainPage.g.cs
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Release\Pages\AchievementsPage.g.cs
@@ -125,5 +127,3 @@ C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Rele
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Release\Archive.dll
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Release\Archive.pdb
 C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Release\XapCacheFile.xml
-C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\Bin\Release\Coding4Fun.Toolkit.Controls.dll
-C:\Users\Jian\Documents\GitHub\JustGo_Project\JustGo_WP\Archive\Archive\obj\Release\Archive.csprojResolveAssemblyReference.cache

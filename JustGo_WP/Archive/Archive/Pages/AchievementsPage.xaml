@@ -187,7 +187,7 @@
                          Content="Email"
                          Margin="12,0,0,0"
                          Click="EmailRadioButton_OnClick"/>
-            <Button Grid.Row="3"
+            <!--<Button Grid.Row="3"
                     VerticalAlignment="Bottom"
                     Foreground="{StaticResource SystemBlueBrush}"
                     BorderBrush="{StaticResource SystemBlueBrush}"
@@ -195,7 +195,7 @@
                     Height="90"
                     FontSize="26"
                     Margin="0,0,0,20"
-                    Click="ShareButton_OnClick"/>
+                    Click="ShareButton_OnClick"/>-->
         </Grid>
     </Grid>
 

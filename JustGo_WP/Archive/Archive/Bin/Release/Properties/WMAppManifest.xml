@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{e80ca184-6807-42ce-bcbb-13b12611a516}" Title="Insist" RuntimeType="Silverlight" Version="1.0.0.2" Genre="apps.normal" Author="Insist author" Description="Sample description" Publisher="Insist" PublisherID="{26041933-3de8-45e1-8ab9-5258e6841c0f}">
+  <App xmlns="" ProductID="{e80ca184-6807-42ce-bcbb-13b12611a516}" Title="Insist" RuntimeType="Silverlight" Version="1.0.0.4" Genre="apps.normal" Author="Insist author" Description="Sample description" Publisher="Insist" PublisherID="{26041933-3de8-45e1-8ab9-5258e6841c0f}">
     <IconPath IsRelative="true" IsResource="false">Assets\icon_100.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />

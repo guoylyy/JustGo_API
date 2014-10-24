@@ -28,6 +28,7 @@ namespace Archive.Pages
 
         private void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
         {
+            ApplicationBar.IsVisible = false;
             var record = new UserRecord
             {
                 User = Global.LoginUser,

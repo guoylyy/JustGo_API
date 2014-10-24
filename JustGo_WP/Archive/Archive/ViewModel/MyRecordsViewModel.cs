@@ -18,16 +18,16 @@ namespace Archive.ViewModel
             Records = new ObservableCollection<UserRecord>();
         }
 
-        public void LoadRecord(bool isForce = false)
+        public async Task LoadRecord(bool isForce = false)
         {
             //|| DateTime.Now - _refreshTime > TimeSpan.FromMinutes(1)
             if (isForce || !IsLoaded)
             {
-                LoadData();
+                await LoadData();
             }
         }
 
-        private async void LoadData()
+        private async Task LoadData()
         {
             Records.Clear();
             if (

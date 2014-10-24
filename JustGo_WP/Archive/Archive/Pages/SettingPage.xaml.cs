@@ -25,6 +25,12 @@ namespace Archive.Pages
             Loaded += SettingPage_Loaded;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            ToggleSwitchButton.IsChecked = StaticMethods.ReadNotificationSetting();
+        }
+
         private void SettingPage_Loaded(object sender, RoutedEventArgs e)
         {
             if (StaticMethods.IsUserLogin())
@@ -55,6 +61,12 @@ namespace Archive.Pages
             emailTask.To = "18801790649@163.com";
 
             emailTask.Show();
+        }
+
+        private void ToggleSwitchButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            StaticMethods.ChangeNotificationSetting(ToggleSwitchButton.IsChecked.HasValue 
+                && ToggleSwitchButton.IsChecked.Value);
         }
     }
 }

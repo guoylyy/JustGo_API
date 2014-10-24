@@ -28,6 +28,7 @@ namespace Archive.Pages
             base.OnNavigatedTo(e);
 
             var b = e.NavigationMode == NavigationMode.New;
+            ApplicationBar.IsVisible = false;
 
             if (await ViewModelLocator.RecordsForGoalViewModel.LoadRecords(b))
             {
@@ -50,6 +51,7 @@ namespace Archive.Pages
                 ContentPanel.Opacity = 100;
                 Rectangle.Visibility = Visibility.Collapsed;
             }
+            ApplicationBar.IsVisible = true;
         }
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
@@ -101,6 +103,9 @@ namespace Archive.Pages
 
         private async void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
         {
+            ApplicationBar.IsVisible = false;
+            ProgressGrid.Visibility = Visibility.Visible;
+
             if (await ViewModelLocator.RecordsForGoalViewModel.LoadRecords(true))
             {
                 Rectangle.Visibility = Visibility.Visible;
@@ -111,7 +116,9 @@ namespace Archive.Pages
             {
                 Rectangle.Visibility = Visibility.Collapsed;
             }
-            
+
+            ApplicationBar.IsVisible = true;
+            ProgressGrid.Visibility = Visibility.Collapsed;
         }
     }
 }

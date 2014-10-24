@@ -34,8 +34,8 @@ namespace Archive.Pages
                 Global.LoginUser.Token = token;
 
                 await ServerApi.GetUserProfileAsync(Global.LoginUser);
-                //Global.LoginUser = user;
                 StaticMethods.WriteUser(Global.LoginUser);
+                StaticMethods.SendAllGoalJoin();
                 NavigationService.GoBack();
             }
         }

@@ -17,6 +17,8 @@ namespace Archive.Pages
     public partial class MyRecordPage : PhoneApplicationPage
     {
         private ApplicationBar _myRecordApplicationBar;
+        private ApplicationBar _deleteApplicationBar;
+        private ApplicationBarIconButton _refreshBarButton;
         private bool _isNewInstance;
 
         public MyRecordPage()
@@ -37,24 +39,50 @@ namespace Archive.Pages
 
         private void InitAppbar()
         {
-            _myRecordApplicationBar = new ApplicationBar();
-            _myRecordApplicationBar.BackgroundColor = (Color)Application.Current.Resources["AppbarBackgroundColor"];
-            _myRecordApplicationBar.ForegroundColor = (Color)Application.Current.Resources["AppbarForegroundColor"];
-            _myRecordApplicationBar.Opacity = 0.99;
+            _myRecordApplicationBar = new ApplicationBar
+            {
+                BackgroundColor = (Color) Application.Current.Resources["AppbarBackgroundColor"],
+                ForegroundColor = (Color) Application.Current.Resources["AppbarForegroundColor"],
+                Opacity = 0.99
+            };
 
             var addBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/add.png", UriKind.Relative));
             addBarButton.Text = "add";
             addBarButton.Click += AddBarButton_Click;
 
-            var refreshBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/refresh2.png",UriKind.Relative));
-            refreshBarButton.Text = "refresh";
-            refreshBarButton.Click += RefreshBarButton_Click;
+            _refreshBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/refresh2.png", UriKind.Relative));
+            _refreshBarButton.Text = "refresh";
+            _refreshBarButton.Click += RefreshBarButton_Click;
 
             _myRecordApplicationBar.Buttons.Add(addBarButton);
-            _myRecordApplicationBar.Buttons.Add(refreshBarButton);
+            _myRecordApplicationBar.Buttons.Add(_refreshBarButton);
+
+
+            _deleteApplicationBar = new ApplicationBar
+            {
+                BackgroundColor = (Color)Application.Current.Resources["AppbarBackgroundColor"],
+                ForegroundColor = (Color)Application.Current.Resources["AppbarForegroundColor"],
+                Opacity = 0.99
+            };
+
+            var deleteBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/minus.png",UriKind.Relative));
+            deleteBarButton.Text = "remove";
+            deleteBarButton.Click += OnDeleteBarButton_Click;
+
+            _deleteApplicationBar.Buttons.Add(deleteBarButton);
         }
 
-        void AddBarButton_Click(object sender, EventArgs e)
+        private void OnDeleteBarButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure to remove this goal?", "Waring", MessageBoxButton.OKCancel)
+                == MessageBoxResult.OK)
+            {
+                ViewModelLocator.GoalViewModel.RemoveGoalJoin(Global.SelectedGoalJoin);
+                NavigationService.GoBack();
+            }
+        }
+
+        private void AddBarButton_Click(object sender, EventArgs e)
         {
             if (StaticMethods.IsUserLogin())
             {
@@ -67,11 +95,13 @@ namespace Archive.Pages
             
         }
 
-        void RefreshBarButton_Click(object sender, EventArgs e)
+        private async void RefreshBarButton_Click(object sender, EventArgs e)
         {
             if (StaticMethods.IsUserLogin())
             {
-                ViewModelLocator.MyRecordsViewModel.LoadRecord(true);
+                _refreshBarButton.IsEnabled = false;
+                await ViewModelLocator.MyRecordsViewModel.LoadRecord(true);
+                _refreshBarButton.IsEnabled = true;
             }
             else
             {
@@ -80,7 +110,7 @@ namespace Archive.Pages
             
         }
 
-        void GoalDetailPage_LayoutUpdated(object sender, EventArgs e)
+        private void GoalDetailPage_LayoutUpdated(object sender, EventArgs e)
         {
             DoneImage.Margin = new Thickness(0, 10, (LayoutRoot.ActualWidth - TestBlock.ActualWidth) / 2 - 35, 0);
         }
@@ -135,7 +165,7 @@ namespace Archive.Pages
 
         private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ApplicationBar = e.AddedItems[0].Equals(RecordsPivotItem) ? _myRecordApplicationBar : null;
+            ApplicationBar = e.AddedItems[0].Equals(RecordsPivotItem) ? _myRecordApplicationBar : _deleteApplicationBar;
         }
 
         private void RecordLongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)

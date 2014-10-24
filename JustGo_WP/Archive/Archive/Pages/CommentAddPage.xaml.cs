@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Navigation;
 using Archive.Datas;
 using Archive.ViewModel;
@@ -15,13 +16,36 @@ namespace Archive.Pages
 {
     public partial class CommentAddPage : PhoneApplicationPage
     {
+        private ApplicationBarIconButton _commentDoneButton;
         public CommentAddPage()
         {
             InitializeComponent();
+            InitAppBar();
+        }
+
+        private void InitAppBar()
+        {
+            ApplicationBar = new ApplicationBar
+            {
+                BackgroundColor = (Color)Application.Current.Resources["AppbarBackgroundColor"],
+                ForegroundColor = (Color)Application.Current.Resources["AppbarForegroundColor"],
+                Opacity = 0.99
+            };
+            _commentDoneButton = new ApplicationBarIconButton
+            {
+                IconUri = new Uri("/Assets/AppBar/check.png",UriKind.Relative),
+                Text = "send",
+                IsEnabled = false
+            };
+            _commentDoneButton.Click += ApplicationBarIconButton_OnClick;
+
+            ApplicationBar.Buttons.Add(_commentDoneButton);
         }
 
         private async void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
         {
+            _commentDoneButton.IsEnabled = false;
+
             var str = await ServerApi.PostRecordCommentAsync(Global.SelectedUserRecord.GoalRecordId,
                 Global.LoginUser.Token, CommentTextBox.Text);
             if (!string.IsNullOrEmpty(str))
@@ -51,8 +75,7 @@ namespace Archive.Pages
 
         private void CommentTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var sendButton = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
-            sendButton.IsEnabled = CommentTextBox.Text.Length != 0;
+            _commentDoneButton.IsEnabled = CommentTextBox.Text.Length != 0;
         }
     }
 }

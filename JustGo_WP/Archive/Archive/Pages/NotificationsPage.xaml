@@ -21,14 +21,6 @@
         <converter:UrlStringToBitmapConverter x:Key="UrlStringToBitmapConverter"/>
     </phone:PhoneApplicationPage.Resources>
     
-    <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar BackgroundColor="#FFB3D3E8"
-                              ForegroundColor="#FF23A7FC"
-                              Opacity="0.99">
-            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/refresh2.png"
-                                            Text="refresh" />
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
     <!--LayoutRoot 是包含所有页面内容的根网格-->
     <Grid x:Name="LayoutRoot"
           Background="White">
@@ -63,10 +55,8 @@
               Margin="12,0,12,0">
 
             <phone:LongListSelector Margin="0,0,0,73"
+                                    x:Name="NotificationList"
                                     ItemsSource="{Binding Notifications}">
-                <!--<phone:LongListSelector.DataContext>
-                    <vm:NotificationViewModel/>
-                </phone:LongListSelector.DataContext>-->
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="15,30,0,0">
@@ -142,8 +132,27 @@
                     </DataTemplate>
                 </phone:LongListSelector.GroupHeaderTemplate>
             </phone:LongListSelector>
+            
+            <TextBlock x:Name="NotificationOffTextBlock"
+                       Text="You have closed Notifications, please open it in the setting page."
+                       Foreground="Black"
+                       TextWrapping="Wrap"
+                       Margin="12"
+                       Visibility="Collapsed"/>
         </Grid>
 
+        <Grid x:Name="ProgressGrid"
+              Grid.Row="0"
+              Background="#7F000000"
+              Grid.RowSpan="2">
+            <ProgressBar IsIndeterminate="True" 
+                             Foreground="{StaticResource SystemBlueBrush}"/>
+            <TextBlock Text="Loading"
+                           TextAlignment="Center"
+                           Foreground="{StaticResource SystemBlueBrush}"
+                           Margin="0,40,0,0" 
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
     </Grid>
 
 </phone:PhoneApplicationPage>
